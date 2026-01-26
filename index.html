@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>阿峰老師課程複習專區 | AutoLab</title>
+    <style>
+        :root {
+            --primary: #1e3a5f;
+            --primary-light: #2d5a87;
+            --accent: #3d7ab5;
+            --text: #1a1a1a;
+            --text-secondary: #4a5568;
+            --bg: #f8fafc;
+            --white: #ffffff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans TC", sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+            min-height: 100vh;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: var(--white);
+            padding: 80px 24px;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 16px;
+        }
+
+        .hero p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 60px 24px;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            color: var(--primary);
+            margin-bottom: 32px;
+            text-align: center;
+        }
+
+        .course-grid {
+            display: grid;
+            gap: 20px;
+        }
+
+        .course-card {
+            display: block;
+            background: var(--white);
+            padding: 28px 32px;
+            border-radius: 12px;
+            text-decoration: none;
+            color: var(--text);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            border-left: 4px solid var(--accent);
+        }
+
+        .course-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+        }
+
+        .course-date {
+            font-size: 13px;
+            color: var(--accent);
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .course-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 8px;
+        }
+
+        .course-desc {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 40px 24px;
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .footer a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        @media (max-width: 600px) {
+            .hero h1 {
+                font-size: 1.8rem;
+            }
+            .hero {
+                padding: 60px 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <section class="hero">
+        <h1>課程複習專區</h1>
+        <p>阿峰老師的 AI 培訓課程資源，隨時回來複習、查找工具連結</p>
+    </section>
+
+    <main class="container">
+        <h2 class="section-title">課程列表</h2>
+        <div class="course-grid">
+            <a href="/20260126-ai-intro/" class="course-card">
+                <div class="course-date">2026.01.26</div>
+                <h3 class="course-title">AI工具輕鬆入門：提升職場效率與決策力</h3>
+                <p class="course-desc">核心心法、十大金句、提示詞工程、AI工具比較、實戰工作流</p>
+            </a>
+            <!-- 未來課程會加在這裡 -->
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p>由 <strong>阿峰老師</strong> 精心準備 | <a href="https://ai-tw.manus.space/" target="_blank">官方網站</a></p>
+    </footer>
+</body>
+</html>
