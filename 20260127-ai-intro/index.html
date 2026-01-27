@@ -1,0 +1,2141 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI工具輕鬆入門：提升職場效率與決策力 - 課後複習</title>
+    <style>
+        :root {
+            --primary: #1e3a5f;
+            --primary-light: #2d5a87;
+            --accent: #3d7ab5;
+            --text: #1a1a1a;
+            --text-secondary: #4a5568;
+            --bg: #f8fafc;
+            --white: #ffffff;
+            --border: #e2e8f0;
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.12);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans TC", sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* 動畫定義 */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .animate {
+            opacity: 0;
+        }
+
+        .animate.visible {
+            animation-duration: 0.8s;
+            animation-fill-mode: forwards;
+            animation-timing-function: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .fade-up.visible { animation-name: fadeInUp; }
+        .fade-in.visible { animation-name: fadeIn; }
+        .slide-left.visible { animation-name: slideInLeft; }
+        .scale-in.visible { animation-name: scaleIn; }
+
+        /* Hero */
+        .hero {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: var(--white);
+            padding: 100px 0 80px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(10px);
+            padding: 10px 24px;
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: 500;
+            letter-spacing: 1px;
+            margin-bottom: 24px;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .hero-title {
+            font-size: 2.8rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            line-height: 1.3;
+        }
+
+        .hero-meta {
+            display: flex;
+            gap: 32px;
+            margin-bottom: 28px;
+            font-size: 15px;
+            opacity: 0.9;
+        }
+
+        .hero-meta span {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .hero-summary {
+            font-size: 1.15rem;
+            max-width: 700px;
+            opacity: 0.95;
+            line-height: 1.8;
+        }
+
+        .hero-note {
+            margin-top: 40px;
+            padding: 20px 28px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 12px;
+            border-left: 4px solid rgba(255,255,255,0.5);
+            font-size: 15px;
+        }
+
+        /* Sections */
+        section {
+            padding: 80px 0;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .section-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 12px;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .section-subtitle {
+            margin-top: 12px;
+            color: var(--text-secondary);
+            font-size: 16px;
+        }
+
+        /* Core Concept */
+        .concept-section {
+            background: var(--white);
+        }
+
+        .concept-box {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: var(--white);
+            padding: 50px;
+            border-radius: 16px;
+            text-align: center;
+        }
+
+        .concept-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .concept-desc {
+            font-size: 1.1rem;
+            opacity: 0.95;
+            line-height: 1.9;
+            max-width: 600px;
+            margin: 0 auto 30px;
+        }
+
+        .concept-tags {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .concept-tag {
+            background: rgba(255,255,255,0.2);
+            padding: 10px 24px;
+            border-radius: 30px;
+            font-weight: 500;
+        }
+
+        /* Quotes */
+        .quotes-section {
+            background: var(--primary);
+            color: var(--white);
+        }
+
+        .quotes-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .quote-card {
+            background: rgba(255,255,255,0.08);
+            padding: 24px 28px;
+            border-radius: 12px;
+            border-left: 3px solid var(--accent);
+            transition: all 0.3s ease;
+        }
+
+        .quote-card:hover {
+            background: rgba(255,255,255,0.12);
+            transform: translateX(4px);
+        }
+
+        .quote-number {
+            color: var(--accent);
+            font-weight: 700;
+            margin-right: 12px;
+            font-size: 14px;
+        }
+
+        .quote-text {
+            font-size: 15px;
+            line-height: 1.7;
+        }
+
+        /* Formula */
+        .formula-section {
+            background: var(--white);
+        }
+
+        .formula-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+
+        .formula-table th {
+            background: var(--primary);
+            color: var(--white);
+            padding: 18px 24px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .formula-table td {
+            padding: 18px 24px;
+            border-bottom: 1px solid var(--border);
+            background: var(--white);
+        }
+
+        .formula-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .formula-table tr:hover td {
+            background: var(--bg);
+        }
+
+        .example-box {
+            background: var(--bg);
+            padding: 28px;
+            border-radius: 12px;
+            border-left: 4px solid var(--accent);
+        }
+
+        .example-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+        }
+
+        .example-text {
+            font-size: 16px;
+            line-height: 1.8;
+        }
+
+        .example-text strong {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        /* Tools */
+        .tools-section {
+            background: var(--bg);
+        }
+
+        .tools-grid {
+            display: grid;
+            gap: 20px;
+        }
+
+        .tool-card {
+            background: var(--white);
+            padding: 28px 32px;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            display: flex;
+            gap: 24px;
+            align-items: flex-start;
+            transition: all 0.3s ease;
+        }
+
+        .tool-card:hover {
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-4px);
+        }
+
+        .tool-icon {
+            width: 56px;
+            height: 56px;
+            background: var(--primary);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .tool-icon svg {
+            width: 28px;
+            height: 28px;
+            fill: var(--white);
+        }
+
+        .tool-name {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 8px;
+        }
+
+        .tool-desc {
+            color: var(--text-secondary);
+            margin-bottom: 14px;
+            line-height: 1.7;
+        }
+
+        .tool-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .tool-tag {
+            background: var(--bg);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        /* Security */
+        .security-section {
+            background: #1a1a1a;
+            color: var(--white);
+        }
+
+        .security-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+
+        .security-card {
+            background: rgba(255,255,255,0.05);
+            padding: 32px;
+            border-radius: 12px;
+            border-top: 3px solid #e53e3e;
+        }
+
+        .security-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .security-list {
+            list-style: none;
+        }
+
+        .security-list li {
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            font-size: 15px;
+            opacity: 0.9;
+        }
+
+        .security-list li:last-child {
+            border-bottom: none;
+        }
+
+        /* Workflow */
+        .workflow-section {
+            background: var(--white);
+        }
+
+        .workflow-steps {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .workflow-step {
+            display: flex;
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .step-number {
+            width: 48px;
+            height: 48px;
+            background: var(--primary);
+            color: var(--white);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .step-content {
+            flex: 1;
+            padding-top: 8px;
+        }
+
+        .step-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 8px;
+        }
+
+        .step-desc {
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+        }
+
+        .step-tip {
+            background: #fef9e7;
+            border-left: 3px solid #d4a017;
+            padding: 12px 16px;
+            border-radius: 0 8px 8px 0;
+            font-size: 14px;
+            color: #8b6914;
+        }
+
+        .step-example {
+            background: var(--bg);
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 12px;
+            font-size: 14px;
+        }
+
+        /* NotebookLM */
+        .notebook-section {
+            background: var(--bg);
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .feature-card {
+            background: var(--white);
+            padding: 28px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .feature-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--primary);
+            border-radius: 12px;
+            margin: 0 auto 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .feature-icon svg {
+            width: 24px;
+            height: 24px;
+            fill: var(--white);
+        }
+
+        .feature-name {
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 8px;
+        }
+
+        .feature-desc {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        /* Manus */
+        .manus-section {
+            background: var(--primary);
+            color: var(--white);
+        }
+
+        .manus-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+        }
+
+        .manus-card {
+            background: rgba(255,255,255,0.08);
+            padding: 32px;
+            border-radius: 12px;
+        }
+
+        .manus-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .manus-desc {
+            opacity: 0.9;
+            margin-bottom: 16px;
+            line-height: 1.7;
+        }
+
+        .manus-case {
+            background: rgba(255,255,255,0.1);
+            padding: 16px;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .manus-case strong {
+            color: #ffd700;
+        }
+
+        /* Comparison */
+        .comparison-section {
+            background: var(--white);
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+
+        .comparison-table th {
+            background: var(--primary);
+            color: var(--white);
+            padding: 18px 24px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .comparison-table td {
+            padding: 16px 24px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .comparison-table tr:hover td {
+            background: var(--bg);
+        }
+
+        /* Mindset */
+        .mindset-section {
+            background: var(--bg);
+        }
+
+        .mindset-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+
+        .mindset-card {
+            background: var(--white);
+            padding: 32px 24px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: var(--shadow);
+        }
+
+        .mindset-icon {
+            width: 56px;
+            height: 56px;
+            background: var(--primary);
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .mindset-icon svg {
+            width: 28px;
+            height: 28px;
+            fill: var(--white);
+        }
+
+        .mindset-title {
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 8px;
+        }
+
+        .mindset-desc {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        /* Action */
+        .action-section {
+            background: var(--primary);
+            color: var(--white);
+        }
+
+        .action-list {
+            max-width: 600px;
+            margin: 0 auto;
+            list-style: none;
+        }
+
+        .action-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            background: rgba(255,255,255,0.08);
+            padding: 18px 24px;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .action-item:hover {
+            background: rgba(255,255,255,0.12);
+            transform: translateX(4px);
+        }
+
+        .action-number {
+            width: 32px;
+            height: 32px;
+            background: var(--white);
+            color: var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .tip-box {
+            background: rgba(255,255,255,0.1);
+            padding: 24px;
+            border-radius: 12px;
+            margin-top: 40px;
+            text-align: center;
+        }
+
+        /* Resources */
+        .resources-section {
+            background: var(--white);
+        }
+
+        .resources-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .resource-card {
+            display: block;
+            background: var(--bg);
+            padding: 28px;
+            border-radius: 12px;
+            text-decoration: none;
+            color: var(--text);
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .resource-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .resource-name {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 8px;
+        }
+
+        .resource-desc {
+            color: var(--text-secondary);
+            font-size: 14px;
+            margin-bottom: 16px;
+        }
+
+        .resource-link {
+            color: var(--accent);
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        /* Instructor Section */
+        .instructor-section {
+            background: var(--bg);
+        }
+
+        .instructor-card {
+            background: var(--white);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: var(--shadow-lg);
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 0;
+        }
+
+        .instructor-photo {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            padding: 50px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: var(--white);
+        }
+
+        .instructor-avatar {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            margin-bottom: 20px;
+            object-fit: cover;
+            border: 4px solid rgba(255,255,255,0.3);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+        }
+
+        .instructor-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .instructor-title {
+            opacity: 0.9;
+            font-size: 14px;
+        }
+
+        .instructor-info {
+            padding: 50px;
+        }
+
+        .instructor-bio {
+            color: var(--text-secondary);
+            line-height: 1.8;
+            margin-bottom: 24px;
+        }
+
+        .instructor-stats {
+            display: flex;
+            gap: 32px;
+            margin-bottom: 24px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .stat-label {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .instructor-philosophy {
+            background: var(--bg);
+            padding: 20px;
+            border-radius: 12px;
+            border-left: 4px solid var(--accent);
+        }
+
+        .philosophy-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        .philosophy-text {
+            font-size: 15px;
+            color: var(--text);
+            font-weight: 500;
+        }
+
+        /* Connect Section */
+        .connect-section {
+            background: var(--primary);
+            color: var(--white);
+        }
+
+        .connect-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 40px;
+        }
+
+        .connect-group h3 {
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            opacity: 0.9;
+        }
+
+        .connect-links {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .connect-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(255,255,255,0.1);
+            padding: 14px 20px;
+            border-radius: 10px;
+            text-decoration: none;
+            color: var(--white);
+            transition: all 0.3s ease;
+        }
+
+        .connect-link:hover {
+            background: rgba(255,255,255,0.2);
+            transform: translateX(4px);
+        }
+
+        .connect-link svg {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
+            flex-shrink: 0;
+        }
+
+        .connect-link span {
+            flex: 1;
+        }
+
+        .connect-link .arrow {
+            opacity: 0.6;
+        }
+
+        /* Language Switcher */
+        .lang-switcher {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255,255,255,0.95);
+            padding: 8px 16px;
+            border-radius: 30px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            backdrop-filter: blur(10px);
+        }
+
+        .lang-icon {
+            width: 20px;
+            height: 20px;
+            fill: var(--primary);
+        }
+
+        .lang-select {
+            appearance: none;
+            background: transparent;
+            border: none;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--primary);
+            cursor: pointer;
+            padding-right: 20px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='%231e3a5f'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right center;
+        }
+
+        .lang-select:focus {
+            outline: none;
+        }
+
+        @media (max-width: 600px) {
+            .lang-switcher {
+                top: 10px;
+                right: 10px;
+                padding: 6px 12px;
+            }
+            .lang-select {
+                font-size: 13px;
+            }
+        }
+
+        /* Footer */
+        .footer {
+            background: #0f172a;
+            color: var(--white);
+            padding: 50px 0;
+            text-align: center;
+        }
+
+        .footer-instructor {
+            font-size: 1.1rem;
+            margin-bottom: 12px;
+        }
+
+        .footer-quote {
+            opacity: 0.7;
+            font-style: italic;
+            margin-bottom: 20px;
+        }
+
+        .footer-note {
+            font-size: 13px;
+            opacity: 0.5;
+        }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .quotes-grid,
+            .manus-grid {
+                grid-template-columns: 1fr;
+            }
+            .security-grid,
+            .feature-grid,
+            .resources-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .mindset-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 900px) {
+            .instructor-card {
+                grid-template-columns: 1fr;
+            }
+            .connect-grid {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .hero-title {
+                font-size: 2rem;
+            }
+            .hero-meta {
+                flex-direction: column;
+                gap: 12px;
+            }
+            section {
+                padding: 60px 0;
+            }
+            .tool-card {
+                flex-direction: column;
+            }
+            .workflow-step {
+                flex-direction: column;
+            }
+            .security-grid,
+            .feature-grid,
+            .mindset-grid,
+            .resources-grid {
+                grid-template-columns: 1fr;
+            }
+            .instructor-stats {
+                flex-direction: column;
+                gap: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Language Switcher -->
+    <div class="lang-switcher">
+        <svg class="lang-icon" viewBox="0 0 24 24"><path d="M12.87 15.07l-2.54-2.51.03-.03c1.74-1.94 2.98-4.17 3.71-6.53H17V4h-7V2H8v2H1v1.99h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11.76-2.04zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2l-4.5-12zm-2.62 7l1.62-4.33L19.12 17h-3.24z"/></svg>
+        <select class="lang-select" id="langSelect" onchange="changeLanguage(this.value)">
+            <option value="zh-TW">繁體中文</option>
+            <option value="en">English</option>
+            <option value="ja">日本語</option>
+            <option value="ko">한국어</option>
+            <option value="ms">Bahasa Melayu</option>
+            <option value="la">Latina</option>
+        </select>
+    </div>
+
+    <!-- Hero -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-badge" data-i18n="hero.badge">課後複習專區</div>
+                <h1 class="hero-title" data-i18n="hero.title">AI工具輕鬆入門<br>提升職場效率與決策力</h1>
+                <div class="hero-meta">
+                    <span>2026.01.27</span>
+                    <span data-i18n="hero.instructor">講師：阿峰老師</span>
+                </div>
+                <p class="hero-summary" data-i18n="hero.summary">
+                    這不只是一堂工具課，而是一場思維升級。<br>
+                    學會當 AI 的機長，讓它成為你最強的機組人員。
+                </p>
+                <div class="hero-note">
+                    <strong data-i18n="hero.noteTitle">這個頁面是您的課後複習資源</strong><br>
+                    <span data-i18n="hero.noteDesc">隨時回來複習課程重點、查找工具連結、回顧實戰案例。建議加入書籤，方便日後查閱。</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Core Concept -->
+    <section class="concept-section">
+        <div class="container">
+            <div class="section-header animate fade-up">
+                <div class="section-label" data-i18n="concept.label">核心心法</div>
+                <h2 class="section-title" data-i18n="concept.title">課程最重要的一句話</h2>
+            </div>
+            <div class="concept-box animate scale-in">
+                <h3 class="concept-title" data-i18n="concept.mainTitle">你是機長，AI 是你的機組人員</h3>
+                <p class="concept-desc" data-i18n="concept.desc">
+                    機長決定方向、負責任，機組人員負責執行。<br>
+                    AI 不是自動駕駛，你不能把方向交出去。<br>
+                    學會指揮機組，才能飛得又快又穩。
+                </p>
+                <div class="concept-tags">
+                    <span class="concept-tag" data-i18n="concept.tag1">方向是你的</span>
+                    <span class="concept-tag" data-i18n="concept.tag2">責任也是你的</span>
+                    <span class="concept-tag" data-i18n="concept.tag3">AI 放大你的能力</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quotes -->
+    <section class="quotes-section">
+        <div class="container">
+            <div class="section-header animate fade-up">
+                <div class="section-label" style="color: rgba(255,255,255,0.7);" data-i18n="quotes.label">金句回顧</div>
+                <h2 class="section-title" style="color: #fff;" data-i18n="quotes.title">課程十大金句</h2>
+            </div>
+            <div class="quotes-grid">
+                <div class="quote-card animate fade-up"><span class="quote-number">01</span><span class="quote-text" data-i18n="quotes.q1">AI 不會取代你，會用 AI 的人會取代你</span></div>
+                <div class="quote-card animate fade-up"><span class="quote-number">02</span><span class="quote-text" data-i18n="quotes.q2">你是機長，AI 是你的機組人員——方向是你的，責任也是你的</span></div>
+                <div class="quote-card animate fade-up"><span class="quote-number">03</span><span class="quote-text" data-i18n="quotes.q3">AI 講的話，六成是對的，四成需要你驗證</span></div>
+                <div class="quote-card animate fade-up"><span class="quote-number">04</span><span class="quote-text" data-i18n="quotes.q4">不要問 AI 對不對，要問 AI 怎麼做到的</span></div>
+                <div class="quote-card animate fade-up"><span class="quote-number">05</span><span class="quote-text" data-i18n="quotes.q5">資安不是技術問題，是人的問題——你貼什麼進去，它就學什麼</span></div>
+                <div class="quote-card animate fade-up"><span class="quote-number">06</span><span class="quote-text" data-i18n="quotes.q6">開會不帶 AI 來幫你做會議記錄，就像考試不帶計算機</span></div>
+                <div class="quote-card animate fade-up"><span class="quote-number">07</span><span class="quote-text" data-i18n="quotes.q7">不是 AI 厲害，是你厲害——AI 只是放大你的能力</span></div>
+                <div class="quote-card animate fade-up"><span class="quote-number">08</span><span class="quote-text" data-i18n="quotes.q8">今天學的東西，三個月後可能就過時了，但思維方式不會</span></div>
+                <div class="quote-card animate fade-up"><span class="quote-number">09</span><span class="quote-text" data-i18n="quotes.q9">會學習的會取代不會學習的</span></div>
+                <div class="quote-card animate fade-up"><span class="quote-number">10</span><span class="quote-text" data-i18n="quotes.q10">80% 交給 AI，20% 找專業的人來做</span></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Formula -->
+    <section class="formula-section">
+        <div class="container">
+            <div class="section-header animate fade-up">
+                <div class="section-label" data-i18n="formula.label">方法論</div>
+                <h2 class="section-title" data-i18n="formula.title">提示詞工程三要素</h2>
+                <p class="section-subtitle" data-i18n="formula.subtitle">掌握這三個要素，讓 AI 給你更精準的回答</p>
+            </div>
+            <table class="formula-table animate fade-up">
+                <tr>
+                    <th style="width: 20%;">要素</th>
+                    <th style="width: 40%;">說明</th>
+                    <th style="width: 40%;">範例問法</th>
+                </tr>
+                <tr>
+                    <td><strong>角色 Role</strong></td>
+                    <td>你要 AI 扮演什麼角色？專家？助理？顧問？</td>
+                    <td>「你是一位資深業務經理」</td>
+                </tr>
+                <tr>
+                    <td><strong>情境 Context</strong></td>
+                    <td>背景是什麼？有什麼限制？目標對象是誰？</td>
+                    <td>「我要拜訪一個製造業客戶」</td>
+                </tr>
+                <tr>
+                    <td><strong>期望 Expect</strong></td>
+                    <td>你要什麼格式？什麼長度？什麼風格？</td>
+                    <td>「幫我準備 5 個破冰問題，每個不超過 20 字」</td>
+                </tr>
+            </table>
+            <div class="example-box animate fade-up">
+                <div class="example-label">完整範例</div>
+                <p class="example-text">
+                    「你是一位<strong>資深業務經理</strong>（角色），我要<strong>拜訪一個製造業客戶</strong>（情境），幫我準備 <strong>5 個開場破冰問題，每個不超過 20 字</strong>（期望）」
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tools -->
+    <section class="tools-section">
+        <div class="container">
+            <div class="section-header animate fade-up">
+                <div class="section-label" data-i18n="tools.label">工具介紹</div>
+                <h2 class="section-title" data-i18n="tools.title">AI 工具比較</h2>
+                <p class="section-subtitle" data-i18n="tools.subtitle">不同工具有不同專長，選對工具事半功倍</p>
+            </div>
+            <div class="tools-grid">
+                <div class="tool-card animate slide-left">
+                    <div class="tool-icon"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg></div>
+                    <div>
+                        <h3 class="tool-name">ChatGPT</h3>
+                        <p class="tool-desc">通才型 AI，什麼都能做，適合日常工作的萬用助手。</p>
+                        <div class="tool-tags">
+                            <span class="tool-tag">日常工作</span>
+                            <span class="tool-tag">創意發想</span>
+                            <span class="tool-tag">文案撰寫</span>
+                            <span class="tool-tag">程式開發</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="tool-card animate slide-left">
+                    <div class="tool-icon"><svg viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96z"/></svg></div>
+                    <div>
+                        <h3 class="tool-name">Gemini</h3>
+                        <p class="tool-desc">與 Google 生態系深度整合，擅長搜尋、分析 YouTube 影片。</p>
+                        <div class="tool-tags">
+                            <span class="tool-tag">Google 整合</span>
+                            <span class="tool-tag">YouTube 分析</span>
+                            <span class="tool-tag">製作簡報</span>
+                            <span class="tool-tag">Deep Research</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="tool-card animate slide-left">
+                    <div class="tool-icon"><svg viewBox="0 0 24 24"><path d="M7 2v11h3v9l7-12h-4l4-8z"/></svg></div>
+                    <div>
+                        <h3 class="tool-name">Grok</h3>
+                        <p class="tool-desc">X (Twitter) 整合，即時性強，適合追蹤時事與熱門話題。</p>
+                        <div class="tool-tags">
+                            <span class="tool-tag">即時資訊</span>
+                            <span class="tool-tag">社群趨勢</span>
+                            <span class="tool-tag">Deep Search</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="tool-card animate slide-left">
+                    <div class="tool-icon"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
+                    <div>
+                        <h3 class="tool-name">Claude</h3>
+                        <p class="tool-desc">邏輯嚴謹，適合長文分析、專業文件處理，回答品質高。</p>
+                        <div class="tool-tags">
+                            <span class="tool-tag">長文分析</span>
+                            <span class="tool-tag">專業文件</span>
+                            <span class="tool-tag">邏輯推理</span>
+                            <span class="tool-tag">程式開發</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="tool-card animate slide-left">
+                    <div class="tool-icon"><svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg></div>
+                    <div>
+                        <h3 class="tool-name">Perplexity</h3>
+                        <p class="tool-desc">搜尋引擎型 AI，自動引用來源，適合研究調查。</p>
+                        <div class="tool-tags">
+                            <span class="tool-tag">有引用來源</span>
+                            <span class="tool-tag">研究調查</span>
+                            <span class="tool-tag">資料查證</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="tool-card animate slide-left">
+                    <div class="tool-icon"><svg viewBox="0 0 24 24"><path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z"/></svg></div>
+                    <div>
+                        <h3 class="tool-name">NotebookLM</h3>
+                        <p class="tool-desc">Google 出品，上傳資料建立專屬知識庫，回答只基於你的檔案，不會胡說八道。</p>
+                        <div class="tool-tags">
+                            <span class="tool-tag">知識庫</span>
+                            <span class="tool-tag">不會幻覺</span>
+                            <span class="tool-tag">製作簡報</span>
+                            <span class="tool-tag">學習卡</span>
+                            <span class="tool-tag">Podcast</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Security -->
+    <section class="security-section">
+        <div class="container">
+            <div class="section-header animate fade-up">
+                <div class="section-label" style="color: #e53e3e;" data-i18n="security.label">重要提醒</div>
+                <h2 class="section-title" style="color: #fff;" data-i18n="security.title">資安三原則</h2>
+            </div>
+            <div class="security-grid">
+                <div class="security-card animate fade-up">
+                    <h4 class="security-title">不貼機密資料</h4>
+                    <ul class="security-list">
+                        <li>客戶個資、薪資表、合約內容 — 絕對不貼</li>
+                        <li>公開資訊、已脫敏資料 — 可以使用</li>
+                    </ul>
+                </div>
+                <div class="security-card animate fade-up">
+                    <h4 class="security-title">先想再貼</h4>
+                    <ul class="security-list">
+                        <li>這份資料外洩會怎樣？</li>
+                        <li>如果會有問題，就不要貼</li>
+                    </ul>
+                </div>
+                <div class="security-card animate fade-up">
+                    <h4 class="security-title">善用企業版</h4>
+                    <ul class="security-list">
+                        <li>企業版有資料保護機制</li>
+                        <li>個人版對話可能用於訓練</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Workflow -->
+    <section class="workflow-section">
+        <div class="container">
+            <div class="section-header animate fade-up">
+                <div class="section-label" data-i18n="workflow.label">實戰應用</div>
+                <h2 class="section-title" data-i18n="workflow.title">會議記錄 AI 工作流</h2>
+                <p class="section-subtitle" data-i18n="workflow.subtitle">最容易上手的 AI 應用場景</p>
+            </div>
+            <div class="workflow-steps">
+                <div class="workflow-step animate slide-left">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h4 class="step-title">錄音</h4>
+                        <p class="step-desc">用手機或錄音筆錄下會議內容</p>
+                        <div class="step-tip">記得事先告知與會者正在錄音</div>
+                    </div>
+                </div>
+                <div class="workflow-step animate slide-left">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h4 class="step-title">轉逐字稿</h4>
+                        <p class="step-desc">使用 Whisper、剪映、或其他語音轉文字工具</p>
+                        <div class="step-tip">NotebookLM 可以直接上傳音訊檔自動轉錄</div>
+                    </div>
+                </div>
+                <div class="workflow-step animate slide-left">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h4 class="step-title">AI 整理</h4>
+                        <p class="step-desc">把逐字稿丟給 ChatGPT / Claude / NotebookLM</p>
+                        <div class="step-example">
+                            <strong>提示詞範例：</strong><br>
+                            「請整理這份會議記錄，列出：<br>
+                            1. 會議結論<br>
+                            2. 待辦事項（含負責人與時間）<br>
+                            3. 重要討論點」
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- NotebookLM -->
+    <section class="notebook-section">
+        <div class="container">
+            <div class="section-header animate fade-up">
+                <div class="section-label" data-i18n="notebook.label">深度介紹</div>
+                <h2 class="section-title" data-i18n="notebook.title">NotebookLM 九大功能</h2>
+                <p class="section-subtitle" data-i18n="notebook.subtitle">知識來源限定於你上傳的檔案，比較不會有幻覺問題</p>
+            </div>
+            <div class="feature-grid">
+                <div class="feature-card animate fade-up">
+                    <div class="feature-icon"><svg viewBox="0 0 24 24"><path d="M22 11V3h-7v3H9V3H2v8h7V8h2v10h4v3h7v-8h-7v3h-2V8h2v3h7zM7 9H4V5h3v4zm10 6h3v4h-3v-4zm0-10h3v4h-3V5z"/></svg></div>
+                    <h4 class="feature-name">心智圖</h4>
+                    <p class="feature-desc">可互動點擊，直接與 AI 對談深入了解</p>
+                </div>
+                <div class="feature-card animate fade-up">
+                    <div class="feature-icon"><svg viewBox="0 0 24 24"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-1 9H9V9h10v2zm-4 4H9v-2h6v2zm4-8H9V5h10v2z"/></svg></div>
+                    <h4 class="feature-name">學習卡</h4>
+                    <p class="feature-desc">正反面問答，可調整數量和難度</p>
+                </div>
+                <div class="feature-card animate fade-up">
+                    <div class="feature-icon"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div>
+                    <h4 class="feature-name">測驗</h4>
+                    <p class="feature-desc">自動出題，答錯可看說明，適合教育訓練</p>
+                </div>
+                <div class="feature-card animate fade-up">
+                    <div class="feature-icon"><svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg></div>
+                    <h4 class="feature-name">簡報</h4>
+                    <p class="feature-desc">一鍵生成漂亮簡報（圖片格式）</p>
+                </div>
+                <div class="feature-card animate fade-up">
+                    <div class="feature-icon"><svg viewBox="0 0 24 24"><path d="M3.5 18.49l6-6.01 4 4L22 6.92l-1.41-1.41-7.09 7.97-4-4L2 16.99z"/></svg></div>
+                    <h4 class="feature-name">資訊圖表</h4>
+                    <p class="feature-desc">直式/橫式/正方形，可調整詳細程度</p>
+                </div>
+                <div class="feature-card animate fade-up">
+                    <div class="feature-icon"><svg viewBox="0 0 24 24"><path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z"/></svg></div>
+                    <h4 class="feature-name">資料表</h4>
+                    <p class="feature-desc">整理成 Excel 格式，可匯出試算表</p>
+                </div>
+                <div class="feature-card animate fade-up">
+                    <div class="feature-icon"><svg viewBox="0 0 24 24"><path d="M12 14c1.66 0 2.99-1.34 2.99-3L15 5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.3-3c0 3-2.54 5.1-5.3 5.1S6.7 14 6.7 11H5c0 3.41 2.72 6.23 6 6.72V21h2v-3.28c3.28-.48 6-3.3 6-6.72h-1.7z"/></svg></div>
+                    <h4 class="feature-name">Podcast</h4>
+                    <p class="feature-desc">多語言支援，可客製化主持風格</p>
+                </div>
+                <div class="feature-card animate fade-up">
+                    <div class="feature-icon"><svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg></div>
+                    <h4 class="feature-name">摘要/評論</h4>
+                    <p class="feature-desc">快速了解內容重點</p>
+                </div>
+                <div class="feature-card animate fade-up">
+                    <div class="feature-icon"><svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg></div>
+                    <h4 class="feature-name">辯論</h4>
+                    <p class="feature-desc">多角度分析議題</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Manus -->
+    <section class="manus-section">
+        <div class="container">
+            <div class="section-header animate fade-up">
+                <div class="section-label" style="color: rgba(255,255,255,0.7);" data-i18n="manus.label">進階工具</div>
+                <h2 class="section-title" style="color: #fff;" data-i18n="manus.title">Manus — AI 特助神器</h2>
+                <p class="section-subtitle" style="color: rgba(255,255,255,0.8);" data-i18n="manus.subtitle">不只是助理，是特助等級的 AI Agent。會開虛擬電腦幫你上網研究。</p>
+            </div>
+            <div class="manus-grid">
+                <div class="manus-card animate fade-up">
+                    <h4 class="manus-title">做簡報</h4>
+                    <p class="manus-desc">自動研究公司風格，做出符合 CIS 的簡報</p>
+                    <div class="manus-case"><strong>案例：</strong>全家便利商店提案，95% 由 AI 完成，只調整字體大小</div>
+                </div>
+                <div class="manus-card animate fade-up">
+                    <h4 class="manus-title">爬資料</h4>
+                    <p class="manus-desc">可爬取全球廠商資訊、聯絡人 Email</p>
+                    <div class="manus-case"><strong>案例：</strong>藥品代理商名單，爬取德國、英國、法國代理商含 Email</div>
+                </div>
+                <div class="manus-card animate fade-up">
+                    <h4 class="manus-title">公司調查</h4>
+                    <p class="manus-desc">調查公司背景、股權結構、關鍵人物</p>
+                    <div class="manus-case"><strong>案例：</strong>調查香港公司背景，花 5 塊台幣，15 分鐘產出完整報告</div>
+                </div>
+                <div class="manus-card animate fade-up">
+                    <h4 class="manus-title">做網站</h4>
+                    <p class="manus-desc">可建立多語言網站</p>
+                    <div class="manus-case"><strong>案例：</strong>阿峰老師官網，花 12000 元做出多語言網站</div>
+                </div>
+            </div>
+            <div class="tip-box animate fade-up">
+                <strong>費用參考：</strong>免費每天 300 點（約 40-50 台幣）/ 一份簡報約 150-300 點 / 付費版約 6000 元/月
+            </div>
+        </div>
+    </section>
+
+    <!-- Comparison -->
+    <section class="comparison-section">
+        <div class="container">
+            <div class="section-header animate fade-up">
+                <div class="section-label" data-i18n="comparison.label">快速查找</div>
+                <h2 class="section-title" data-i18n="comparison.title">需求對應工具表</h2>
+            </div>
+            <table class="comparison-table animate fade-up">
+                <tr>
+                    <th style="width: 40%;">我想要...</th>
+                    <th>推薦工具</th>
+                </tr>
+                <tr><td>創意發想、腦力激盪</td><td>ChatGPT、Gemini、Grok、Claude</td></tr>
+                <tr><td>找資料要有來源</td><td>Perplexity</td></tr>
+                <tr><td>深度研究報告</td><td>Gemini Deep Research、Grok Deep Search</td></tr>
+                <tr><td>會議記錄整理</td><td>NotebookLM（直接上傳錄音檔）</td></tr>
+                <tr><td>做漂亮簡報</td><td>NotebookLM、Manus</td></tr>
+                <tr><td>做可編輯簡報</td><td>Gemini（Google Slide）、Manus</td></tr>
+                <tr><td>公司/人物調查</td><td>Manus</td></tr>
+                <tr><td>教育訓練教材</td><td>NotebookLM（學習卡、測驗）</td></tr>
+                <tr><td>資料分析比較（不會亂掰）</td><td>NotebookLM</td></tr>
+            </table>
+        </div>
+    </section>
+
+    <!-- Mindset -->
+    <section class="mindset-section">
+        <div class="container">
+            <div class="section-header animate fade-up">
+                <div class="section-label" data-i18n="mindset.label">學習心態</div>
+                <h2 class="section-title" data-i18n="mindset.title">學習 AI 的正確心態</h2>
+            </div>
+            <div class="mindset-grid">
+                <div class="mindset-card animate fade-up">
+                    <div class="mindset-icon"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg></div>
+                    <h4 class="mindset-title">不要怕犯錯</h4>
+                    <p class="mindset-desc">AI 不會罵你，多試多問才會進步</p>
+                </div>
+                <div class="mindset-card animate fade-up">
+                    <div class="mindset-icon"><svg viewBox="0 0 24 24"><path d="M12 3L1 9l4 2.18v6L12 21l7-3.82v-6l2-1.09V17h2V9L12 3zm6.82 6L12 12.72 5.18 9 12 5.28 18.82 9zM17 15.99l-5 2.73-5-2.73v-3.72L12 15l5-2.73v3.72z"/></svg></div>
+                    <h4 class="mindset-title">持續學習</h4>
+                    <p class="mindset-desc">工具會一直更新，保持好奇心</p>
+                </div>
+                <div class="mindset-card animate fade-up">
+                    <div class="mindset-icon"><svg viewBox="0 0 24 24"><path d="M22.7 19l-9.1-9.1c.9-2.3.4-5-1.5-6.9-2-2-5-2.4-7.4-1.3L9 6 6 9 1.6 4.7C.4 7.1.9 10.1 2.9 12.1c1.9 1.9 4.6 2.4 6.9 1.5l9.1 9.1c.4.4 1 .4 1.4 0l2.3-2.3c.5-.4.5-1.1.1-1.4z"/></svg></div>
+                    <h4 class="mindset-title">動手實作</h4>
+                    <p class="mindset-desc">聽一百遍不如做一遍，今天學今天就用</p>
+                </div>
+                <div class="mindset-card animate fade-up">
+                    <div class="mindset-icon"><svg viewBox="0 0 24 24"><path d="M20 6h-8l-2-2H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm0 12H4V8h16v10z"/></svg></div>
+                    <h4 class="mindset-title">建立模板</h4>
+                    <p class="mindset-desc">好的提示詞記錄下來，累積個人 AI 工具箱</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Action -->
+    <section class="action-section">
+        <div class="container">
+            <div class="section-header animate fade-up">
+                <div class="section-label" style="color: rgba(255,255,255,0.7);" data-i18n="action.label">立即行動</div>
+                <h2 class="section-title" style="color: #fff;" data-i18n="action.title">課後行動建議</h2>
+            </div>
+            <ul class="action-list">
+                <li class="action-item animate slide-left"><span class="action-number">1</span>選一個最有感的工具，深入研究一週</li>
+                <li class="action-item animate slide-left"><span class="action-number">2</span>找一個工作痛點，嘗試用 AI 解決</li>
+                <li class="action-item animate slide-left"><span class="action-number">3</span>建立 AI First 習慣：遇到問題先問 AI</li>
+                <li class="action-item animate slide-left"><span class="action-number">4</span>公司內部：組建 AI 小組，定期分享心得</li>
+                <li class="action-item animate slide-left"><span class="action-number">5</span>主管請同仁吃便當，邊吃邊討論 AI 應用</li>
+            </ul>
+            <div class="tip-box animate fade-up">
+                <strong>AI 付費建議：</strong>刷卡後立刻取消自動續訂 → 給每個 AI 一個月試用期 → 真的有幫助再續訂
+            </div>
+        </div>
+    </section>
+
+    <!-- Resources -->
+    <section class="resources-section">
+        <div class="container">
+            <div class="section-header animate fade-up">
+                <div class="section-label" data-i18n="resources.label">工具連結</div>
+                <h2 class="section-title" data-i18n="resources.title">學習資源</h2>
+            </div>
+            <div class="resources-grid">
+                <a href="https://chat.openai.com" target="_blank" rel="noopener" class="resource-card animate fade-up">
+                    <h3 class="resource-name">ChatGPT</h3>
+                    <p class="resource-desc">通才型 AI，什麼都能做</p>
+                    <span class="resource-link">前往 →</span>
+                </a>
+                <a href="https://gemini.google.com" target="_blank" rel="noopener" class="resource-card animate fade-up">
+                    <h3 class="resource-name">Gemini</h3>
+                    <p class="resource-desc">Google 生態系整合，可做簡報</p>
+                    <span class="resource-link">前往 →</span>
+                </a>
+                <a href="https://claude.ai" target="_blank" rel="noopener" class="resource-card animate fade-up">
+                    <h3 class="resource-name">Claude</h3>
+                    <p class="resource-desc">邏輯嚴謹，適合長文分析</p>
+                    <span class="resource-link">前往 →</span>
+                </a>
+                <a href="https://perplexity.ai" target="_blank" rel="noopener" class="resource-card animate fade-up">
+                    <h3 class="resource-name">Perplexity</h3>
+                    <p class="resource-desc">搜尋引擎型 AI，自動引用來源</p>
+                    <span class="resource-link">前往 →</span>
+                </a>
+                <a href="https://notebooklm.google.com" target="_blank" rel="noopener" class="resource-card animate fade-up">
+                    <h3 class="resource-name">NotebookLM</h3>
+                    <p class="resource-desc">建立專屬知識庫，不會胡說八道</p>
+                    <span class="resource-link">前往 →</span>
+                </a>
+                <a href="https://manus.im" target="_blank" rel="noopener" class="resource-card animate fade-up">
+                    <h3 class="resource-name">Manus</h3>
+                    <p class="resource-desc">AI 特助，自動研究、做簡報</p>
+                    <span class="resource-link">前往 →</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Instructor -->
+    <section class="instructor-section">
+        <div class="container">
+            <div class="section-header animate fade-up">
+                <div class="section-label" data-i18n="instructor.label">關於講師</div>
+                <h2 class="section-title" data-i18n="instructor.sectionTitle">阿峰老師</h2>
+            </div>
+            <div class="instructor-card animate scale-in">
+                <div class="instructor-photo">
+                    <img src="instructor.jpg" alt="阿峰老師" class="instructor-avatar">
+                    <h3 class="instructor-name" data-i18n="instructor.name">黃敬峰</h3>
+                    <p class="instructor-title" data-i18n="instructor.title">AI峰哥 / 阿峰老師</p>
+                </div>
+                <div class="instructor-info">
+                    <p class="instructor-bio" data-i18n="instructor.bio">
+                        台灣領先的企業 AI 實戰培訓專家，擁有超過 10 年的企業培訓經驗。自生成式 AI 元年（2022）起，深入研究 ChatGPT、Claude、Midjourney 等前沿工具，擅長將技術轉化為企業可落地的實戰方案，協助組織進行數位轉型與效能提升。
+                    </p>
+                    <div class="instructor-stats">
+                        <div class="stat-item">
+                            <div class="stat-number">400+</div>
+                            <div class="stat-label" data-i18n="instructor.stat1">企業合作</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">300+</div>
+                            <div class="stat-label" data-i18n="instructor.stat2">場次課程</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">10,000+</div>
+                            <div class="stat-label" data-i18n="instructor.stat3">學員人次</div>
+                        </div>
+                    </div>
+                    <div class="instructor-philosophy">
+                        <div class="philosophy-label" data-i18n="instructor.philosophyLabel">教學理念</div>
+                        <p class="philosophy-text" data-i18n="instructor.philosophy">「會用、懂用、好用、每天用」— 不只教工具操作，更強調 Prompt 工程思維與工作流設計</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Connect -->
+    <section class="connect-section">
+        <div class="container">
+            <div class="section-header animate fade-up">
+                <div class="section-label" style="color: rgba(255,255,255,0.7);" data-i18n="connect.label">保持聯繫</div>
+                <h2 class="section-title" style="color: #fff;" data-i18n="connect.title">追蹤阿峰老師</h2>
+            </div>
+            <div class="connect-grid">
+                <div class="connect-group animate fade-up">
+                    <h3 data-i18n="connect.officialTitle">官方資源</h3>
+                    <div class="connect-links">
+                        <a href="https://ai-tw.manus.space/" target="_blank" rel="noopener" class="connect-link">
+                            <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+                            <span>官方網站</span>
+                            <span class="arrow">→</span>
+                        </a>
+                        <a href="https://ai-tw.manus.space/blog" target="_blank" rel="noopener" class="connect-link">
+                            <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
+                            <span>部落格文章</span>
+                            <span class="arrow">→</span>
+                        </a>
+                        <a href="https://ai-tw.manus.space/events" target="_blank" rel="noopener" class="connect-link">
+                            <svg viewBox="0 0 24 24"><path d="M17 12h-5v5h5v-5zM16 1v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-1V1h-2zm3 18H5V8h14v11z"/></svg>
+                            <span>課程活動</span>
+                            <span class="arrow">→</span>
+                        </a>
+                        <a href="https://www.youtube.com/channel/UCVVZz6m4T4k6-PZxFSlCkRQ" target="_blank" rel="noopener" class="connect-link">
+                            <svg viewBox="0 0 24 24"><path d="M10 15l5.19-3L10 9v6m11.56-7.83c.13.47.22 1.1.28 1.9.07.8.1 1.49.1 2.09L22 12c0 2.19-.16 3.8-.44 4.83-.25.9-.83 1.48-1.73 1.73-.47.13-1.33.22-2.65.28-1.3.07-2.49.1-3.59.1L12 19c-4.19 0-6.8-.16-7.83-.44-.9-.25-1.48-.83-1.73-1.73-.13-.47-.22-1.1-.28-1.9-.07-.8-.1-1.49-.1-2.09L2 12c0-2.19.16-3.8.44-4.83.25-.9.83-1.48 1.73-1.73.47-.13 1.33-.22 2.65-.28 1.3-.07 2.49-.1 3.59-.1L12 5c4.19 0 6.8.16 7.83.44.9.25 1.48.83 1.73 1.73z"/></svg>
+                            <span>YouTube 頻道</span>
+                            <span class="arrow">→</span>
+                        </a>
+                    </div>
+                </div>
+                <div class="connect-group animate fade-up">
+                    <h3 data-i18n="connect.communityTitle">AI 學習社群</h3>
+                    <div class="connect-links">
+                        <a href="https://reurl.cc/GGlLNx" target="_blank" rel="noopener" class="connect-link">
+                            <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/></svg>
+                            <span>Line 社群（中文）</span>
+                            <span class="arrow">→</span>
+                        </a>
+                        <a href="https://chat.whatsapp.com/BemCCL9DsW1GyH4OkO20Rt" target="_blank" rel="noopener" class="connect-link">
+                            <svg viewBox="0 0 24 24"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0012.04 2zm.01 1.67c2.2 0 4.26.86 5.82 2.42a8.225 8.225 0 012.41 5.83c0 4.54-3.7 8.23-8.24 8.23-1.48 0-2.93-.39-4.19-1.15l-.3-.17-3.12.82.83-3.04-.2-.32a8.188 8.188 0 01-1.26-4.38c.01-4.54 3.7-8.24 8.25-8.24zM8.53 7.33c-.16 0-.43.06-.66.31-.22.25-.87.86-.87 2.07 0 1.22.89 2.39 1 2.56.14.17 1.76 2.67 4.25 3.73.59.27 1.05.42 1.41.53.59.19 1.13.16 1.56.1.48-.07 1.46-.6 1.67-1.18.21-.58.21-1.07.15-1.18-.07-.1-.23-.16-.48-.27-.25-.14-1.47-.74-1.69-.82-.23-.08-.37-.12-.56.12-.16.25-.64.81-.78.97-.15.17-.29.19-.53.07-.26-.13-1.06-.39-2-1.23-.74-.66-1.23-1.47-1.38-1.72-.12-.24-.01-.39.11-.5.11-.11.27-.29.37-.44.13-.14.17-.25.25-.41.08-.17.04-.31-.02-.43-.06-.11-.56-1.35-.77-1.84-.2-.48-.4-.42-.56-.43-.14 0-.3-.01-.47-.01z"/></svg>
+                            <span>WhatsApp 社群（英文）</span>
+                            <span class="arrow">→</span>
+                        </a>
+                        <a href="https://ai-tw.manus.space/topics" target="_blank" rel="noopener" class="connect-link">
+                            <svg viewBox="0 0 24 24"><path d="M22.7 19l-9.1-9.1c.9-2.3.4-5-1.5-6.9-2-2-5-2.4-7.4-1.3L9 6 6 9 1.6 4.7C.4 7.1.9 10.1 2.9 12.1c1.9 1.9 4.6 2.4 6.9 1.5l9.1 9.1c.4.4 1 .4 1.4 0l2.3-2.3c.5-.4.5-1.1.1-1.4z"/></svg>
+                            <span>AI 實用工具</span>
+                            <span class="arrow">→</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p class="footer-instructor" data-i18n="footer.instructor">由 <strong>阿峰老師</strong> 精心準備</p>
+            <p class="footer-quote" data-i18n="footer.quote">「你是機長，AI 是你的機組人員」</p>
+            <p class="footer-note" data-i18n="footer.note">持續學習，持續進步 | 課程洽詢請聯繫阿峰老師</p>
+        </div>
+    </footer>
+
+    <script>
+        // 多語言翻譯系統
+        const translations = {
+            'zh-TW': {
+                'hero.badge': '課後複習專區',
+                'hero.title': 'AI工具輕鬆入門<br>提升職場效率與決策力',
+                'hero.instructor': '講師：阿峰老師',
+                'hero.summary': '這不只是一堂工具課，而是一場思維升級。<br>學會當 AI 的機長，讓它成為你最強的機組人員。',
+                'hero.noteTitle': '這個頁面是您的課後複習資源',
+                'hero.noteDesc': '隨時回來複習課程重點、查找工具連結、回顧實戰案例。建議加入書籤，方便日後查閱。',
+                'concept.label': '核心心法',
+                'concept.title': '課程最重要的一句話',
+                'concept.mainTitle': '你是機長，AI 是你的機組人員',
+                'concept.desc': '機長決定方向、負責任，機組人員負責執行。<br>AI 不是自動駕駛，你不能把方向交出去。<br>學會指揮機組，才能飛得又快又穩。',
+                'concept.tag1': '方向是你的',
+                'concept.tag2': '責任也是你的',
+                'concept.tag3': 'AI 放大你的能力',
+                'quotes.label': '金句回顧',
+                'quotes.title': '課程十大金句',
+                'quotes.q1': 'AI 不會取代你，會用 AI 的人會取代你',
+                'quotes.q2': '你是機長，AI 是你的機組人員——方向是你的，責任也是你的',
+                'quotes.q3': 'AI 講的話，六成是對的，四成需要你驗證',
+                'quotes.q4': '不要問 AI 對不對，要問 AI 怎麼做到的',
+                'quotes.q5': '資安不是技術問題，是人的問題——你貼什麼進去，它就學什麼',
+                'quotes.q6': '開會不帶 AI 來幫你做會議記錄，就像考試不帶計算機',
+                'quotes.q7': '不是 AI 厲害，是你厲害——AI 只是放大你的能力',
+                'quotes.q8': '今天學的東西，三個月後可能就過時了，但思維方式不會',
+                'quotes.q9': '會學習的會取代不會學習的',
+                'quotes.q10': '80% 交給 AI，20% 找專業的人來做',
+                'formula.label': '方法論',
+                'formula.title': '提示詞工程三要素',
+                'formula.subtitle': '掌握這三個要素，讓 AI 給你更精準的回答',
+                'tools.label': '工具介紹',
+                'tools.title': 'AI 工具比較',
+                'tools.subtitle': '不同工具有不同專長，選對工具事半功倍',
+                'security.label': '重要提醒',
+                'security.title': '資安三原則',
+                'workflow.label': '實戰應用',
+                'workflow.title': '會議記錄 AI 工作流',
+                'workflow.subtitle': '最容易上手的 AI 應用場景',
+                'notebook.label': '深度介紹',
+                'notebook.title': 'NotebookLM 九大功能',
+                'notebook.subtitle': '知識來源限定於你上傳的檔案，比較不會有幻覺問題',
+                'manus.label': '進階工具',
+                'manus.title': 'Manus — AI 特助神器',
+                'manus.subtitle': '不只是助理，是特助等級的 AI Agent。會開虛擬電腦幫你上網研究。',
+                'comparison.label': '快速查找',
+                'comparison.title': '需求對應工具表',
+                'mindset.label': '學習心態',
+                'mindset.title': '學習 AI 的正確心態',
+                'action.label': '立即行動',
+                'action.title': '課後行動建議',
+                'resources.label': '工具連結',
+                'resources.title': '學習資源',
+                'instructor.label': '關於講師',
+                'instructor.sectionTitle': '阿峰老師',
+                'instructor.name': '黃敬峰',
+                'instructor.title': 'AI峰哥 / 阿峰老師',
+                'instructor.bio': '台灣領先的企業 AI 實戰培訓專家，擁有超過 10 年的企業培訓經驗。自生成式 AI 元年（2022）起，深入研究 ChatGPT、Claude、Midjourney 等前沿工具，擅長將技術轉化為企業可落地的實戰方案，協助組織進行數位轉型與效能提升。',
+                'instructor.stat1': '企業合作',
+                'instructor.stat2': '場次課程',
+                'instructor.stat3': '學員人次',
+                'instructor.philosophyLabel': '教學理念',
+                'instructor.philosophy': '「會用、懂用、好用、每天用」— 不只教工具操作，更強調 Prompt 工程思維與工作流設計',
+                'connect.label': '保持聯繫',
+                'connect.title': '追蹤阿峰老師',
+                'connect.officialTitle': '官方資源',
+                'connect.communityTitle': 'AI 學習社群',
+                'footer.instructor': '由 <strong>阿峰老師</strong> 精心準備',
+                'footer.quote': '「你是機長，AI 是你的機組人員」',
+                'footer.note': '持續學習，持續進步 | 課程洽詢請聯繫阿峰老師'
+            },
+            'en': {
+                'hero.badge': 'Post-Course Review',
+                'hero.title': 'AI Tools Made Easy<br>Boost Your Workplace Efficiency',
+                'hero.instructor': 'Instructor: Teacher Afeng',
+                'hero.summary': 'This is not just a tool course, but a mindset upgrade.<br>Learn to be the captain of AI, making it your strongest crew member.',
+                'hero.noteTitle': 'This page is your post-course review resource',
+                'hero.noteDesc': 'Come back anytime to review key points, find tool links, and revisit practical cases. Bookmark this page for future reference.',
+                'concept.label': 'CORE PRINCIPLE',
+                'concept.title': 'The Most Important Lesson',
+                'concept.mainTitle': 'You are the Captain, AI is Your Crew',
+                'concept.desc': 'The captain decides direction and takes responsibility; the crew executes.<br>AI is not autopilot—you cannot hand over control.<br>Learn to command your crew to fly fast and steady.',
+                'concept.tag1': 'Direction is yours',
+                'concept.tag2': 'Responsibility is yours',
+                'concept.tag3': 'AI amplifies your ability',
+                'quotes.label': 'KEY QUOTES',
+                'quotes.title': 'Top 10 Course Quotes',
+                'quotes.q1': 'AI won\'t replace you, but people who use AI will',
+                'quotes.q2': 'You are the captain, AI is your crew—direction and responsibility are yours',
+                'quotes.q3': '60% of what AI says is correct, 40% needs your verification',
+                'quotes.q4': 'Don\'t ask if AI is right, ask how AI got there',
+                'quotes.q5': 'Security isn\'t a tech problem, it\'s a people problem—what you input, it learns',
+                'quotes.q6': 'Having a meeting without AI for notes is like taking an exam without a calculator',
+                'quotes.q7': 'It\'s not AI that\'s great, it\'s you—AI just amplifies your ability',
+                'quotes.q8': 'What you learn today may be outdated in three months, but the mindset won\'t',
+                'quotes.q9': 'Those who learn will replace those who don\'t',
+                'quotes.q10': '80% to AI, 20% to human experts',
+                'formula.label': 'METHODOLOGY',
+                'formula.title': 'Three Elements of Prompt Engineering',
+                'formula.subtitle': 'Master these three elements for more precise AI responses',
+                'tools.label': 'TOOL GUIDE',
+                'tools.title': 'AI Tool Comparison',
+                'tools.subtitle': 'Different tools have different strengths—choose wisely',
+                'security.label': 'IMPORTANT',
+                'security.title': 'Three Security Principles',
+                'workflow.label': 'PRACTICAL USE',
+                'workflow.title': 'AI Workflow for Meeting Notes',
+                'workflow.subtitle': 'The easiest AI application to get started with',
+                'notebook.label': 'DEEP DIVE',
+                'notebook.title': 'NotebookLM: 9 Key Features',
+                'notebook.subtitle': 'Knowledge sourced only from your uploaded files—less hallucination',
+                'manus.label': 'ADVANCED TOOL',
+                'manus.title': 'Manus — AI Executive Assistant',
+                'manus.subtitle': 'Not just an assistant, but executive-level AI Agent. Opens virtual computers to research for you.',
+                'comparison.label': 'QUICK REFERENCE',
+                'comparison.title': 'Tool Recommendation Table',
+                'mindset.label': 'LEARNING MINDSET',
+                'mindset.title': 'The Right Mindset for Learning AI',
+                'action.label': 'TAKE ACTION',
+                'action.title': 'Post-Course Action Items',
+                'resources.label': 'TOOL LINKS',
+                'resources.title': 'Learning Resources',
+                'instructor.label': 'ABOUT INSTRUCTOR',
+                'instructor.sectionTitle': 'Teacher Afeng',
+                'instructor.name': 'Jing-Feng Huang',
+                'instructor.title': 'AI Feng / Teacher Afeng',
+                'instructor.bio': 'Taiwan\'s leading enterprise AI practical training expert with over 10 years of corporate training experience. Since the generative AI era (2022), deeply researched ChatGPT, Claude, Midjourney and other cutting-edge tools, specializing in transforming technology into actionable enterprise solutions for digital transformation.',
+                'instructor.stat1': 'Enterprise Partners',
+                'instructor.stat2': 'Course Sessions',
+                'instructor.stat3': 'Trained Students',
+                'instructor.philosophyLabel': 'Teaching Philosophy',
+                'instructor.philosophy': '"Learn it, understand it, use it well, use it daily" — Not just tool operation, but emphasizing prompt engineering mindset and workflow design',
+                'connect.label': 'STAY CONNECTED',
+                'connect.title': 'Follow Teacher Afeng',
+                'connect.officialTitle': 'Official Resources',
+                'connect.communityTitle': 'AI Learning Community',
+                'footer.instructor': 'Carefully prepared by <strong>Teacher Afeng</strong>',
+                'footer.quote': '"You are the Captain, AI is Your Crew"',
+                'footer.note': 'Keep learning, keep improving | Contact Teacher Afeng for courses'
+            },
+            'ja': {
+                'hero.badge': '復習専用ページ',
+                'hero.title': 'AIツール入門<br>職場効率と意思決定力を向上',
+                'hero.instructor': '講師：阿峰先生',
+                'hero.summary': 'これは単なるツール講座ではなく、思考のアップグレードです。<br>AIの機長になり、最強のクルーとして活用しましょう。',
+                'hero.noteTitle': 'このページは授業後の復習リソースです',
+                'hero.noteDesc': 'いつでも戻って重要ポイントを復習し、ツールリンクを見つけ、実践事例を振り返りましょう。ブックマークをお勧めします。',
+                'concept.label': 'コア原則',
+                'concept.title': '最も重要な一言',
+                'concept.mainTitle': 'あなたは機長、AIはクルー',
+                'concept.desc': '機長は方向を決め、責任を取る。クルーは実行する。<br>AIは自動操縦ではない、方向を手放してはいけない。<br>クルーを指揮することを学び、速く安定して飛ぶ。',
+                'concept.tag1': '方向はあなたのもの',
+                'concept.tag2': '責任もあなたのもの',
+                'concept.tag3': 'AIはあなたの能力を増幅',
+                'quotes.label': '名言集',
+                'quotes.title': '授業の十大名言',
+                'quotes.q1': 'AIはあなたを置き換えない、AIを使う人があなたを置き換える',
+                'quotes.q2': 'あなたは機長、AIはクルー——方向も責任もあなたのもの',
+                'quotes.q3': 'AIの言葉は6割正しく、4割は検証が必要',
+                'quotes.q4': 'AIが正しいか聞くな、どうやってそこに至ったか聞け',
+                'quotes.q5': 'セキュリティは技術の問題ではなく、人の問題——入力したものを学習する',
+                'quotes.q6': 'AI無しで会議するのは、電卓無しで試験を受けるようなもの',
+                'quotes.q7': 'AIが凄いのではなく、あなたが凄い——AIはあなたの能力を増幅するだけ',
+                'quotes.q8': '今日学んだことは3ヶ月後には古くなるかもしれないが、思考法は古くならない',
+                'quotes.q9': '学ぶ者が学ばない者を置き換える',
+                'quotes.q10': '80%はAIに、20%は専門家に',
+                'formula.label': '方法論',
+                'formula.title': 'プロンプト工学の3要素',
+                'formula.subtitle': 'この3要素をマスターして、より正確なAI回答を得る',
+                'tools.label': 'ツール紹介',
+                'tools.title': 'AIツール比較',
+                'tools.subtitle': '異なるツールには異なる強みがある——賢く選ぼう',
+                'security.label': '重要',
+                'security.title': 'セキュリティ3原則',
+                'workflow.label': '実践応用',
+                'workflow.title': '議事録AIワークフロー',
+                'workflow.subtitle': '最も始めやすいAI活用シーン',
+                'notebook.label': '詳細紹介',
+                'notebook.title': 'NotebookLMの9つの機能',
+                'notebook.subtitle': 'アップロードしたファイルのみを知識源とする——幻覚が少ない',
+                'manus.label': '上級ツール',
+                'manus.title': 'Manus — AI特別アシスタント',
+                'manus.subtitle': '単なるアシスタントではなく、エグゼクティブレベルのAIエージェント。仮想コンピュータを開いてリサーチ。',
+                'comparison.label': 'クイックリファレンス',
+                'comparison.title': 'ニーズ対応ツール表',
+                'mindset.label': '学習マインドセット',
+                'mindset.title': 'AI学習の正しい心構え',
+                'action.label': '今すぐ行動',
+                'action.title': '授業後のアクションアイテム',
+                'resources.label': 'ツールリンク',
+                'resources.title': '学習リソース',
+                'instructor.label': '講師について',
+                'instructor.sectionTitle': '阿峰先生',
+                'instructor.name': '黄敬峰',
+                'instructor.title': 'AI峰 / 阿峰先生',
+                'instructor.bio': '台湾を代表する企業AI実践トレーニング専門家。10年以上の企業研修経験を持つ。生成AI元年（2022年）以来、ChatGPT、Claude、Midjourneyなどの最先端ツールを深く研究し、技術を企業が実践できるソリューションに変換することを専門とする。',
+                'instructor.stat1': '企業パートナー',
+                'instructor.stat2': '研修セッション',
+                'instructor.stat3': '受講者数',
+                'instructor.philosophyLabel': '教育理念',
+                'instructor.philosophy': '「使える、分かる、上手に使える、毎日使える」— ツール操作だけでなく、プロンプト工学思考とワークフロー設計を重視',
+                'connect.label': 'つながる',
+                'connect.title': '阿峰先生をフォロー',
+                'connect.officialTitle': '公式リソース',
+                'connect.communityTitle': 'AI学習コミュニティ',
+                'footer.instructor': '<strong>阿峰先生</strong>が心を込めて準備',
+                'footer.quote': '「あなたは機長、AIはクルー」',
+                'footer.note': '学び続け、成長し続ける | 講座のお問い合わせは阿峰先生まで'
+            },
+            'ko': {
+                'hero.badge': '수업 후 복습 공간',
+                'hero.title': 'AI 도구 쉽게 시작하기<br>업무 효율과 의사결정력 향상',
+                'hero.instructor': '강사: 아펑 선생님',
+                'hero.summary': '이것은 단순한 도구 수업이 아닌 사고방식의 업그레이드입니다.<br>AI의 기장이 되어 가장 강력한 승무원으로 활용하세요.',
+                'hero.noteTitle': '이 페이지는 수업 후 복습 자료입니다',
+                'hero.noteDesc': '언제든지 돌아와서 핵심 내용을 복습하고, 도구 링크를 찾고, 실전 사례를 되돌아보세요. 북마크를 권장합니다.',
+                'concept.label': '핵심 원칙',
+                'concept.title': '가장 중요한 한 마디',
+                'concept.mainTitle': '당신이 기장이고, AI는 승무원입니다',
+                'concept.desc': '기장은 방향을 결정하고 책임을 진다. 승무원은 실행한다.<br>AI는 자동 조종이 아니다—방향을 넘겨줄 수 없다.<br>승무원을 지휘하는 법을 배워 빠르고 안정적으로 비행하라.',
+                'concept.tag1': '방향은 당신 것',
+                'concept.tag2': '책임도 당신 것',
+                'concept.tag3': 'AI는 능력을 증폭',
+                'quotes.label': '명언 모음',
+                'quotes.title': '수업 10대 명언',
+                'quotes.q1': 'AI가 당신을 대체하지 않지만, AI를 사용하는 사람이 대체할 것이다',
+                'quotes.q2': '당신이 기장이고 AI는 승무원—방향과 책임은 당신 것',
+                'quotes.q3': 'AI 말의 60%는 맞고, 40%는 검증이 필요하다',
+                'quotes.q4': 'AI가 맞는지 묻지 말고, 어떻게 그 결론에 도달했는지 물어라',
+                'quotes.q5': '보안은 기술 문제가 아니라 사람 문제—입력한 것을 학습한다',
+                'quotes.q6': 'AI 없이 회의하는 것은 계산기 없이 시험 보는 것과 같다',
+                'quotes.q7': 'AI가 대단한 게 아니라 당신이 대단한 것—AI는 당신의 능력을 증폭할 뿐',
+                'quotes.q8': '오늘 배운 것은 3개월 후 구식이 될 수 있지만, 사고방식은 그렇지 않다',
+                'quotes.q9': '배우는 자가 배우지 않는 자를 대체한다',
+                'quotes.q10': '80%는 AI에게, 20%는 전문가에게',
+                'formula.label': '방법론',
+                'formula.title': '프롬프트 엔지니어링 3요소',
+                'formula.subtitle': '이 세 가지 요소를 마스터하여 더 정확한 AI 응답을 얻으세요',
+                'tools.label': '도구 소개',
+                'tools.title': 'AI 도구 비교',
+                'tools.subtitle': '도구마다 강점이 다릅니다—현명하게 선택하세요',
+                'security.label': '중요',
+                'security.title': '보안 3원칙',
+                'workflow.label': '실전 활용',
+                'workflow.title': '회의록 AI 워크플로우',
+                'workflow.subtitle': '가장 시작하기 쉬운 AI 활용 시나리오',
+                'notebook.label': '상세 소개',
+                'notebook.title': 'NotebookLM 9가지 기능',
+                'notebook.subtitle': '업로드한 파일만 지식 소스로 사용—환각 감소',
+                'manus.label': '고급 도구',
+                'manus.title': 'Manus — AI 특별 비서',
+                'manus.subtitle': '단순 비서가 아닌 임원급 AI 에이전트. 가상 컴퓨터를 열어 리서치.',
+                'comparison.label': '빠른 참조',
+                'comparison.title': '니즈별 도구 추천표',
+                'mindset.label': '학습 마인드셋',
+                'mindset.title': 'AI 학습의 올바른 마음가짐',
+                'action.label': '지금 행동',
+                'action.title': '수업 후 행동 권장사항',
+                'resources.label': '도구 링크',
+                'resources.title': '학습 자료',
+                'instructor.label': '강사 소개',
+                'instructor.sectionTitle': '아펑 선생님',
+                'instructor.name': '황경봉',
+                'instructor.title': 'AI 펑 / 아펑 선생님',
+                'instructor.bio': '대만을 대표하는 기업 AI 실전 교육 전문가로 10년 이상의 기업 교육 경험 보유. 생성 AI 원년(2022년) 이후 ChatGPT, Claude, Midjourney 등 최첨단 도구를 깊이 연구하며, 기술을 기업이 실행 가능한 솔루션으로 전환하는 것을 전문으로 함.',
+                'instructor.stat1': '기업 파트너',
+                'instructor.stat2': '교육 세션',
+                'instructor.stat3': '수강생',
+                'instructor.philosophyLabel': '교육 철학',
+                'instructor.philosophy': '"사용할 줄 알고, 이해하고, 잘 사용하고, 매일 사용한다" — 도구 조작뿐 아니라 프롬프트 엔지니어링 사고와 워크플로우 설계 강조',
+                'connect.label': '연결하기',
+                'connect.title': '아펑 선생님 팔로우',
+                'connect.officialTitle': '공식 자료',
+                'connect.communityTitle': 'AI 학습 커뮤니티',
+                'footer.instructor': '<strong>아펑 선생님</strong>이 정성껏 준비',
+                'footer.quote': '"당신이 기장이고, AI는 승무원입니다"',
+                'footer.note': '계속 배우고, 계속 성장하세요 | 강의 문의는 아펑 선생님에게'
+            },
+            'ms': {
+                'hero.badge': 'Ruang Ulangkaji',
+                'hero.title': 'Pengenalan Alat AI<br>Tingkatkan Kecekapan & Keputusan Kerja',
+                'hero.instructor': 'Pengajar: Cikgu Afeng',
+                'hero.summary': 'Ini bukan sekadar kursus alat, tetapi peningkatan minda.<br>Belajar menjadi kapten AI, jadikan ia kru terkuat anda.',
+                'hero.noteTitle': 'Halaman ini adalah sumber ulangkaji selepas kursus',
+                'hero.noteDesc': 'Kembali bila-bila untuk mengulangkaji perkara utama, mencari pautan alat, dan mengimbas kembali kes praktikal. Disyorkan untuk menanda halaman ini.',
+                'concept.label': 'PRINSIP TERAS',
+                'concept.title': 'Pelajaran Terpenting',
+                'concept.mainTitle': 'Anda Kapten, AI adalah Kru Anda',
+                'concept.desc': 'Kapten menentukan arah dan bertanggungjawab; kru melaksanakan.<br>AI bukan autopilot—anda tidak boleh serahkan kawalan.<br>Belajar mengarah kru untuk terbang pantas dan stabil.',
+                'concept.tag1': 'Arah adalah milik anda',
+                'concept.tag2': 'Tanggungjawab juga milik anda',
+                'concept.tag3': 'AI menguatkan keupayaan anda',
+                'quotes.label': 'PETIKAN UTAMA',
+                'quotes.title': '10 Petikan Kursus Teratas',
+                'quotes.q1': 'AI tidak akan menggantikan anda, tetapi orang yang menggunakan AI akan',
+                'quotes.q2': 'Anda kapten, AI adalah kru—arah dan tanggungjawab adalah milik anda',
+                'quotes.q3': '60% apa yang AI kata betul, 40% perlu pengesahan anda',
+                'quotes.q4': 'Jangan tanya sama ada AI betul, tanya bagaimana AI sampai ke situ',
+                'quotes.q5': 'Keselamatan bukan masalah teknikal, ia masalah manusia—apa yang anda masukkan, ia belajar',
+                'quotes.q6': 'Mesyuarat tanpa AI untuk nota seperti peperiksaan tanpa kalkulator',
+                'quotes.q7': 'Bukan AI yang hebat, anda yang hebat—AI hanya menguatkan keupayaan anda',
+                'quotes.q8': 'Apa yang dipelajari hari ini mungkin lapuk dalam 3 bulan, tetapi cara berfikir tidak',
+                'quotes.q9': 'Mereka yang belajar akan menggantikan mereka yang tidak',
+                'quotes.q10': '80% kepada AI, 20% kepada pakar manusia',
+                'formula.label': 'METODOLOGI',
+                'formula.title': 'Tiga Elemen Kejuruteraan Prompt',
+                'formula.subtitle': 'Kuasai tiga elemen ini untuk respons AI yang lebih tepat',
+                'tools.label': 'PANDUAN ALAT',
+                'tools.title': 'Perbandingan Alat AI',
+                'tools.subtitle': 'Alat berbeza mempunyai kekuatan berbeza—pilih dengan bijak',
+                'security.label': 'PENTING',
+                'security.title': 'Tiga Prinsip Keselamatan',
+                'workflow.label': 'PENGGUNAAN PRAKTIKAL',
+                'workflow.title': 'Aliran Kerja AI untuk Nota Mesyuarat',
+                'workflow.subtitle': 'Aplikasi AI paling mudah untuk bermula',
+                'notebook.label': 'PENJELASAN MENDALAM',
+                'notebook.title': 'NotebookLM: 9 Ciri Utama',
+                'notebook.subtitle': 'Pengetahuan hanya dari fail yang dimuat naik—kurang halusinasi',
+                'manus.label': 'ALAT LANJUTAN',
+                'manus.title': 'Manus — Pembantu Eksekutif AI',
+                'manus.subtitle': 'Bukan sekadar pembantu, tetapi Ejen AI peringkat eksekutif. Membuka komputer maya untuk menyelidik.',
+                'comparison.label': 'RUJUKAN PANTAS',
+                'comparison.title': 'Jadual Cadangan Alat',
+                'mindset.label': 'MINDA PEMBELAJARAN',
+                'mindset.title': 'Minda Yang Betul untuk Belajar AI',
+                'action.label': 'AMBIL TINDAKAN',
+                'action.title': 'Item Tindakan Selepas Kursus',
+                'resources.label': 'PAUTAN ALAT',
+                'resources.title': 'Sumber Pembelajaran',
+                'instructor.label': 'TENTANG PENGAJAR',
+                'instructor.sectionTitle': 'Cikgu Afeng',
+                'instructor.name': 'Jing-Feng Huang',
+                'instructor.title': 'AI Feng / Cikgu Afeng',
+                'instructor.bio': 'Pakar latihan AI praktikal perusahaan terkemuka Taiwan dengan pengalaman latihan korporat lebih 10 tahun. Sejak era AI generatif (2022), menyelidik secara mendalam ChatGPT, Claude, Midjourney dan alat canggih lain, pakar dalam mengubah teknologi menjadi penyelesaian yang boleh dilaksanakan.',
+                'instructor.stat1': 'Rakan Korporat',
+                'instructor.stat2': 'Sesi Kursus',
+                'instructor.stat3': 'Pelajar Terlatih',
+                'instructor.philosophyLabel': 'Falsafah Pengajaran',
+                'instructor.philosophy': '"Belajar, faham, guna dengan baik, guna setiap hari" — Bukan sekadar operasi alat, tetapi menekankan pemikiran kejuruteraan prompt dan reka bentuk aliran kerja',
+                'connect.label': 'KEKAL BERHUBUNG',
+                'connect.title': 'Ikuti Cikgu Afeng',
+                'connect.officialTitle': 'Sumber Rasmi',
+                'connect.communityTitle': 'Komuniti Pembelajaran AI',
+                'footer.instructor': 'Disediakan dengan teliti oleh <strong>Cikgu Afeng</strong>',
+                'footer.quote': '"Anda Kapten, AI adalah Kru Anda"',
+                'footer.note': 'Terus belajar, terus berkembang | Hubungi Cikgu Afeng untuk kursus'
+            },
+            'la': {
+                'hero.badge': 'Spatium Recensionis',
+                'hero.title': 'Instrumenta AI Facilia<br>Efficientiam et Iudicium Augere',
+                'hero.instructor': 'Magister: Magister Afeng',
+                'hero.summary': 'Hic non solum cursus instrumentorum est, sed mentis evolutio.<br>Disce esse gubernator AI, fac eam fortissimam turbam tuam.',
+                'hero.noteTitle': 'Haec pagina est fons recensionis post cursum',
+                'hero.noteDesc': 'Semper redi ad revidendas res principales, vincula instrumentorum invenienda, et casus practicos recognoscendos. Signa hanc paginam.',
+                'concept.label': 'PRINCIPIUM CENTRALE',
+                'concept.title': 'Lectio Gravissima',
+                'concept.mainTitle': 'Tu es Gubernator, AI est Turba Tua',
+                'concept.desc': 'Gubernator directionem decidit et responsabilitatem sumit; turba exsequitur.<br>AI non est autopilota—non potes imperium tradere.<br>Disce turbam ducere ut celeriter et stabiliter voles.',
+                'concept.tag1': 'Directio tua est',
+                'concept.tag2': 'Responsabilitas quoque tua est',
+                'concept.tag3': 'AI facultatem tuam amplificat',
+                'quotes.label': 'DICTA MEMORABILIA',
+                'quotes.title': 'Decem Praecipua Dicta Cursus',
+                'quotes.q1': 'AI te non substituet, sed qui AI utuntur substituent',
+                'quotes.q2': 'Tu es gubernator, AI est turba tua—directio et responsabilitas tuae sunt',
+                'quotes.q3': 'Sexaginta per centum quod AI dicit rectum est, quadraginta per centum verificandum est',
+                'quotes.q4': 'Noli quaerere an AI rectum sit, quaere quomodo AI illuc pervenerit',
+                'quotes.q5': 'Securitas non est problema technicum, est problema humanum—quod intras, discit',
+                'quotes.q6': 'Conventum sine AI pro notis habere est sicut examen sine calculatore',
+                'quotes.q7': 'Non AI magnum est, tu magnus es—AI tantum facultatem tuam amplificat',
+                'quotes.q8': 'Quod hodie discis post tres menses obsoletum esse potest, sed modus cogitandi non erit',
+                'quotes.q9': 'Qui discunt substituent eos qui non discunt',
+                'quotes.q10': 'Octoginta per centum AI, viginti per centum peritis humanis',
+                'formula.label': 'METHODOLOGIA',
+                'formula.title': 'Tria Elementa Ingeniaturae Prompti',
+                'formula.subtitle': 'Haec tria elementa dominare pro responsionibus AI accuratioribus',
+                'tools.label': 'DUX INSTRUMENTORUM',
+                'tools.title': 'Comparatio Instrumentorum AI',
+                'tools.subtitle': 'Diversa instrumenta diversas vires habent—sapienter elige',
+                'security.label': 'GRAVE',
+                'security.title': 'Tria Principia Securitatis',
+                'workflow.label': 'USUS PRACTICUS',
+                'workflow.title': 'Fluxus Operis AI pro Notis Conventuum',
+                'workflow.subtitle': 'Applicatio AI facillima ad incipiendum',
+                'notebook.label': 'EXPLICATIO PROFUNDA',
+                'notebook.title': 'NotebookLM: IX Proprietates Principales',
+                'notebook.subtitle': 'Scientia tantum ex fasciculis impositis—minus hallucinationis',
+                'manus.label': 'INSTRUMENTUM PROVECTUM',
+                'manus.title': 'Manus — Adiutor Exsecutivus AI',
+                'manus.subtitle': 'Non solum adiutor, sed Agens AI gradus exsecutivi. Computatores virtuales aperit ad investigandum.',
+                'comparison.label': 'REFERENTIA VELOX',
+                'comparison.title': 'Tabula Commendationum Instrumentorum',
+                'mindset.label': 'MENS DISCENDI',
+                'mindset.title': 'Recta Mens ad AI Discendum',
+                'action.label': 'AGE NUNC',
+                'action.title': 'Actiones Post Cursum',
+                'resources.label': 'VINCULA INSTRUMENTORUM',
+                'resources.title': 'Fontes Discendi',
+                'instructor.label': 'DE MAGISTRO',
+                'instructor.sectionTitle': 'Magister Afeng',
+                'instructor.name': 'Jing-Feng Huang',
+                'instructor.title': 'AI Feng / Magister Afeng',
+                'instructor.bio': 'Peritus praecipuus Taiwan in exercitatione AI practica pro negotiis cum experientia plus quam 10 annorum. Ab aera AI generativa (2022), instrumenta provecta ut ChatGPT, Claude, Midjourney profunde investigavit, peritus in transformandis technologiis in solutiones exsecutabiles.',
+                'instructor.stat1': 'Socii Negotiorum',
+                'instructor.stat2': 'Sessiones Cursuum',
+                'instructor.stat3': 'Discipuli Exercitati',
+                'instructor.philosophyLabel': 'Philosophia Docendi',
+                'instructor.philosophy': '"Disce, intellege, bene utere, cotidie utere" — Non solum operatio instrumentorum, sed emphasis in mente ingeniaturae prompti et designatione fluxus operis',
+                'connect.label': 'MANERE CONIUNCTI',
+                'connect.title': 'Sequere Magistrum Afeng',
+                'connect.officialTitle': 'Fontes Officiales',
+                'connect.communityTitle': 'Communitas Discendi AI',
+                'footer.instructor': 'Diligenter praeparatum a <strong>Magistro Afeng</strong>',
+                'footer.quote': '"Tu es Gubernator, AI est Turba Tua"',
+                'footer.note': 'Perge discere, perge crescere | Contacta Magistrum Afeng pro cursibus'
+            }
+        };
+
+        // 切換語言功能
+        function changeLanguage(lang) {
+            document.documentElement.lang = lang;
+            localStorage.setItem('preferredLanguage', lang);
+
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (translations[lang] && translations[lang][key]) {
+                    el.innerHTML = translations[lang][key];
+                }
+            });
+        }
+
+        // 頁面載入時檢查儲存的語言偏好
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedLang = localStorage.getItem('preferredLanguage');
+            if (savedLang && translations[savedLang]) {
+                document.getElementById('langSelect').value = savedLang;
+                changeLanguage(savedLang);
+            }
+        });
+
+        // 滾動動畫
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry, index) => {
+                if (entry.isIntersecting) {
+                    const delay = entry.target.dataset.delay || 0;
+                    setTimeout(() => {
+                        entry.target.classList.add('visible');
+                    }, delay);
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.animate').forEach((el, index) => {
+            const parent = el.parentElement;
+            const siblings = parent.querySelectorAll('.animate');
+            const siblingIndex = Array.from(siblings).indexOf(el);
+            el.dataset.delay = siblingIndex * 100;
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>
