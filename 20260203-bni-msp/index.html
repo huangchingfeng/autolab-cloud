@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MSP BNI 初階培訓課程 | 2026.02.03</title>
+    <meta name="description" content="BNI 新北市西B區 MSP 初階培訓課程，2026/2/3 線上視訊">
+    <style>
+        :root {
+            --primary: #1e3a5f;
+            --primary-light: #2d5a87;
+            --accent: #3d7ab5;
+            --accent-light: #e8f0fe;
+            --text: #1a1a1a;
+            --text-secondary: #4a5568;
+            --bg: #f8fafc;
+            --white: #ffffff;
+            --success: #38a169;
+            --success-light: #f0fff4;
+            --error: #e53e3e;
+            --error-light: #fed7d7;
+            --shadow: 0 4px 20px rgba(0,0,0,0.08);
+            --shadow-lg: 0 12px 40px rgba(0,0,0,0.12);
+            --radius: 12px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans TC", sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+            min-height: 100vh;
+        }
+
+        /* Hero */
+        .hero {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: var(--white);
+            padding: 80px 24px 60px;
+            text-align: center;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            padding: 6px 18px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 12px;
+            font-weight: 700;
+        }
+
+        .hero p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .container {
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* 課程資訊卡 */
+        .info-section {
+            margin-top: -40px;
+            margin-bottom: 40px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .info-card {
+            background: var(--white);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-lg);
+            padding: 32px;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 24px;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .info-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--accent-light);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 18px;
+        }
+
+        .info-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 2px;
+        }
+
+        .info-value {
+            font-weight: 600;
+            font-size: 15px;
+        }
+
+        /* 表單區塊 */
+        .form-section {
+            margin-bottom: 40px;
+        }
+
+        .section-title {
+            font-size: 1.4rem;
+            color: var(--primary);
+            margin-bottom: 24px;
+            text-align: center;
+            font-weight: 700;
+        }
+
+        .form-card {
+            background: var(--white);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 32px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 6px;
+            font-size: 14px;
+            color: var(--text);
+        }
+
+        .form-group label .required {
+            color: var(--error);
+            margin-left: 2px;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 15px;
+            font-family: inherit;
+            transition: border-color 0.3s ease;
+            background: var(--white);
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        .form-group input.invalid,
+        .form-group select.invalid {
+            border-color: var(--error);
+        }
+
+        .checkbox-group {
+            margin-bottom: 16px;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            margin-top: 3px;
+            accent-color: var(--accent);
+            flex-shrink: 0;
+        }
+
+        .checkbox-group label {
+            font-size: 14px;
+            color: var(--text);
+            cursor: pointer;
+            line-height: 1.5;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: var(--white);
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: inherit;
+            margin-top: 8px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(30, 58, 95, 0.3);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* 訊息 */
+        .message {
+            padding: 16px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            display: none;
+        }
+
+        .message.success {
+            background: var(--success-light);
+            color: var(--success);
+            border: 1px solid var(--success);
+        }
+
+        .message.error {
+            background: var(--error-light);
+            color: var(--error);
+            border: 1px solid var(--error);
+        }
+
+        .message.show {
+            display: block;
+        }
+
+        /* 成功畫面 */
+        .success-view {
+            display: none;
+            text-align: center;
+            padding: 48px 24px;
+        }
+
+        .success-view .check-icon {
+            width: 72px;
+            height: 72px;
+            background: var(--success-light);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            margin: 0 auto 20px;
+        }
+
+        .success-view h3 {
+            font-size: 1.4rem;
+            color: var(--primary);
+            margin-bottom: 12px;
+        }
+
+        .success-view p {
+            color: var(--text-secondary);
+            font-size: 15px;
+        }
+
+        /* 統計區塊 */
+        .stats-section {
+            margin-bottom: 60px;
+        }
+
+        .stats-card {
+            background: var(--white);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 32px;
+        }
+
+        .stats-total {
+            text-align: center;
+            margin-bottom: 28px;
+        }
+
+        .stats-total .number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .stats-total .label {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .stats-list {
+            display: grid;
+            gap: 16px;
+        }
+
+        .stats-row {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .stats-name {
+            width: 80px;
+            font-weight: 600;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+
+        .stats-bar-bg {
+            flex: 1;
+            height: 28px;
+            background: var(--bg);
+            border-radius: 14px;
+            overflow: hidden;
+        }
+
+        .stats-bar {
+            height: 100%;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            border-radius: 14px;
+            transition: width 0.8s ease;
+            min-width: 0;
+        }
+
+        .stats-count {
+            width: 36px;
+            text-align: right;
+            font-weight: 700;
+            font-size: 15px;
+            color: var(--primary);
+            flex-shrink: 0;
+        }
+
+        .stats-loading {
+            text-align: center;
+            padding: 24px;
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 40px 24px;
+            color: var(--text-secondary);
+            font-size: 14px;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .footer a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 8px;
+        }
+
+        /* RWD */
+        @media (max-width: 600px) {
+            .hero {
+                padding: 60px 24px 50px;
+            }
+            .hero h1 {
+                font-size: 1.8rem;
+            }
+            .info-grid {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+            .form-card, .info-card, .stats-card {
+                padding: 24px;
+            }
+        }
+
+        /* Spinner */
+        .spinner {
+            display: inline-block;
+            width: 18px;
+            height: 18px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-top-color: var(--white);
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+            vertical-align: middle;
+            margin-right: 8px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Hero -->
+    <section class="hero">
+        <div class="hero-badge">BNI 新北市西B區</div>
+        <h1>MSP 初階培訓課程</h1>
+        <p>會員成功計畫 - 讓你在 BNI 引薦更多、收穫更多</p>
+    </section>
+
+    <!-- 課程資訊 -->
+    <section class="info-section">
+        <div class="container">
+            <div class="info-card">
+                <div class="info-grid">
+                    <div class="info-item">
+                        <div class="info-icon">📅</div>
+                        <div>
+                            <div class="info-label">日期</div>
+                            <div class="info-value">2026 / 2 / 3（二）</div>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-icon">🕢</div>
+                        <div>
+                            <div class="info-label">時間</div>
+                            <div class="info-value">19:30 - 22:00</div>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-icon">💻</div>
+                        <div>
+                            <div class="info-label">上課方式</div>
+                            <div class="info-value">線上視訊（Google Meet）</div>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-icon">👥</div>
+                        <div>
+                            <div class="info-label">對象分會</div>
+                            <div class="info-value">華日 / 華市集 / 華外 / 華影視</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 報名表單 -->
+    <section class="form-section">
+        <div class="container">
+            <h2 class="section-title">線上報名</h2>
+
+            <div class="form-card">
+                <div id="message" class="message"></div>
+
+                <form id="registrationForm">
+                    <div class="form-group">
+                        <label>姓名 <span class="required">*</span></label>
+                        <input type="text" id="name" name="name" required placeholder="請輸入姓名">
+                    </div>
+
+                    <div class="form-group">
+                        <label>分會 <span class="required">*</span></label>
+                        <select id="chapter" name="chapter" required>
+                            <option value="">請選擇分會</option>
+                            <option value="華日">華日</option>
+                            <option value="華市集">華市集</option>
+                            <option value="華外">華外</option>
+                            <option value="華影視">華影視</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>電話 <span class="required">*</span></label>
+                        <input type="tel" id="phone" name="phone" required placeholder="0912-345-678">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Email <span class="required">*</span></label>
+                        <input type="email" id="email" name="email" required placeholder="your@email.com">
+                    </div>
+
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="confirmCamera" required>
+                        <label for="confirmCamera">我確認全程開啟鏡頭參加</label>
+                    </div>
+
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="confirmAttend" required>
+                        <label for="confirmAttend">我確認會準時出席（19:30 準時開始）</label>
+                    </div>
+
+                    <button type="submit" class="submit-btn" id="submitBtn">立即報名</button>
+                </form>
+
+                <div class="success-view" id="successView">
+                    <div class="check-icon">✅</div>
+                    <h3>報名成功！</h3>
+                    <p>確認信已寄到你的 Email，請留意信箱。<br>2/3（二）19:30 線上見！</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 報名統計 -->
+    <section class="stats-section">
+        <div class="container">
+            <h2 class="section-title">報名統計</h2>
+            <div class="stats-card">
+                <div class="stats-total">
+                    <div class="number" id="totalCount">-</div>
+                    <div class="label">人已報名</div>
+                </div>
+                <div class="stats-list" id="statsList">
+                    <div class="stats-loading">載入中...</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <a href="/" class="back-link">← 回到課程列表</a>
+        <p>阿峰老師 | BNI 新北市西B區</p>
+    </footer>
+
+    <script>
+        // ====== 設定 ======
+        // 部署 GAS Web App 後，將網址貼在這裡
+        const GAS_URL = 'YOUR_GAS_WEB_APP_URL';
+
+        const CHAPTERS = ['華日', '華市集', '華外', '華影視'];
+
+        // ====== 載入統計 ======
+        async function loadStats() {
+            try {
+                const res = await fetch(GAS_URL);
+                const data = await res.json();
+                renderStats(data);
+            } catch (e) {
+                document.getElementById('statsList').innerHTML =
+                    '<div class="stats-loading">尚未連接後端，統計稍後更新</div>';
+                document.getElementById('totalCount').textContent = '-';
+            }
+        }
+
+        function renderStats(data) {
+            const total = data.total || 0;
+            const stats = data.stats || {};
+            const maxCount = Math.max(...CHAPTERS.map(c => stats[c] || 0), 1);
+
+            document.getElementById('totalCount').textContent = total;
+
+            const html = CHAPTERS.map(chapter => {
+                const count = stats[chapter] || 0;
+                const percent = (count / maxCount) * 100;
+                return `
+                    <div class="stats-row">
+                        <div class="stats-name">${chapter}</div>
+                        <div class="stats-bar-bg">
+                            <div class="stats-bar" style="width: ${percent}%"></div>
+                        </div>
+                        <div class="stats-count">${count}</div>
+                    </div>
+                `;
+            }).join('');
+
+            document.getElementById('statsList').innerHTML = html;
+        }
+
+        // ====== 表單送出 ======
+        const form = document.getElementById('registrationForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const messageEl = document.getElementById('message');
+
+        function showMessage(text, type) {
+            messageEl.textContent = text;
+            messageEl.className = `message ${type} show`;
+            messageEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        function hideMessage() {
+            messageEl.className = 'message';
+        }
+
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            hideMessage();
+
+            const name = document.getElementById('name').value.trim();
+            const chapter = document.getElementById('chapter').value;
+            const phone = document.getElementById('phone').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const confirmCamera = document.getElementById('confirmCamera').checked;
+            const confirmAttend = document.getElementById('confirmAttend').checked;
+
+            // 前端驗證
+            if (!name || !chapter || !phone || !email) {
+                showMessage('請填寫所有必填欄位', 'error');
+                return;
+            }
+
+            if (!confirmCamera || !confirmAttend) {
+                showMessage('請確認勾選兩項承諾', 'error');
+                return;
+            }
+
+            // 簡易 email 驗證
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                showMessage('請輸入有效的 Email 地址', 'error');
+                return;
+            }
+
+            // 送出
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<span class="spinner"></span>報名中...';
+
+            try {
+                const res = await fetch(GAS_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain' },
+                    body: JSON.stringify({ name, chapter, phone, email })
+                });
+
+                const data = await res.json();
+
+                if (data.success) {
+                    form.style.display = 'none';
+                    document.getElementById('successView').style.display = 'block';
+                    loadStats();
+                } else {
+                    showMessage(data.message || '報名失敗，請稍後再試', 'error');
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = '立即報名';
+                }
+            } catch (err) {
+                showMessage('網路錯誤，請稍後再試', 'error');
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '立即報名';
+            }
+        });
+
+        // ====== 頁面載入 ======
+        loadStats();
+    </script>
+
+</body>
+</html>
