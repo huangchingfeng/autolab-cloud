@@ -1,0 +1,1 @@
+ALTER TABLE `courseRegistrations2026` ADD `promoCode` varchar(50);

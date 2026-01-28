@@ -1,0 +1,202 @@
+{
+  "version": "7",
+  "dialect": "mysql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "5",
+      "when": 1764556041828,
+      "tag": "0000_abnormal_punisher",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1764556107188,
+      "tag": "0001_first_stone_men",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1764567115965,
+      "tag": "0002_tough_zarek",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1765842364644,
+      "tag": "0003_thick_king_bedlam",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "5",
+      "when": 1765844634516,
+      "tag": "0004_large_captain_america",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "5",
+      "when": 1765846485362,
+      "tag": "0005_crazy_tyger_tiger",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "5",
+      "when": 1765929321286,
+      "tag": "0006_loose_mikhail_rasputin",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "5",
+      "when": 1766013665654,
+      "tag": "0007_low_tigra",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "5",
+      "when": 1766032234855,
+      "tag": "0009_thick_wolf_cub",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "5",
+      "when": 1766062138775,
+      "tag": "0009_pretty_paibok",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "5",
+      "when": 1766068401595,
+      "tag": "0010_fine_squadron_sinister",
+      "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "5",
+      "when": 1766463614420,
+      "tag": "0011_quiet_gorgon",
+      "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "5",
+      "when": 1766678532081,
+      "tag": "0012_mixed_mister_fear",
+      "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "5",
+      "when": 1766800371352,
+      "tag": "0013_new_scrambler",
+      "breakpoints": true
+    },
+    {
+      "idx": 14,
+      "version": "5",
+      "when": 1766801884476,
+      "tag": "0014_charming_quicksilver",
+      "breakpoints": true
+    },
+    {
+      "idx": 15,
+      "version": "5",
+      "when": 1767345530662,
+      "tag": "0015_rapid_hercules",
+      "breakpoints": true
+    },
+    {
+      "idx": 16,
+      "version": "5",
+      "when": 1767360979338,
+      "tag": "0016_curvy_sasquatch",
+      "breakpoints": true
+    },
+    {
+      "idx": 17,
+      "version": "5",
+      "when": 1767364808315,
+      "tag": "0017_awesome_ozymandias",
+      "breakpoints": true
+    },
+    {
+      "idx": 18,
+      "version": "5",
+      "when": 1767449233637,
+      "tag": "0018_bright_marrow",
+      "breakpoints": true
+    },
+    {
+      "idx": 19,
+      "version": "5",
+      "when": 1767453056074,
+      "tag": "0019_thankful_boomerang",
+      "breakpoints": true
+    },
+    {
+      "idx": 20,
+      "version": "5",
+      "when": 1767453554873,
+      "tag": "0020_warm_warbird",
+      "breakpoints": true
+    },
+    {
+      "idx": 21,
+      "version": "5",
+      "when": 1767510246182,
+      "tag": "0021_deep_skrulls",
+      "breakpoints": true
+    },
+    {
+      "idx": 22,
+      "version": "5",
+      "when": 1768205795238,
+      "tag": "0022_nosy_the_professor",
+      "breakpoints": true
+    },
+    {
+      "idx": 23,
+      "version": "5",
+      "when": 1768435818449,
+      "tag": "0023_white_jack_power",
+      "breakpoints": true
+    },
+    {
+      "idx": 24,
+      "version": "5",
+      "when": 1769040366849,
+      "tag": "0024_talented_sally_floyd",
+      "breakpoints": true
+    },
+    {
+      "idx": 25,
+      "version": "5",
+      "when": 1769042825918,
+      "tag": "0025_magenta_sabretooth",
+      "breakpoints": true
+    },
+    {
+      "idx": 26,
+      "version": "5",
+      "when": 1769049195011,
+      "tag": "0026_spooky_violations",
+      "breakpoints": true
+    },
+    {
+      "idx": 27,
+      "version": "5",
+      "when": 1769061316715,
+      "tag": "0027_same_venus",
+      "breakpoints": true
+    }
+  ]
+}

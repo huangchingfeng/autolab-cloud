@@ -1,0 +1,2 @@
+ALTER TABLE `courseRegistrations2026` ADD `subscribeNewsletter` boolean DEFAULT false NOT NULL;--> statement-breakpoint
+ALTER TABLE `eventRegistrations` ADD `subscribeNewsletter` boolean DEFAULT false NOT NULL;

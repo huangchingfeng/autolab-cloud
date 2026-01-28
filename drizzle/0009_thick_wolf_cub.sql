@@ -1,0 +1,1 @@
+ALTER TABLE `contacts` MODIFY COLUMN `inquiryType` enum('enterprise','public','coaching','enterprise_training','one_on_one','collaboration','media','other') NOT NULL;

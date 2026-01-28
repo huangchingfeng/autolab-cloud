@@ -1,0 +1,28 @@
+CREATE TABLE `courseRegistrations2026` (
+	`id` int AUTO_INCREMENT NOT NULL,
+	`userType` enum('new','returning') NOT NULL,
+	`plan` varchar(50) NOT NULL,
+	`planPrice` int NOT NULL,
+	`selectedSessions` text NOT NULL,
+	`selectedMonth` varchar(20),
+	`name1` varchar(100) NOT NULL,
+	`phone1` varchar(20) NOT NULL,
+	`email1` varchar(320) NOT NULL,
+	`industry1` varchar(200),
+	`name2` varchar(100),
+	`phone2` varchar(20),
+	`email2` varchar(320),
+	`industry2` varchar(200),
+	`paymentMethod` enum('transfer','online') NOT NULL,
+	`transferLast5` varchar(5),
+	`paymentStatus` enum('pending','paid','failed') NOT NULL DEFAULT 'pending',
+	`newebpayTradeNo` varchar(100),
+	`status` enum('registered','confirmed','cancelled') NOT NULL DEFAULT 'registered',
+	`emailSent` boolean NOT NULL DEFAULT false,
+	`notes` text,
+	`createdAt` timestamp NOT NULL DEFAULT (now()),
+	`updatedAt` timestamp NOT NULL DEFAULT (now()) ON UPDATE CURRENT_TIMESTAMP,
+	CONSTRAINT `courseRegistrations2026_id` PRIMARY KEY(`id`)
+);
+--> statement-breakpoint
+ALTER TABLE `events` ADD `tags` text;

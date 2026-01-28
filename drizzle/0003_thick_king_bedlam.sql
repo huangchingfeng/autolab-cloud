@@ -1,0 +1,43 @@
+CREATE TABLE `eventRegistrations` (
+	`id` int AUTO_INCREMENT NOT NULL,
+	`eventId` int NOT NULL,
+	`name` varchar(100) NOT NULL,
+	`email` varchar(320) NOT NULL,
+	`phone` varchar(20) NOT NULL,
+	`company` varchar(200),
+	`jobTitle` varchar(100),
+	`referralSource` enum('teacher_afeng','friend','facebook','threads','youtube','instagram','other') NOT NULL,
+	`referralSourceOther` varchar(200),
+	`interestedTopics` text,
+	`status` enum('registered','confirmed','cancelled','attended') NOT NULL DEFAULT 'registered',
+	`emailSent` boolean NOT NULL DEFAULT false,
+	`notes` text,
+	`createdAt` timestamp NOT NULL DEFAULT (now()),
+	`updatedAt` timestamp NOT NULL DEFAULT (now()) ON UPDATE CURRENT_TIMESTAMP,
+	CONSTRAINT `eventRegistrations_id` PRIMARY KEY(`id`)
+);
+--> statement-breakpoint
+CREATE TABLE `events` (
+	`id` int AUTO_INCREMENT NOT NULL,
+	`title` varchar(255) NOT NULL,
+	`subtitle` varchar(500),
+	`slug` varchar(255) NOT NULL,
+	`description` text NOT NULL,
+	`highlights` text,
+	`targetAudience` text,
+	`speakerInfo` text,
+	`coverImage` varchar(500),
+	`eventDate` timestamp NOT NULL,
+	`eventEndDate` timestamp,
+	`eventTime` varchar(100),
+	`location` varchar(255) NOT NULL,
+	`locationDetails` text,
+	`price` int NOT NULL DEFAULT 0,
+	`maxAttendees` int,
+	`status` enum('draft','published','cancelled','completed') NOT NULL DEFAULT 'draft',
+	`registrationDeadline` timestamp,
+	`createdAt` timestamp NOT NULL DEFAULT (now()),
+	`updatedAt` timestamp NOT NULL DEFAULT (now()) ON UPDATE CURRENT_TIMESTAMP,
+	CONSTRAINT `events_id` PRIMARY KEY(`id`),
+	CONSTRAINT `events_slug_unique` UNIQUE(`slug`)
+);

@@ -1,0 +1,1 @@
+ALTER TABLE `events` ADD `meetingUrl` varchar(500);

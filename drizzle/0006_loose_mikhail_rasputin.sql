@@ -1,0 +1,1 @@
+ALTER TABLE `events` ADD `externalRegistrationUrl` varchar(500);
