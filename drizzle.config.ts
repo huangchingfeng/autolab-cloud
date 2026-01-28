@@ -9,11 +9,8 @@ if (!connectionString) {
 export default defineConfig({
   schema: "./drizzle/schema.ts",
   out: "./drizzle/migrations",
-  dialect: "mysql",
+  dialect: "postgresql",
   dbCredentials: {
     url: connectionString,
   },
-  // PlanetScale 不支援 foreign key constraints
-  // 如果遇到問題可以設定這個
-  // tablesFilter: ["!_*"],
 });

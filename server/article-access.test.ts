@@ -1,30 +1,28 @@
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import { appRouter } from './routers';
 import type { Context } from './_core/context';
-import mysql from 'mysql2/promise';
+import { neon } from '@neondatabase/serverless';
 
 describe('Article Access Control', () => {
-  let conn: mysql.Connection;
+  let sql: ReturnType<typeof neon>;
   const testEmail = 'test@example.com';
   const testArticleSlug = 'ai-social-media-content-automation';
 
   beforeAll(async () => {
-    conn = await mysql.createConnection(process.env.DATABASE_URL!);
-    
+    sql = neon(process.env.DATABASE_URL!);
+
     // Insert test email into whitelist
-    await conn.execute(
-      'INSERT INTO articleAccessWhitelist (email, articleSlug, createdAt, updatedAt) VALUES (?, ?, NOW(), NOW())',
-      [testEmail, testArticleSlug]
-    );
+    await sql`
+      INSERT INTO "articleAccessWhitelist" (email, "articleSlug", "createdAt", "updatedAt")
+      VALUES (${testEmail}, ${testArticleSlug}, NOW(), NOW())
+    `;
   });
 
   afterAll(async () => {
     // Clean up test data
-    await conn.execute(
-      'DELETE FROM articleAccessWhitelist WHERE email = ?',
-      [testEmail]
-    );
-    await conn.end();
+    await sql`
+      DELETE FROM "articleAccessWhitelist" WHERE email = ${testEmail}
+    `;
   });
 
   it('should allow access for whitelisted email', async () => {

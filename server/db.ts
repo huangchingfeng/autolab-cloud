@@ -1,5 +1,6 @@
 import { eq, desc, and, or, like, sql, ne, inArray, notInArray, lte, gte, count } from "drizzle-orm";
-import { drizzle } from "drizzle-orm/mysql2";
+import { drizzle } from "drizzle-orm/neon-serverless";
+import { neon } from "@neondatabase/serverless";
 import { InsertUser, users, posts, categories, tags, postTags, InsertPost, InsertCategory, InsertTag, contacts, InsertContact, events, eventRegistrations, InsertEvent, InsertEventRegistration, downloadLeads, InsertDownloadLead, orders, InsertOrder, promoCodes, InsertPromoCode, videoCourses, InsertVideoCourse, videoCoursePurchases, InsertVideoCoursePurchase, videoCourseNotes, InsertVideoCourseNote, videoCourseReviews, InsertVideoCourseReview, articleAccessWhitelist, courseRegistrations2026, InsertCourseRegistration2026, notifications, notificationReads, InsertNotification, InsertNotificationRead, courseSessions2026, InsertCourseSession2026, courseAttendance2026, InsertCourseAttendance2026, courseTransfers2026, InsertCourseTransfer2026 } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
@@ -9,7 +10,8 @@ let _db: ReturnType<typeof drizzle> | null = null;
 export async function getDb() {
   if (!_db && process.env.DATABASE_URL) {
     try {
-      _db = drizzle(process.env.DATABASE_URL);
+      const sql = neon(process.env.DATABASE_URL);
+      _db = drizzle(sql);
     } catch (error) {
       console.warn("[Database] Failed to connect:", error);
       _db = null;
@@ -68,7 +70,8 @@ export async function upsertUser(user: InsertUser): Promise<void> {
       updateSet.lastSignedIn = new Date();
     }
 
-    await db.insert(users).values(values).onDuplicateKeyUpdate({
+    await db.insert(users).values(values).onConflictDoUpdate({
+      target: users.openId,
       set: updateSet,
     });
   } catch (error) {

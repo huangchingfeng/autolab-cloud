@@ -6,7 +6,7 @@ AI峰哥官方網站克隆版，部署於 autolab.cloud
 
 - **前端**: React 19 + TailwindCSS 4 + shadcn/ui + Framer Motion
 - **後端**: Express 4 + tRPC 11
-- **資料庫**: PlanetScale (MySQL)
+- **資料庫**: NeonDB (PostgreSQL)
 - **認證**: Clerk
 - **儲存**: Cloudflare R2
 - **金流**: 藍新金流 (Newebpay)
@@ -57,7 +57,7 @@ pnpm dev
 
 | 服務 | 用途 | 申請連結 |
 |------|------|---------|
-| PlanetScale | 資料庫 | https://planetscale.com |
+| NeonDB | 資料庫 | https://neon.tech |
 | Clerk | 使用者認證 | https://clerk.com |
 | Cloudflare R2 | 檔案儲存 | https://cloudflare.com |
 | Resend | Email 發送 | https://resend.com |
@@ -67,11 +67,11 @@ pnpm dev
 
 ### 環境變數說明
 
-#### PlanetScale 資料庫
+#### NeonDB 資料庫
 
-1. 前往 https://app.planetscale.com/ 建立帳號
-2. 建立新的 Database
-3. 點擊 "Connect" 取得連線字串
+1. 前往 https://console.neon.tech/ 建立帳號
+2. 建立新的 Project
+3. 在 Connection Details 取得連線字串
 4. 設定 `DATABASE_URL`
 
 #### Clerk 認證
