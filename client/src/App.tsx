@@ -50,6 +50,8 @@ import EventRegistrations from "./pages/admin/EventRegistrations";
 import Course2026PaymentResult from "./pages/Course2026PaymentResult";
 import { LineChatPlugin } from "./components/LineChatPlugin";
 import SocialMediaButtons from "./components/SocialMediaButtons";
+import SignIn from "./pages/SignIn";
+import SignUp from "./pages/SignUp";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
@@ -84,7 +86,11 @@ function Router() {
       <Route path={"/faq"} component={FAQ} />
       <Route path="/payment-result" component={PaymentResult} />
       <Route path="/course-2026-payment-result" component={Course2026PaymentResult} />
-      
+
+      {/* Auth Routes */}
+      <Route path="/sign-in" component={SignIn} />
+      <Route path="/sign-up" component={SignUp} />
+
       {/* Admin Routes */}
       <Route path={"/admin"}>
         {() => (
