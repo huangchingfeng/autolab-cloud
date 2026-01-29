@@ -3,7 +3,11 @@
  * Separated from server startup for Vercel serverless compatibility
  */
 
-import "dotenv/config";
+// Only load dotenv in development - Vercel provides env vars automatically
+if (process.env.NODE_ENV !== "production") {
+  require("dotenv/config");
+}
+
 import { clerkMiddleware } from "@clerk/express";
 import { createExpressMiddleware } from "@trpc/server/adapters/express";
 import express from "express";
