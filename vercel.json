@@ -6,10 +6,15 @@
   "outputDirectory": "dist/public",
   "functions": {
     "api/index.ts": {
-      "maxDuration": 30
+      "maxDuration": 30,
+      "includeFiles": "server/**/*,drizzle/**/*,shared/**/*"
+    },
+    "api/test.ts": {
+      "maxDuration": 10
     }
   },
   "rewrites": [
+    { "source": "/api/test", "destination": "/api/test" },
     { "source": "/api/:path*", "destination": "/api" },
     { "source": "/((?!api|assets).*)", "destination": "/index.html" }
   ]
