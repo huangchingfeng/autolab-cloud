@@ -87,8 +87,10 @@ function Router() {
       <Route path="/payment-result" component={PaymentResult} />
       <Route path="/course-2026-payment-result" component={Course2026PaymentResult} />
 
-      {/* Auth Routes */}
+      {/* Auth Routes - 使用通配符處理 Clerk 的子路由 */}
+      <Route path="/sign-in/:rest*" component={SignIn} />
       <Route path="/sign-in" component={SignIn} />
+      <Route path="/sign-up/:rest*" component={SignUp} />
       <Route path="/sign-up" component={SignUp} />
 
       {/* Admin Routes */}
