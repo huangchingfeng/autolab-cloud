@@ -2,12 +2,11 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "version": 2,
   "installCommand": "npm install --legacy-peer-deps",
-  "buildCommand": "npm run build:frontend",
+  "buildCommand": "npm run build:api && npm run build:frontend",
   "outputDirectory": "dist/public",
   "functions": {
-    "api/index.ts": {
-      "maxDuration": 30,
-      "includeFiles": "server/**/*,drizzle/**/*,shared/**/*"
+    "api/index.js": {
+      "maxDuration": 30
     },
     "api/test.ts": {
       "maxDuration": 10
