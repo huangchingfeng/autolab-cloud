@@ -10,9 +10,10 @@
       "memory": 1024
     }
   },
-  "rewrites": [
-    { "source": "/api/test", "destination": "/api/test" },
-    { "source": "/api/:path*", "destination": "/api" },
-    { "source": "/((?!api|assets|2026).*)", "destination": "/index.html" }
+  "routes": [
+    { "handle": "filesystem" },
+    { "src": "/api/test", "dest": "/api/test" },
+    { "src": "/api/(.*)", "dest": "/api" },
+    { "src": "/(.*)", "dest": "/index.html" }
   ]
 }
