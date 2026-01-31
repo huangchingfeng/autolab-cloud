@@ -1,0 +1,2053 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI 軟體使用實作技巧 | 東捷科技 課後重點整理</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <span class="logo-text">AI 實作技巧</span>
+                <span class="logo-badge">東捷專屬</span>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="#tools">工具總覽</a></li>
+                <li><a href="#ai-links">AI 工具連結</a></li>
+                <li><a href="#deep-research">Deep Research</a></li>
+                <li><a href="#manus">Manus</a></li>
+                <li><a href="#notebooklm">NotebookLM</a></li>
+                <li><a href="#prompts">提示詞範本</a></li>
+                <li><a href="#resources">實用連結</a></li>
+            </ul>
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-bg-pattern"></div>
+        <div class="hero-container">
+            <div class="hero-badge">
+                <span class="badge-icon">★</span>
+                <span>東捷科技 AI 培訓課程</span>
+            </div>
+            <h1 class="hero-title">
+                AI 軟體使用<br>
+                <span class="gradient-text">實作技巧重點整理</span>
+            </h1>
+            <p class="hero-subtitle">
+                課後複習專用網站<br>
+                3 大 AI 工具 × 25 個提示詞範本
+            </p>
+            <div class="hero-stats">
+                <div class="stat-item">
+                    <span class="stat-number">3</span>
+                    <span class="stat-label">AI 工具</span>
+                </div>
+                <div class="stat-divider"></div>
+                <div class="stat-item">
+                    <span class="stat-number">25</span>
+                    <span class="stat-label">提示詞範本</span>
+                </div>
+                <div class="stat-divider"></div>
+                <div class="stat-item">
+                    <span class="stat-number">12</span>
+                    <span class="stat-label">部門情境</span>
+                </div>
+            </div>
+            <div class="hero-info">
+                <div class="info-item">
+                    <span class="info-icon">📅</span>
+                    <span>2026 年 1 月 30 日</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-icon">🏢</span>
+                    <span>東捷科技股份有限公司</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Instructor Section -->
+    <section id="instructor" class="instructor-section">
+        <div class="container">
+            <div class="instructor-card">
+                <div class="instructor-photo">
+                    <img src="images/instructor.jpg" alt="黃敬峰（AI峰哥）">
+                </div>
+                <div class="instructor-info">
+                    <div class="instructor-badge">課程講師</div>
+                    <h2 class="instructor-name">黃敬峰（AI峰哥）</h2>
+                    <p class="instructor-title">企業 AI 實戰培訓專家｜讓 AI 成為你的最佳工作夥伴</p>
+                    <p class="instructor-quote">「你是機長，AI是機組人員」</p>
+                    <div class="instructor-stats">
+                        <div class="instructor-stat">
+                            <span class="stat-num">400+</span>
+                            <span class="stat-text">企業合作</span>
+                        </div>
+                        <div class="instructor-stat">
+                            <span class="stat-num">300+</span>
+                            <span class="stat-text">課程場次</span>
+                        </div>
+                        <div class="instructor-stat">
+                            <span class="stat-num">10,000+</span>
+                            <span class="stat-text">學員人次</span>
+                        </div>
+                    </div>
+                    <div class="instructor-features">
+                        <div class="feature-tag">深入淺出</div>
+                        <div class="feature-tag">實戰導向</div>
+                        <div class="feature-tag">產業客製</div>
+                        <div class="feature-tag">持續支持</div>
+                    </div>
+                    <div class="instructor-clients">
+                        <p><strong>服務客戶包含：</strong>華碩電腦、南山人壽、蝦皮電商、裕隆日產、歐德傢俱、日商 TOTO、行政院數位發展部、勞動力發展署 等 400+ 企業與機關</p>
+                    </div>
+                    <div class="instructor-links">
+                        <a href="https://autolab.cloud" target="_blank" class="instructor-link-btn primary">
+                            <span>🌐</span> 官方網站
+                        </a>
+                        <a href="https://reurl.cc/GGlLNx" target="_blank" class="instructor-link-btn">
+                            <span>💬</span> LINE 學習社群
+                        </a>
+                        <a href="https://www.youtube.com/channel/UCVVZz6m4T4k6-PZxFSlCkRQ" target="_blank" class="instructor-link-btn">
+                            <span>🎬</span> YouTube 頻道
+                        </a>
+                        <a href="https://autolab.cloud/blog" target="_blank" class="instructor-link-btn">
+                            <span>📝</span> 部落格文章
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tools Overview -->
+    <section id="tools" class="tools-overview">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">工具總覽</span>
+                <h2 class="section-title">課程使用的 3 大 AI 工具</h2>
+                <p class="section-desc">根據不同需求選擇合適的工具</p>
+            </div>
+            <div class="tools-grid">
+                <div class="tool-card">
+                    <div class="tool-logo">🔬</div>
+                    <h3>Deep Research</h3>
+                    <p>AI 深度研究功能，自動進行多輪搜尋、整合來源、產出完整報告</p>
+                    <span class="tool-use">產業調查 / 競品分析</span>
+                    <a href="#deep-research" class="tool-link">查看應用情境 →</a>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-logo">🤖</div>
+                    <h3>Manus</h3>
+                    <p>AI 代理工具，可自主執行複雜任務：瀏覽網頁、搜尋資料、撰寫報告</p>
+                    <span class="tool-use">任務自動化 / 資料蒐集</span>
+                    <a href="#manus" class="tool-link">查看應用情境 →</a>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-logo">📓</div>
+                    <h3>NotebookLM</h3>
+                    <p>Google AI 筆記工具，上傳文件後進行問答、摘要、內容生成</p>
+                    <span class="tool-use">文件分析 / 知識整理</span>
+                    <a href="#notebooklm" class="tool-link">查看應用情境 →</a>
+                </div>
+            </div>
+            <div class="tool-comparison">
+                <h3>工具選擇指南</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>你的需求</th>
+                            <th>建議使用</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>快速問答、簡單任務</td>
+                            <td>一般 AI 對話（ChatGPT、Gemini）</td>
+                        </tr>
+                        <tr>
+                            <td>執行任務、自動化流程</td>
+                            <td><strong>Manus</strong></td>
+                        </tr>
+                        <tr>
+                            <td>理解已有文件、內部知識</td>
+                            <td><strong>NotebookLM</strong></td>
+                        </tr>
+                        <tr>
+                            <td>深度市場調查、產業研究</td>
+                            <td><strong>Deep Research</strong></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- AI Tools Links Section -->
+    <section id="ai-links" class="ai-links-section">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">🔗 工具連結</span>
+                <h2 class="section-title">AI 工具快速連結</h2>
+                <p class="section-desc">點擊即可開始使用，支援網頁版與手機 App</p>
+            </div>
+            <div class="ai-tools-grid">
+                <!-- ChatGPT -->
+                <div class="ai-tool-card">
+                    <div class="ai-tool-icon">💬</div>
+                    <h3>ChatGPT</h3>
+                    <p>OpenAI 開發的對話式 AI，功能全面</p>
+                    <div class="ai-tool-links">
+                        <a href="https://chat.openai.com/" target="_blank" class="link-btn primary">開啟網頁版</a>
+                        <div class="app-links">
+                            <a href="https://apps.apple.com/tw/app/chatgpt/id6448311069" target="_blank" class="link-btn small">iOS App</a>
+                            <a href="https://play.google.com/store/apps/details?id=com.openai.chatgpt" target="_blank" class="link-btn small">Android App</a>
+                        </div>
+                    </div>
+                </div>
+                <!-- Gemini -->
+                <div class="ai-tool-card">
+                    <div class="ai-tool-icon">✨</div>
+                    <h3>Gemini</h3>
+                    <p>Google 開發的 AI，整合 Google 服務</p>
+                    <div class="ai-tool-links">
+                        <a href="https://gemini.google.com/app" target="_blank" class="link-btn primary">開啟網頁版</a>
+                        <div class="app-links">
+                            <a href="https://apps.apple.com/us/app/google-gemini/id6477489729" target="_blank" class="link-btn small">iOS App</a>
+                            <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.bard" target="_blank" class="link-btn small">Android App</a>
+                        </div>
+                    </div>
+                </div>
+                <!-- Grok -->
+                <div class="ai-tool-card">
+                    <div class="ai-tool-icon">🚀</div>
+                    <h3>Grok</h3>
+                    <p>xAI 開發的 AI，即時資訊能力強</p>
+                    <div class="ai-tool-links">
+                        <a href="https://grok.com/" target="_blank" class="link-btn primary">開啟網頁版</a>
+                        <div class="app-links">
+                            <a href="https://apps.apple.com/us/app/grok/id6670324846" target="_blank" class="link-btn small">iOS App</a>
+                            <a href="https://play.google.com/store/apps/details?id=ai.x.grok" target="_blank" class="link-btn small">Android App</a>
+                        </div>
+                    </div>
+                </div>
+                <!-- Manus -->
+                <div class="ai-tool-card">
+                    <div class="ai-tool-icon">🤖</div>
+                    <h3>Manus</h3>
+                    <p>AI 代理，可自動執行複雜任務</p>
+                    <div class="ai-tool-links">
+                        <a href="https://manus.im/app" target="_blank" class="link-btn primary">開啟網頁版</a>
+                    </div>
+                </div>
+                <!-- NotebookLM -->
+                <div class="ai-tool-card">
+                    <div class="ai-tool-icon">📓</div>
+                    <h3>NotebookLM</h3>
+                    <p>Google AI 筆記，上傳文件即可問答</p>
+                    <div class="ai-tool-links">
+                        <a href="https://notebooklm.google/" target="_blank" class="link-btn primary">開啟網頁版</a>
+                    </div>
+                </div>
+                <!-- Gemini Deep Research -->
+                <div class="ai-tool-card">
+                    <div class="ai-tool-icon">🔬</div>
+                    <h3>Deep Research</h3>
+                    <p>Gemini 深度研究功能，自動產出報告</p>
+                    <div class="ai-tool-links">
+                        <a href="https://gemini.google.com/app" target="_blank" class="link-btn primary">開啟 Gemini</a>
+                        <p class="link-note">選擇 Deep Research 模式</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Deep Research Section -->
+    <section id="deep-research" class="tool-section deep-research">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">🔬 Deep Research</span>
+                <h2 class="section-title">深度研究應用情境</h2>
+                <p class="section-desc">給一個研究主題 → AI 自動規劃研究方向 → 搜尋數十個來源 → 產出結構化報告</p>
+            </div>
+
+            <div class="comparison-table">
+                <h3>Deep Research vs 一般搜尋</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>比較項目</th>
+                            <th>一般 AI 對話</th>
+                            <th>Deep Research</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>搜尋深度</td>
+                            <td>1-3 個來源</td>
+                            <td>數十個來源</td>
+                        </tr>
+                        <tr>
+                            <td>處理時間</td>
+                            <td>即時回覆</td>
+                            <td>5-30 分鐘</td>
+                        </tr>
+                        <tr>
+                            <td>輸出格式</td>
+                            <td>簡短回答</td>
+                            <td>完整報告（含引用來源）</td>
+                        </tr>
+                        <tr>
+                            <td>適用情境</td>
+                            <td>快速問答</td>
+                            <td>深度調查、完整分析</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="department-grid">
+                <!-- RD -->
+                <div class="department-card">
+                    <div class="dept-header">
+                        <span class="dept-icon">🔬</span>
+                        <h4>研發工程師（RD）</h4>
+                    </div>
+                    <ul class="scenario-list">
+                        <li>
+                            <strong>技術趨勢報告</strong>
+                            <p>「請深入研究 2024-2025 年 Mini LED 檢測技術的發展趨勢，包含主要技術路線、領先廠商、專利佈局、未來 3 年預測」</p>
+                        </li>
+                        <li>
+                            <strong>競品技術分析</strong>
+                            <p>「請深入調查牧德科技的 AI-AOI 技術，包含技術原理、產品規格、客戶案例、專利、與其他競品的比較」</p>
+                        </li>
+                        <li>
+                            <strong>專利地圖分析</strong>
+                            <p>「請分析『雷射修補面板』相關專利的全球分布，包含主要專利權人、技術分類、近年趨勢」</p>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Sales -->
+                <div class="department-card">
+                    <div class="dept-header">
+                        <span class="dept-icon">💼</span>
+                        <h4>業務人員</h4>
+                    </div>
+                    <ul class="scenario-list">
+                        <li>
+                            <strong>客戶深度調查</strong>
+                            <p>「請深入研究群創光電，包含公司架構、主要產品線、近 3 年財務狀況、擴廠計畫、設備採購歷史、主要供應商」</p>
+                        </li>
+                        <li>
+                            <strong>市場規模分析</strong>
+                            <p>「請研究全球 PCB 檢測設備市場，包含市場規模、成長率、主要玩家市佔率、區域分布、未來 5 年預測」</p>
+                        </li>
+                        <li>
+                            <strong>競爭對手分析</strong>
+                            <p>「請全面分析德律科技，包含產品線、技術優勢、客戶群、定價策略、近期動態、優劣勢」</p>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- FAE -->
+                <div class="department-card">
+                    <div class="dept-header">
+                        <span class="dept-icon">🔧</span>
+                        <h4>FAE / 現場應用工程師</h4>
+                    </div>
+                    <ul class="scenario-list">
+                        <li>
+                            <strong>競品設備研究</strong>
+                            <p>「請深入調查 XX 品牌的 AOI 設備，包含技術規格、操作介面、常見問題、用戶評價、與我們的差異」</p>
+                        </li>
+                        <li>
+                            <strong>客戶製程研究</strong>
+                            <p>「請研究 HDI 高密度互連板的製程流程，包含各工站的檢測需求、品質管控重點」</p>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- PM -->
+                <div class="department-card">
+                    <div class="dept-header">
+                        <span class="dept-icon">📋</span>
+                        <h4>專案經理（PM）</h4>
+                    </div>
+                    <ul class="scenario-list">
+                        <li>
+                            <strong>專案風險研究</strong>
+                            <p>「請研究設備出口到越南的潛在風險，包含物流、關稅、法規、當地安裝挑戰、過去案例」</p>
+                        </li>
+                        <li>
+                            <strong>驗收標準研究</strong>
+                            <p>「請調查半導體設備驗收的產業標準，包含 FAT/SAT 流程、常見驗收項目、國際慣例」</p>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- HR -->
+                <div class="department-card">
+                    <div class="dept-header">
+                        <span class="dept-icon">👥</span>
+                        <h4>人資（HR）</h4>
+                    </div>
+                    <ul class="scenario-list">
+                        <li>
+                            <strong>薪資市調報告</strong>
+                            <p>「請深入調查台灣半導體設備產業的薪資水準，包含各職位薪資範圍、年資影響、區域差異、福利比較」</p>
+                        </li>
+                        <li>
+                            <strong>競業人才動態</strong>
+                            <p>「請調查牧德、德律、由田近期的人才招募動態，包含職缺類型、薪資水準、福利條件」</p>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Marketing -->
+                <div class="department-card">
+                    <div class="dept-header">
+                        <span class="dept-icon">📣</span>
+                        <h4>行銷人員</h4>
+                    </div>
+                    <ul class="scenario-list">
+                        <li>
+                            <strong>產業趨勢報告</strong>
+                            <p>「請深入研究全球面板產業 2025 年趨勢，包含市場規模、技術發展、主要玩家動態、對設備需求的影響」</p>
+                        </li>
+                        <li>
+                            <strong>展覽效益研究</strong>
+                            <p>「請調查 SEMICON Taiwan 的參展效益，包含參觀人數、買家輪廓、過去參展商的評價、最佳展位位置」</p>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- QA -->
+                <div class="department-card">
+                    <div class="dept-header">
+                        <span class="dept-icon">✅</span>
+                        <h4>品保工程師</h4>
+                    </div>
+                    <ul class="scenario-list">
+                        <li>
+                            <strong>認證要求研究</strong>
+                            <p>「請深入研究 CE 認證對工業設備的要求，包含適用指令、符合性評估程序、技術文件要求、認證機構」</p>
+                        </li>
+                        <li>
+                            <strong>可靠度工程</strong>
+                            <p>「請研究設備可靠度工程的最佳實踐，包含 MTBF 計算、加速壽命試驗、FMEA 方法」</p>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Management -->
+                <div class="department-card">
+                    <div class="dept-header">
+                        <span class="dept-icon">📊</span>
+                        <h4>管理層 / 幕僚</h4>
+                    </div>
+                    <ul class="scenario-list">
+                        <li>
+                            <strong>策略競爭分析</strong>
+                            <p>「請深入分析東捷科技的主要競爭對手（牧德、德律、由田），包含財務表現、技術實力、市場策略、SWOT 分析」</p>
+                        </li>
+                        <li>
+                            <strong>ESG 趨勢研究</strong>
+                            <p>「請研究半導體設備產業的 ESG 趨勢，包含碳中和目標、供應鏈要求、投資人關注點、領先企業實踐」</p>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Procurement -->
+                <div class="department-card">
+                    <div class="dept-header">
+                        <span class="dept-icon">🛒</span>
+                        <h4>採購</h4>
+                    </div>
+                    <ul class="scenario-list">
+                        <li>
+                            <strong>供應商深度調查</strong>
+                            <p>「請深入調查 XX 供應商，包含公司背景、財務狀況、產能、品質紀錄、客戶評價、風險評估」</p>
+                        </li>
+                        <li>
+                            <strong>供應鏈風險</strong>
+                            <p>「請分析全球半導體零組件供應鏈風險，包含地緣政治、自然災害、單一來源風險、因應策略」</p>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="tips-box">
+                <h3>💡 使用 Deep Research 的小技巧</h3>
+                <ol>
+                    <li><strong>研究主題要明確</strong>：說清楚你要調查什麼、需要哪些面向</li>
+                    <li><strong>給時間範圍</strong>：例如「2024-2025 年」「近 3 年」「未來 5 年預測」</li>
+                    <li><strong>指定輸出格式</strong>：例如「請產出包含數據圖表的報告」「請以 SWOT 分析呈現」</li>
+                    <li><strong>耐心等待</strong>：Deep Research 需要 5-30 分鐘，不是即時回覆</li>
+                    <li><strong>檢查來源</strong>：報告會附上引用來源，重要資訊請點擊原文確認</li>
+                </ol>
+            </div>
+        </div>
+    </section>
+
+    <!-- Manus Section -->
+    <section id="manus" class="tool-section manus">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">🤖 Manus</span>
+                <h2 class="section-title">AI 代理應用情境</h2>
+                <p class="section-desc">給 Manus 一個明確的任務指令，它會自動規劃步驟並執行</p>
+            </div>
+
+            <div class="department-grid">
+                <!-- RD -->
+                <div class="department-card">
+                    <div class="dept-header">
+                        <span class="dept-icon">🔬</span>
+                        <h4>研發工程師（RD）</h4>
+                    </div>
+                    <ul class="scenario-list">
+                        <li>
+                            <strong>技術趨勢調研</strong>
+                            <p>「幫我蒐集 2024-2025 年 Mini LED 檢測技術的最新發展，整理成表格，包含技術名稱、廠商、優缺點」</p>
+                        </li>
+                        <li>
+                            <strong>專利檢索</strong>
+                            <p>「搜尋與『AOI 光學檢測 AI 瑕疵辨識』相關的專利，列出前 20 筆，標註申請人與摘要」</p>
+                        </li>
+                        <li>
+                            <strong>競品技術分析</strong>
+                            <p>「調查牧德、德律、由田的最新 AOI 設備規格，做成比較表」</p>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Sales -->
+                <div class="department-card">
+                    <div class="dept-header">
+                        <span class="dept-icon">💼</span>
+                        <h4>業務人員</h4>
+                    </div>
+                    <ul class="scenario-list">
+                        <li>
+                            <strong>客戶背景調查</strong>
+                            <p>「幫我調查群創光電的最新營運狀況、近期擴廠計畫、主要設備供應商」</p>
+                        </li>
+                        <li>
+                            <strong>潛在客戶名單</strong>
+                            <p>「列出中國大陸前 20 大 PCB 廠商，包含營收規模、工廠地點、聯絡窗口」</p>
+                        </li>
+                        <li>
+                            <strong>展覽資訊整理</strong>
+                            <p>「列出 2025 年亞洲區半導體與 PCB 相關展覽，包含時間地點與報名截止日」</p>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- FAE -->
+                <div class="department-card">
+                    <div class="dept-header">
+                        <span class="dept-icon">🔧</span>
+                        <h4>FAE / 現場應用工程師</h4>
+                    </div>
+                    <ul class="scenario-list">
+                        <li>
+                            <strong>故障案例庫建立</strong>
+                            <p>「從這些客訴紀錄中，整理出常見故障類型與解決方案，做成查詢表」</p>
+                        </li>
+                        <li>
+                            <strong>技術文件翻譯</strong>
+                            <p>「把這份日文設備手冊翻譯成繁體中文，保留專業術語」</p>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- PM -->
+                <div class="department-card">
+                    <div class="dept-header">
+                        <span class="dept-icon">📋</span>
+                        <h4>專案經理（PM）</h4>
+                    </div>
+                    <ul class="scenario-list">
+                        <li>
+                            <strong>專案風險分析</strong>
+                            <p>「根據這份專案計畫，列出可能的風險項目與建議的應對措施」</p>
+                        </li>
+                        <li>
+                            <strong>進度報告產出</strong>
+                            <p>「根據這份 Excel 進度表，產出一份給客戶的週報摘要」</p>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- HR -->
+                <div class="department-card">
+                    <div class="dept-header">
+                        <span class="dept-icon">👥</span>
+                        <h4>人資（HR）</h4>
+                    </div>
+                    <ul class="scenario-list">
+                        <li>
+                            <strong>薪資市場調查</strong>
+                            <p>「調查南科地區『光學工程師』的薪資行情，包含年資與職級差異」</p>
+                        </li>
+                        <li>
+                            <strong>校園招募規劃</strong>
+                            <p>「列出台灣設有光電、機械、自動化相關科系的大學，排名與特色」</p>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Marketing -->
+                <div class="department-card">
+                    <div class="dept-header">
+                        <span class="dept-icon">📣</span>
+                        <h4>行銷人員</h4>
+                    </div>
+                    <ul class="scenario-list">
+                        <li>
+                            <strong>產業報告蒐集</strong>
+                            <p>「找出近期關於 Mini LED 市場的研究報告，整理重點數據」</p>
+                        </li>
+                        <li>
+                            <strong>SEO 關鍵字研究</strong>
+                            <p>「分析『AOI 檢測設備』相關的搜尋關鍵字與搜尋量」</p>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- QA -->
+                <div class="department-card">
+                    <div class="dept-header">
+                        <span class="dept-icon">✅</span>
+                        <h4>品保工程師</h4>
+                    </div>
+                    <ul class="scenario-list">
+                        <li>
+                            <strong>規範標準查詢</strong>
+                            <p>「整理 SEMI 規範中與設備安全相關的條款，做成檢核表」</p>
+                        </li>
+                        <li>
+                            <strong>認證要求整理</strong>
+                            <p>「整理 CE 認證對工業設備的要求，做成自我檢查清單」</p>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Management -->
+                <div class="department-card">
+                    <div class="dept-header">
+                        <span class="dept-icon">📊</span>
+                        <h4>管理層 / 幕僚</h4>
+                    </div>
+                    <ul class="scenario-list">
+                        <li>
+                            <strong>產業動態簡報</strong>
+                            <p>「整理本月面板與半導體產業的重大事件，做成 5 頁簡報重點」</p>
+                        </li>
+                        <li>
+                            <strong>競爭對手財報分析</strong>
+                            <p>「分析牧德、由田最新一季財報，比較營收、毛利率、研發費用」</p>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Procurement -->
+                <div class="department-card">
+                    <div class="dept-header">
+                        <span class="dept-icon">🛒</span>
+                        <h4>採購</h4>
+                    </div>
+                    <ul class="scenario-list">
+                        <li>
+                            <strong>供應商比價</strong>
+                            <p>「調查 XX 零組件的供應商報價與交期，做成比較表」</p>
+                        </li>
+                        <li>
+                            <strong>進口關稅查詢</strong>
+                            <p>「查詢從日本進口光學元件的關稅稅率與相關規定」</p>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="tips-box">
+                <h3>💡 使用 Manus 的小技巧</h3>
+                <ol>
+                    <li><strong>指令要具體</strong>：說清楚你要什麼格式（表格、清單、報告）</li>
+                    <li><strong>給範圍限制</strong>：例如「前 10 名」「近 3 年」「台灣地區」</li>
+                    <li><strong>說明用途</strong>：讓 Manus 知道資料要用在哪裡，它會調整內容深度</li>
+                    <li><strong>分段執行</strong>：複雜任務可以拆成幾個步驟，逐步完成</li>
+                </ol>
+            </div>
+        </div>
+    </section>
+
+    <!-- NotebookLM Section -->
+    <section id="notebooklm" class="tool-section notebooklm">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">📓 NotebookLM</span>
+                <h2 class="section-title">文件分析應用情境</h2>
+                <p class="section-desc">上傳文件 → 向 AI 提問 → 獲得基於文件內容的回答</p>
+            </div>
+
+            <div class="features-row">
+                <div class="feature-item">
+                    <span class="feature-icon">📄</span>
+                    <span>上傳文件</span>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-icon">💬</span>
+                    <span>智能問答</span>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-icon">📝</span>
+                    <span>摘要生成</span>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-icon">❓</span>
+                    <span>FAQ 生成</span>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-icon">🎙️</span>
+                    <span>Audio Overview</span>
+                </div>
+            </div>
+
+            <div class="department-grid">
+                <!-- RD -->
+                <div class="department-card">
+                    <div class="dept-header">
+                        <span class="dept-icon">🔬</span>
+                        <h4>研發工程師（RD）</h4>
+                    </div>
+                    <ul class="scenario-list">
+                        <li>
+                            <strong>快速掌握技術論文</strong>
+                            <p>上傳 5-10 篇相關論文 PDF → 問「這些論文的主要技術突破是什麼？」「哪些方法可以應用在 AOI 檢測？」</p>
+                        </li>
+                        <li>
+                            <strong>專利分析</strong>
+                            <p>上傳競爭對手的專利文件 → 問「這個專利的核心技術是什麼？」「有哪些迴避設計的可能？」</p>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Sales -->
+                <div class="department-card">
+                    <div class="dept-header">
+                        <span class="dept-icon">💼</span>
+                        <h4>業務人員</h4>
+                    </div>
+                    <ul class="scenario-list">
+                        <li>
+                            <strong>客戶 RFQ 分析</strong>
+                            <p>上傳客戶的報價需求書（RFQ）→ 問「客戶的核心需求是什麼？」「有哪些特殊規格要求？」「驗收條件有哪些？」</p>
+                        </li>
+                        <li>
+                            <strong>客戶年報研讀</strong>
+                            <p>上傳客戶的年報 PDF → 問「他們明年的資本支出計畫是什麼？」「哪些產線可能需要新設備？」</p>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- FAE -->
+                <div class="department-card">
+                    <div class="dept-header">
+                        <span class="dept-icon">🔧</span>
+                        <h4>FAE / 現場應用工程師</h4>
+                    </div>
+                    <ul class="scenario-list">
+                        <li>
+                            <strong>設備手冊速查</strong>
+                            <p>上傳設備操作手冊 → 問「XX 錯誤代碼代表什麼？如何排除？」「定期保養的項目有哪些？」</p>
+                        </li>
+                        <li>
+                            <strong>維修 SOP 建立</strong>
+                            <p>上傳多份維修紀錄 → 問「最常見的故障是什麼？」生成標準故障排除 SOP</p>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- PM -->
+                <div class="department-card">
+                    <div class="dept-header">
+                        <span class="dept-icon">📋</span>
+                        <h4>專案經理（PM）</h4>
+                    </div>
+                    <ul class="scenario-list">
+                        <li>
+                            <strong>合約重點掌握</strong>
+                            <p>上傳專案合約 → 問「主要的里程碑與交付日期是什麼？」「逾期罰則是什麼？」「驗收標準有哪些？」</p>
+                        </li>
+                        <li>
+                            <strong>會議紀錄整理</strong>
+                            <p>上傳多場會議紀錄 → 問「目前還有哪些未解決的議題？」「各方的行動項目是什麼？」</p>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- HR -->
+                <div class="department-card">
+                    <div class="dept-header">
+                        <span class="dept-icon">👥</span>
+                        <h4>人資（HR）</h4>
+                    </div>
+                    <ul class="scenario-list">
+                        <li>
+                            <strong>履歷篩選</strong>
+                            <p>上傳多份履歷 → 問「哪些候選人有 AOI 相關經驗？」「誰的學歷背景最符合需求？」</p>
+                        </li>
+                        <li>
+                            <strong>面試準備</strong>
+                            <p>上傳職位說明書 + 履歷 → 生成針對該候選人的面試問題</p>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Marketing -->
+                <div class="department-card">
+                    <div class="dept-header">
+                        <span class="dept-icon">📣</span>
+                        <h4>行銷人員</h4>
+                    </div>
+                    <ul class="scenario-list">
+                        <li>
+                            <strong>產業報告消化</strong>
+                            <p>上傳 50 頁的市場研究報告 → 問「報告的主要結論是什麼？」「與我們相關的數據有哪些？」</p>
+                        </li>
+                        <li>
+                            <strong>展覽準備</strong>
+                            <p>上傳產品技術文件 → 生成適合展覽使用的產品亮點摘要</p>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- QA -->
+                <div class="department-card">
+                    <div class="dept-header">
+                        <span class="dept-icon">✅</span>
+                        <h4>品保工程師</h4>
+                    </div>
+                    <ul class="scenario-list">
+                        <li>
+                            <strong>規範解讀</strong>
+                            <p>上傳 ISO、SEMI 規範文件 → 問「與我們產品相關的要求有哪些？」「需要準備哪些文件？」</p>
+                        </li>
+                        <li>
+                            <strong>稽核準備</strong>
+                            <p>上傳稽核檢查表 + 內部程序書 → 問「我們目前有哪些項目可能不符合？」「需要補強哪些文件？」</p>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Management -->
+                <div class="department-card">
+                    <div class="dept-header">
+                        <span class="dept-icon">📊</span>
+                        <h4>管理層 / 幕僚</h4>
+                    </div>
+                    <ul class="scenario-list">
+                        <li>
+                            <strong>財報快速掌握</strong>
+                            <p>上傳競爭對手財報 → 問「他們的營收成長來自哪裡？」「研發費用佔比多少？」「毛利率趨勢如何？」</p>
+                        </li>
+                        <li>
+                            <strong>法說會準備</strong>
+                            <p>上傳過去的法說會 Q&A → 問「投資人最常問的問題是什麼？」「我們應該準備哪些回答？」</p>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Procurement -->
+                <div class="department-card">
+                    <div class="dept-header">
+                        <span class="dept-icon">🛒</span>
+                        <h4>採購</h4>
+                    </div>
+                    <ul class="scenario-list">
+                        <li>
+                            <strong>供應商比較</strong>
+                            <p>上傳多家供應商的報價單 → 問「哪家的性價比最高？」「各家的優缺點是什麼？」</p>
+                        </li>
+                        <li>
+                            <strong>合約審閱</strong>
+                            <p>上傳採購合約 → 問「有哪些對我方不利的條款？」「付款條件是什麼？」「保固範圍包含哪些？」</p>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="audio-feature">
+                <h3>🎙️ 特別功能：Audio Overview（Podcast 摘要）</h3>
+                <p>NotebookLM 可以將上傳的文件轉換成 Podcast 風格的音訊摘要</p>
+                <div class="audio-uses">
+                    <div class="audio-use-item">
+                        <strong>通勤學習</strong>
+                        <p>將技術文件轉成音訊，在開車或搭車時聽</p>
+                    </div>
+                    <div class="audio-use-item">
+                        <strong>主管快速了解</strong>
+                        <p>將報告轉成 10 分鐘音訊，讓忙碌的主管快速掌握重點</p>
+                    </div>
+                    <div class="audio-use-item">
+                        <strong>團隊分享</strong>
+                        <p>將產業新知轉成音訊，在團隊群組分享</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tips-box">
+                <h3>💡 使用 NotebookLM 的小技巧</h3>
+                <ol>
+                    <li><strong>上傳相關文件</strong>：一個 Notebook 最多可上傳 50 個來源，上傳越相關的文件，回答越準確</li>
+                    <li><strong>問具體問題</strong>：不要問「這是什麼？」，要問「這份規格書中，檢測速度的要求是什麼？」</li>
+                    <li><strong>善用生成功能</strong>：FAQ、學習指南、摘要都是一鍵生成，省下大量時間</li>
+                    <li><strong>檢查來源</strong>：NotebookLM 會標註回答的來源出處，可以點擊查看原文確認</li>
+                    <li><strong>多個 Notebook</strong>：不同主題用不同的 Notebook，避免文件混雜</li>
+                </ol>
+            </div>
+        </div>
+    </section>
+
+    <!-- Prompts Section -->
+    <section id="prompts" class="prompts-section">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">📝 提示詞範本</span>
+                <h2 class="section-title">10 個 LLM 下指令範本</h2>
+                <p class="section-desc">複製範本 → 填入 [ ] 中的資訊 → 貼到 ChatGPT / Gemini / Grok</p>
+            </div>
+
+            <div class="prompts-grid">
+                <!-- Prompt 1 -->
+                <div class="prompt-card">
+                    <div class="prompt-header">
+                        <span class="prompt-number">01</span>
+                        <div class="prompt-meta">
+                            <h4>研發部門 - 撰寫技術規格書</h4>
+                            <span class="prompt-dept">RD 工程師</span>
+                        </div>
+                    </div>
+                    <div class="prompt-content">
+                        <div class="prompt-section">
+                            <h5>一、角色 (Role)</h5>
+                            <p>你是一位擁有 15 年經驗的「半導體設備技術文件專家」，專精於撰寫符合國際標準的技術規格書 (Technical Specification)，熟悉 SEMI 規範與設備產業的專業術語。</p>
+                        </div>
+                        <div class="prompt-section">
+                            <h5>二、情境 (Context)</h5>
+                            <p>我是東捷科技的研發工程師，我們剛完成一台新的 [請填入設備名稱，例如：AOI 光學檢測機] 的開發。</p>
+                            <ul>
+                                <li>設備用途：[請簡述設備主要功能]</li>
+                                <li>核心技術：[請填入關鍵技術，例如：AI 瑕疵辨識、高速影像處理]</li>
+                                <li>目標客戶：[請填入，例如：面板廠、PCB 廠]</li>
+                            </ul>
+                            <p>我需要一份完整的技術規格書，提供給客戶進行設備評估。</p>
+                        </div>
+                        <div class="prompt-section">
+                            <h5>三、期望 (Expectation)</h5>
+                            <p>請以專業技術文件的格式，產出一份結構完整的技術規格書大綱，包含：</p>
+                            <ol>
+                                <li>設備概述與應用場景</li>
+                                <li>主要技術規格（含表格格式）</li>
+                                <li>系統架構說明</li>
+                                <li>軟體功能規格</li>
+                                <li>環境與安裝需求</li>
+                                <li>維護保養建議</li>
+                            </ol>
+                        </div>
+                    </div>
+                    <button class="copy-btn" onclick="copyPrompt(this)">複製範本</button>
+                </div>
+
+                <!-- Prompt 2 -->
+                <div class="prompt-card">
+                    <div class="prompt-header">
+                        <span class="prompt-number">02</span>
+                        <div class="prompt-meta">
+                            <h4>業務部門 - 客戶提案簡報</h4>
+                            <span class="prompt-dept">業務人員</span>
+                        </div>
+                    </div>
+                    <div class="prompt-content">
+                        <div class="prompt-section">
+                            <h5>一、角色 (Role)</h5>
+                            <p>你是一位擁有 20 年經驗的「半導體設備業務顧問」，專精於將複雜的技術規格轉化為客戶聽得懂的商業價值，擅長製作具有說服力的客戶提案簡報。</p>
+                        </div>
+                        <div class="prompt-section">
+                            <h5>二、情境 (Context)</h5>
+                            <p>我是東捷科技的業務人員，下週要向 [請填入客戶名稱，例如：群創光電] 提案我們的 [設備名稱]。</p>
+                            <ul>
+                                <li>客戶產業：[面板/PCB/半導體封裝]</li>
+                                <li>客戶痛點：[請簡述，例如：現有檢測設備誤判率高、產能不足]</li>
+                                <li>我們的優勢：[請填入，例如：AI 辨識準確率達 99.5%、檢測速度提升 30%]</li>
+                                <li>競爭對手：[請填入主要競品]</li>
+                            </ul>
+                        </div>
+                        <div class="prompt-section">
+                            <h5>三、期望 (Expectation)</h5>
+                            <p>請幫我規劃一份 15 分鐘的提案簡報大綱，包含：</p>
+                            <ol>
+                                <li>開場：客戶痛點共鳴（2 分鐘）</li>
+                                <li>解決方案：我們設備的核心價值（5 分鐘）</li>
+                                <li>技術優勢：與競品的差異化比較表（3 分鐘）</li>
+                                <li>成功案例：類似客戶的導入效益（3 分鐘）</li>
+                                <li>結尾：合作方案與下一步行動（2 分鐘）</li>
+                            </ol>
+                        </div>
+                    </div>
+                    <button class="copy-btn" onclick="copyPrompt(this)">複製範本</button>
+                </div>
+
+                <!-- Prompt 3 -->
+                <div class="prompt-card">
+                    <div class="prompt-header">
+                        <span class="prompt-number">03</span>
+                        <div class="prompt-meta">
+                            <h4>工程部門 - 設備故障排除 SOP</h4>
+                            <span class="prompt-dept">FAE / 維修工程師</span>
+                        </div>
+                    </div>
+                    <div class="prompt-content">
+                        <div class="prompt-section">
+                            <h5>一、角色 (Role)</h5>
+                            <p>你是一位擁有 15 年現場經驗的「設備維護資深工程師」，專精於光學檢測設備與雷射加工設備的故障診斷，擅長將複雜的維修流程轉化為易懂的 SOP 文件。</p>
+                        </div>
+                        <div class="prompt-section">
+                            <h5>二、情境 (Context)</h5>
+                            <p>我是東捷科技的 FAE（現場應用工程師），需要為客戶建立一份 [設備名稱] 的常見故障排除手冊。</p>
+                            <ul>
+                                <li>設備類型：[AOI 檢測機/雷射修補機/自動化設備]</li>
+                                <li>常見問題：[請列出 3-5 個常見故障現象]</li>
+                                <li>使用者：客戶端的設備操作員（非專業維修人員）</li>
+                            </ul>
+                        </div>
+                        <div class="prompt-section">
+                            <h5>三、期望 (Expectation)</h5>
+                            <p>請針對每個故障現象，產出一份結構化的排除 SOP，格式如下：</p>
+                            <ol>
+                                <li>故障現象描述</li>
+                                <li>可能原因（依機率排序）</li>
+                                <li>排除步驟（含圖示說明位置）</li>
+                                <li>預防措施</li>
+                                <li>何時需要聯繫東捷技術支援</li>
+                            </ol>
+                            <p>請使用條列式，語言簡潔易懂。</p>
+                        </div>
+                    </div>
+                    <button class="copy-btn" onclick="copyPrompt(this)">複製範本</button>
+                </div>
+
+                <!-- Prompt 4 -->
+                <div class="prompt-card">
+                    <div class="prompt-header">
+                        <span class="prompt-number">04</span>
+                        <div class="prompt-meta">
+                            <h4>專案管理 - 設備導入專案計畫</h4>
+                            <span class="prompt-dept">PM</span>
+                        </div>
+                    </div>
+                    <div class="prompt-content">
+                        <div class="prompt-section">
+                            <h5>一、角色 (Role)</h5>
+                            <p>你是一位擁有 PMP 認證的「設備導入專案經理」，專精於半導體與面板產業的設備安裝專案，熟悉從出貨、安裝、調機到驗收的完整流程。</p>
+                        </div>
+                        <div class="prompt-section">
+                            <h5>二、情境 (Context)</h5>
+                            <p>我是東捷科技的專案經理，即將執行一個 [客戶名稱] 的設備導入專案。</p>
+                            <ul>
+                                <li>設備數量：[X 台]</li>
+                                <li>設備類型：[請填入]</li>
+                                <li>安裝地點：[請填入，例如：台南科學園區]</li>
+                                <li>客戶要求的完工日期：[請填入]</li>
+                                <li>特殊挑戰：[請填入，例如：需配合客戶產線不停機安裝]</li>
+                            </ul>
+                        </div>
+                        <div class="prompt-section">
+                            <h5>三、期望 (Expectation)</h5>
+                            <p>請幫我規劃一份完整的專案計畫書大綱，包含：</p>
+                            <ol>
+                                <li>專案範圍與交付標的</li>
+                                <li>里程碑時程表（甘特圖格式）</li>
+                                <li>人力資源配置</li>
+                                <li>風險評估與應對策略</li>
+                                <li>客戶溝通計畫</li>
+                                <li>驗收標準與流程</li>
+                            </ol>
+                        </div>
+                    </div>
+                    <button class="copy-btn" onclick="copyPrompt(this)">複製範本</button>
+                </div>
+
+                <!-- Prompt 5 -->
+                <div class="prompt-card">
+                    <div class="prompt-header">
+                        <span class="prompt-number">05</span>
+                        <div class="prompt-meta">
+                            <h4>人資部門 - 技術人才招募文案</h4>
+                            <span class="prompt-dept">HR</span>
+                        </div>
+                    </div>
+                    <div class="prompt-content">
+                        <div class="prompt-section">
+                            <h5>一、角色 (Role)</h5>
+                            <p>你是一位專精於「科技業雇主品牌行銷」的人資顧問，擅長撰寫能吸引頂尖技術人才的職缺文案，深諳工程師求職時在意的關鍵要素。</p>
+                        </div>
+                        <div class="prompt-section">
+                            <h5>二、情境 (Context)</h5>
+                            <p>我是東捷科技的人資，目前急需招募 [職位名稱，例如：AI 演算法工程師 / 光學系統工程師 / FAE]。</p>
+                            <ul>
+                                <li>工作地點：[南科/高雄/台中/新竹]</li>
+                                <li>主要職責：[請簡述]</li>
+                                <li>必備技能：[請列出]</li>
+                                <li>我們的優勢：[例如：參與 Mini LED 前沿技術、2024 AI Award 得獎團隊、東台集團資源]</li>
+                            </ul>
+                        </div>
+                        <div class="prompt-section">
+                            <h5>三、期望 (Expectation)</h5>
+                            <p>請幫我撰寫一份能在 104/LinkedIn 上脫穎而出的職缺文案，包含：</p>
+                            <ol>
+                                <li>吸睛標題（不超過 20 字）</li>
+                                <li>開場 Hook（讓工程師想繼續看下去）</li>
+                                <li>工作內容（用「你將會...」的句型）</li>
+                                <li>我們提供的成長機會</li>
+                                <li>團隊文化描述</li>
+                                <li>應徵行動呼籲</li>
+                            </ol>
+                            <p>語氣專業但有溫度，避免制式官腔。</p>
+                        </div>
+                    </div>
+                    <button class="copy-btn" onclick="copyPrompt(this)">複製範本</button>
+                </div>
+
+                <!-- Prompt 6 -->
+                <div class="prompt-card">
+                    <div class="prompt-header">
+                        <span class="prompt-number">06</span>
+                        <div class="prompt-meta">
+                            <h4>行銷部門 - 展覽攤位文宣</h4>
+                            <span class="prompt-dept">行銷人員</span>
+                        </div>
+                    </div>
+                    <div class="prompt-content">
+                        <div class="prompt-section">
+                            <h5>一、角色 (Role)</h5>
+                            <p>你是一位專精於「B2B 科技產業展覽行銷」的資深文案，熟悉 TPCA Show、SEMICON Taiwan 等專業展覽的參展策略，擅長在有限空間內傳達技術價值。</p>
+                        </div>
+                        <div class="prompt-section">
+                            <h5>二、情境 (Context)</h5>
+                            <p>東捷科技即將參加 [展覽名稱，例如：2025 TPCA Show 台灣電路板產業展]。</p>
+                            <ul>
+                                <li>主打產品：[請填入，例如：新一代 AI-AOI 檢測設備]</li>
+                                <li>產品亮點：[請列出 3 個核心賣點]</li>
+                                <li>目標客群：[PCB 廠製程/品管主管]</li>
+                                <li>攤位大小：[請填入]</li>
+                            </ul>
+                        </div>
+                        <div class="prompt-section">
+                            <h5>三、期望 (Expectation)</h5>
+                            <p>請幫我規劃以下展覽文宣內容：</p>
+                            <ol>
+                                <li>主視覺標語（10 字以內，一眼抓住目光）</li>
+                                <li>產品海報文案（A1 尺寸，50 字以內）</li>
+                                <li>產品 DM 單張內容大綱（正反面）</li>
+                                <li>攤位人員的 30 秒 Elevator Pitch 話術</li>
+                                <li>吸引人留下名片的互動機制建議</li>
+                            </ol>
+                        </div>
+                    </div>
+                    <button class="copy-btn" onclick="copyPrompt(this)">複製範本</button>
+                </div>
+
+                <!-- Prompt 7 -->
+                <div class="prompt-card">
+                    <div class="prompt-header">
+                        <span class="prompt-number">07</span>
+                        <div class="prompt-meta">
+                            <h4>品保部門 - 客訴處理回覆</h4>
+                            <span class="prompt-dept">品保 / 客服</span>
+                        </div>
+                    </div>
+                    <div class="prompt-content">
+                        <div class="prompt-section">
+                            <h5>一、角色 (Role)</h5>
+                            <p>你是一位擁有 15 年經驗的「設備業客戶服務經理」，專精於處理技術性客訴，擅長在維護客戶關係的同時，清楚說明技術問題與解決方案。</p>
+                        </div>
+                        <div class="prompt-section">
+                            <h5>二、情境 (Context)</h5>
+                            <p>我是東捷科技的品保工程師，收到客戶的一封客訴信件。</p>
+                            <ul>
+                                <li>客戶名稱：[請填入]</li>
+                                <li>設備型號：[請填入]</li>
+                                <li>客訴內容：[請簡述客戶反映的問題]</li>
+                                <li>我們的調查結果：[請填入初步調查發現]</li>
+                                <li>預計解決方案：[請填入]</li>
+                            </ul>
+                        </div>
+                        <div class="prompt-section">
+                            <h5>三、期望 (Expectation)</h5>
+                            <p>請幫我草擬一封專業的客訴回覆信件，需包含：</p>
+                            <ol>
+                                <li>開頭致歉與感謝回饋</li>
+                                <li>問題調查結果說明（用客戶聽得懂的語言）</li>
+                                <li>解決方案與時程承諾</li>
+                                <li>預防再發措施</li>
+                                <li>結尾表達重視合作關係</li>
+                            </ol>
+                            <p>語氣誠懇專業，避免推諉責任。</p>
+                        </div>
+                    </div>
+                    <button class="copy-btn" onclick="copyPrompt(this)">複製範本</button>
+                </div>
+
+                <!-- Prompt 8 -->
+                <div class="prompt-card">
+                    <div class="prompt-header">
+                        <span class="prompt-number">08</span>
+                        <div class="prompt-meta">
+                            <h4>研發部門 - 專利申請技術揭露書</h4>
+                            <span class="prompt-dept">RD / 智財</span>
+                        </div>
+                    </div>
+                    <div class="prompt-content">
+                        <div class="prompt-section">
+                            <h5>一、角色 (Role)</h5>
+                            <p>你是一位擁有專利工程師與研發背景的「智財顧問」，專精於半導體設備與光學檢測領域的專利撰寫，熟悉如何將技術創新轉化為具有保護力的專利文件。</p>
+                        </div>
+                        <div class="prompt-section">
+                            <h5>二、情境 (Context)</h5>
+                            <p>我是東捷科技的研發工程師，我們開發了一項新技術，需要申請專利保護。</p>
+                            <ul>
+                                <li>技術名稱：[請填入]</li>
+                                <li>技術領域：[AOI 檢測/雷射加工/自動化]</li>
+                                <li>創新點：[請描述這項技術與現有技術的差異]</li>
+                                <li>解決的問題：[請描述這項技術解決了什麼產業痛點]</li>
+                                <li>技術原理：[請簡述運作方式]</li>
+                            </ul>
+                        </div>
+                        <div class="prompt-section">
+                            <h5>三、期望 (Expectation)</h5>
+                            <p>請幫我草擬一份專利技術揭露書 (Invention Disclosure) 的初稿，包含：</p>
+                            <ol>
+                                <li>發明名稱（中英文）</li>
+                                <li>技術領域</li>
+                                <li>先前技術與其缺點</li>
+                                <li>本發明的技術特徵與優點</li>
+                                <li>實施方式說明</li>
+                                <li>申請專利範圍建議（獨立項與附屬項）</li>
+                            </ol>
+                        </div>
+                    </div>
+                    <button class="copy-btn" onclick="copyPrompt(this)">複製範本</button>
+                </div>
+
+                <!-- Prompt 9 -->
+                <div class="prompt-card">
+                    <div class="prompt-header">
+                        <span class="prompt-number">09</span>
+                        <div class="prompt-meta">
+                            <h4>業務部門 - 競品分析報告</h4>
+                            <span class="prompt-dept">業務主管</span>
+                        </div>
+                    </div>
+                    <div class="prompt-content">
+                        <div class="prompt-section">
+                            <h5>一、角色 (Role)</h5>
+                            <p>你是一位專精於「半導體設備產業」的市場研究分析師，擅長進行競品分析，能從技術規格、價格策略、市場定位等多維度進行比較，提供具有商業洞察的建議。</p>
+                        </div>
+                        <div class="prompt-section">
+                            <h5>二、情境 (Context)</h5>
+                            <p>我是東捷科技的業務主管，需要了解我們 [產品線名稱] 與主要競爭對手的差異。</p>
+                            <ul>
+                                <li>我們的產品：[請填入產品名稱與主要規格]</li>
+                                <li>主要競爭對手：[請列出 2-3 家，例如：牧德、德律、由田]</li>
+                                <li>目標市場：[面板/PCB/半導體]</li>
+                                <li>我們目前遇到的競爭挑戰：[請簡述]</li>
+                            </ul>
+                        </div>
+                        <div class="prompt-section">
+                            <h5>三、期望 (Expectation)</h5>
+                            <p>請提供一份結構化的競品分析報告，包含：</p>
+                            <ol>
+                                <li>競爭態勢總覽（市場定位圖）</li>
+                                <li>技術規格比較表（含我方與各競品）</li>
+                                <li>價格帶與性價比分析</li>
+                                <li>各競品的優劣勢分析</li>
+                                <li>我方的競爭策略建議（攻擊點與防守點）</li>
+                                <li>業務話術建議：當客戶提到競品時如何回應</li>
+                            </ol>
+                        </div>
+                    </div>
+                    <button class="copy-btn" onclick="copyPrompt(this)">複製範本</button>
+                </div>
+
+                <!-- Prompt 10 -->
+                <div class="prompt-card">
+                    <div class="prompt-header">
+                        <span class="prompt-number">10</span>
+                        <div class="prompt-meta">
+                            <h4>管理層 - 月會營運報告摘要</h4>
+                            <span class="prompt-dept">幕僚 / 主管</span>
+                        </div>
+                    </div>
+                    <div class="prompt-content">
+                        <div class="prompt-section">
+                            <h5>一、角色 (Role)</h5>
+                            <p>你是一位擁有 MBA 背景的「企業營運分析師」，專精於將複雜的營運數據轉化為高階主管易於理解的簡報摘要，擅長提煉關鍵洞察與行動建議。</p>
+                        </div>
+                        <div class="prompt-section">
+                            <h5>二、情境 (Context)</h5>
+                            <p>我是東捷科技的幕僚，需要為總經理準備月會的營運報告摘要。</p>
+                            <ul>
+                                <li>報告月份：[請填入]</li>
+                                <li>營收狀況：[請填入本月營收與目標達成率]</li>
+                                <li>訂單狀況：[請填入新接訂單與在手訂單]</li>
+                                <li>重大事項：[請列出本月重要事件，例如：新客戶開發、設備驗收、展覽參展]</li>
+                                <li>待解決議題：[請列出需要主管決策的事項]</li>
+                            </ul>
+                        </div>
+                        <div class="prompt-section">
+                            <h5>三、期望 (Expectation)</h5>
+                            <p>請幫我產出一份 1 頁 A4 的月會報告摘要，格式如下：</p>
+                            <ol>
+                                <li>本月營運 Highlight（3 點，每點一句話）</li>
+                                <li>關鍵指標儀表板（表格呈現：指標/目標/實際/達成率）</li>
+                                <li>重大事項進度追蹤（條列式）</li>
+                                <li>風險與議題（需主管關注或決策）</li>
+                                <li>下月工作重點（3-5 項）</li>
+                            </ol>
+                            <p>語氣簡潔有力，數據說話。</p>
+                        </div>
+                    </div>
+                    <button class="copy-btn" onclick="copyPrompt(this)">複製範本</button>
+                </div>
+
+                <!-- 生產部門情境 -->
+                <div class="prompt-divider">
+                    <span>🏭 生產部門情境</span>
+                </div>
+
+                <!-- Prompt 11 -->
+                <div class="prompt-card">
+                    <div class="prompt-header">
+                        <span class="prompt-number">11</span>
+                        <div class="prompt-meta">
+                            <h4>生產部門 - 生產排程優化</h4>
+                            <span class="prompt-dept">生產排程人員</span>
+                        </div>
+                    </div>
+                    <div class="prompt-content">
+                        <div class="prompt-section">
+                            <h5>一、角色 (Role)</h5>
+                            <p>你是一位擁有 15 年經驗的「精密設備製造生產管理專家」，專精於少量多樣的客製化設備生產排程，熟悉 AOI 檢測機與雷射加工設備的組裝流程。</p>
+                        </div>
+                        <div class="prompt-section">
+                            <h5>二、情境 (Context)</h5>
+                            <p>我是東捷科技生產部門的排程人員，目前手上有以下訂單：</p>
+                            <ul>
+                                <li>客戶 A：AOI 檢測機 2 台，交期 3/15</li>
+                                <li>客戶 B：雷射修補機 1 台，交期 3/10</li>
+                                <li>客戶 C：自動化模組 5 套，交期 3/20</li>
+                                <li>目前產線人力：組裝技師 8 人、測試工程師 3 人</li>
+                                <li>瓶頸工站：光學校正（每台需 2 天）</li>
+                            </ul>
+                        </div>
+                        <div class="prompt-section">
+                            <h5>三、期望 (Expectation)</h5>
+                            <p>請幫我規劃一份生產排程表，需包含：</p>
+                            <ol>
+                                <li>各訂單的開工與完工日期</li>
+                                <li>人力配置建議</li>
+                                <li>瓶頸工站的因應對策</li>
+                                <li>風險預警（哪些訂單可能延遲）</li>
+                            </ol>
+                        </div>
+                    </div>
+                    <button class="copy-btn" onclick="copyPrompt(this)">複製範本</button>
+                </div>
+
+                <!-- Prompt 12 -->
+                <div class="prompt-card">
+                    <div class="prompt-header">
+                        <span class="prompt-number">12</span>
+                        <div class="prompt-meta">
+                            <h4>生產部門 - 設備組裝 SOP 撰寫</h4>
+                            <span class="prompt-dept">生產組長</span>
+                        </div>
+                    </div>
+                    <div class="prompt-content">
+                        <div class="prompt-section">
+                            <h5>一、角色 (Role)</h5>
+                            <p>你是一位擁有 10 年經驗的「精密設備組裝工程師」，專精於光學檢測設備與雷射系統的組裝，擅長將複雜的組裝流程轉化為新人易懂的 SOP 文件。</p>
+                        </div>
+                        <div class="prompt-section">
+                            <h5>二、情境 (Context)</h5>
+                            <p>我是東捷科技生產部門的組長，需要為新進同仁撰寫 AOI 光學檢測機的組裝 SOP。</p>
+                            <ul>
+                                <li>設備主要模組：光源模組、CCD 鏡頭模組、XY 精密平台、控制機箱</li>
+                                <li>關鍵注意事項：光學元件需在無塵環境操作、鏡頭不可直接用手碰觸、光源模組需確認防靜電接地</li>
+                                <li>目標讀者：新進組裝技師（具基礎機械與電控背景）</li>
+                            </ul>
+                        </div>
+                        <div class="prompt-section">
+                            <h5>三、期望 (Expectation)</h5>
+                            <p>請產出一份結構化的組裝 SOP，包含：</p>
+                            <ol>
+                                <li>組裝前準備（工具、環境、安全）</li>
+                                <li>各模組組裝步驟（含順序與圖示說明位置）</li>
+                                <li>關鍵品質檢查點（Check Point）</li>
+                                <li>常見錯誤與預防方式</li>
+                                <li>組裝完成後的自主檢驗項目</li>
+                            </ol>
+                        </div>
+                    </div>
+                    <button class="copy-btn" onclick="copyPrompt(this)">複製範本</button>
+                </div>
+
+                <!-- Prompt 13 -->
+                <div class="prompt-card">
+                    <div class="prompt-header">
+                        <span class="prompt-number">13</span>
+                        <div class="prompt-meta">
+                            <h4>生產部門 - 生產異常分析報告</h4>
+                            <span class="prompt-dept">品保人員</span>
+                        </div>
+                    </div>
+                    <div class="prompt-content">
+                        <div class="prompt-section">
+                            <h5>一、角色 (Role)</h5>
+                            <p>你是一位擁有 15 年經驗的「設備製造品質工程師」，專精於運用 8D、魚骨圖、5 Why 等方法進行異常分析，熟悉精密設備的常見品質問題。</p>
+                        </div>
+                        <div class="prompt-section">
+                            <h5>二、情境 (Context)</h5>
+                            <p>我是東捷科技生產部門的品保人員，最近發生一起生產異常：</p>
+                            <ul>
+                                <li>異常現象：雷射修補機出光功率不穩定，波動範圍超過 ±10%</li>
+                                <li>發生時間點：組裝完成後的功能測試階段</li>
+                                <li>影響範圍：本批次 3 台中有 2 台發生</li>
+                                <li>已排除的原因：已確認雷射源本身輸出正常</li>
+                            </ul>
+                        </div>
+                        <div class="prompt-section">
+                            <h5>三、期望 (Expectation)</h5>
+                            <p>請協助我產出一份異常分析報告，包含：</p>
+                            <ol>
+                                <li>問題描述（5W1H）</li>
+                                <li>可能原因分析（魚骨圖或 5 Why）</li>
+                                <li>根本原因判定</li>
+                                <li>短期對策（圍堵措施）</li>
+                                <li>長期對策（預防再發）</li>
+                                <li>效果驗證方式</li>
+                            </ol>
+                        </div>
+                    </div>
+                    <button class="copy-btn" onclick="copyPrompt(this)">複製範本</button>
+                </div>
+
+                <!-- Prompt 14 -->
+                <div class="prompt-card">
+                    <div class="prompt-header">
+                        <span class="prompt-number">14</span>
+                        <div class="prompt-meta">
+                            <h4>生產部門 - 產能規劃與人力需求</h4>
+                            <span class="prompt-dept">生產主管</span>
+                        </div>
+                    </div>
+                    <div class="prompt-content">
+                        <div class="prompt-section">
+                            <h5>一、角色 (Role)</h5>
+                            <p>你是一位擁有 MBA 背景的「製造業營運規劃顧問」，專精於產能分析與人力資源配置，熟悉設備製造業的生產特性。</p>
+                        </div>
+                        <div class="prompt-section">
+                            <h5>二、情境 (Context)</h5>
+                            <p>我是東捷科技生產部門的主管，需要為下一季的產能做規劃。</p>
+                            <ul>
+                                <li>預估訂單量：AOI 檢測機 15 台、雷射修補機 8 台、自動化設備 10 套</li>
+                                <li>各產品標準工時：AOI 檢測機 120 工時/台、雷射修補機 150 工時/台、自動化設備 100 工時/套</li>
+                                <li>現有人力：組裝人員 10 人、測試工程師 4 人</li>
+                                <li>可用加班時數：每人每月上限 46 小時</li>
+                            </ul>
+                        </div>
+                        <div class="prompt-section">
+                            <h5>三、期望 (Expectation)</h5>
+                            <p>請幫我分析：</p>
+                            <ol>
+                                <li>下季總需求工時</li>
+                                <li>現有人力是否足夠（含加班）</li>
+                                <li>若不足，建議增補多少人力</li>
+                                <li>替代方案（如外包、調整交期）</li>
+                                <li>以表格呈現月份別的人力負荷率</li>
+                            </ol>
+                        </div>
+                    </div>
+                    <button class="copy-btn" onclick="copyPrompt(this)">複製範本</button>
+                </div>
+
+                <!-- Prompt 15 -->
+                <div class="prompt-card">
+                    <div class="prompt-header">
+                        <span class="prompt-number">15</span>
+                        <div class="prompt-meta">
+                            <h4>生產部門 - 設備測試報告撰寫</h4>
+                            <span class="prompt-dept">測試工程師</span>
+                        </div>
+                    </div>
+                    <div class="prompt-content">
+                        <div class="prompt-section">
+                            <h5>一、角色 (Role)</h5>
+                            <p>你是一位擁有 10 年經驗的「精密設備測試工程師」，專精於 AOI 與雷射設備的功能驗證，熟悉撰寫符合客戶驗收標準的測試報告。</p>
+                        </div>
+                        <div class="prompt-section">
+                            <h5>二、情境 (Context)</h5>
+                            <p>我是東捷科技生產部門的測試工程師，剛完成一台 AOI 光學檢測機的出貨前測試。</p>
+                            <ul>
+                                <li>測試項目：解析度測試、重複精度測試、檢測速度、誤判率測試</li>
+                                <li>測試結果：解析度 5 μm、重複精度 ±3 μm、檢測速度 800 pcs/min、誤判率 0.8%</li>
+                                <li>客戶規格要求：解析度 ≤ 10 μm、重複精度 ≤ ±5 μm、誤判率 ≤ 1%</li>
+                            </ul>
+                        </div>
+                        <div class="prompt-section">
+                            <h5>三、期望 (Expectation)</h5>
+                            <p>請幫我產出一份正式的設備測試報告，包含：</p>
+                            <ol>
+                                <li>測試設備基本資訊（型號、序號、客戶）</li>
+                                <li>測試環境條件（溫濕度、潔淨度）</li>
+                                <li>測試項目與結果對照表（含 Pass/Fail 判定）</li>
+                                <li>測試數據圖表（如適用）</li>
+                                <li>結論與建議</li>
+                                <li>簽核欄位</li>
+                            </ol>
+                        </div>
+                    </div>
+                    <button class="copy-btn" onclick="copyPrompt(this)">複製範本</button>
+                </div>
+
+                <!-- 倉庫部門情境 -->
+                <div class="prompt-divider">
+                    <span>📦 倉庫部門情境</span>
+                </div>
+
+                <!-- Prompt 16 -->
+                <div class="prompt-card">
+                    <div class="prompt-header">
+                        <span class="prompt-number">16</span>
+                        <div class="prompt-meta">
+                            <h4>倉庫部門 - 庫存盤點差異分析</h4>
+                            <span class="prompt-dept">倉管人員</span>
+                        </div>
+                    </div>
+                    <div class="prompt-content">
+                        <div class="prompt-section">
+                            <h5>一、角色 (Role)</h5>
+                            <p>你是一位擁有 10 年經驗的「倉儲管理專家」，專精於電子設備製造業的物料管理，擅長分析庫存差異並建立防呆機制。</p>
+                        </div>
+                        <div class="prompt-section">
+                            <h5>二、情境 (Context)</h5>
+                            <p>我是東捷科技倉庫部門的管理人員，剛完成月度盤點，發現以下差異：</p>
+                            <ul>
+                                <li>料號 A（光學鏡頭）：帳面 50 個，實際 47 個，短少 3 個</li>
+                                <li>料號 B（伺服馬達）：帳面 30 個，實際 32 個，多出 2 個</li>
+                                <li>料號 C（雷射模組）：帳面 10 個，實際 10 個，無差異</li>
+                                <li>這些都是高單價零件，需要向主管報告並提出改善對策</li>
+                            </ul>
+                        </div>
+                        <div class="prompt-section">
+                            <h5>三、期望 (Expectation)</h5>
+                            <p>請幫我產出一份盤點差異分析報告，包含：</p>
+                            <ol>
+                                <li>差異彙總表（料號、品名、帳面、實際、差異、金額影響）</li>
+                                <li>可能原因分析（依料號分別說明）</li>
+                                <li>短期處理方式（如何調帳、是否需報廢）</li>
+                                <li>長期改善對策（防止再發）</li>
+                                <li>建議的盤點頻率與方式調整</li>
+                            </ol>
+                        </div>
+                    </div>
+                    <button class="copy-btn" onclick="copyPrompt(this)">複製範本</button>
+                </div>
+
+                <!-- Prompt 17 -->
+                <div class="prompt-card">
+                    <div class="prompt-header">
+                        <span class="prompt-number">17</span>
+                        <div class="prompt-meta">
+                            <h4>倉庫部門 - 倉庫空間規劃</h4>
+                            <span class="prompt-dept">倉庫主管</span>
+                        </div>
+                    </div>
+                    <div class="prompt-content">
+                        <div class="prompt-section">
+                            <h5>一、角色 (Role)</h5>
+                            <p>你是一位擁有 15 年經驗的「倉儲物流規劃顧問」，專精於精密設備製造業的倉庫動線設計，熟悉 5S 與精實管理原則。</p>
+                        </div>
+                        <div class="prompt-section">
+                            <h5>二、情境 (Context)</h5>
+                            <p>我是東捷科技倉庫部門的主管，公司即將擴增產能，需要重新規劃倉庫空間。</p>
+                            <ul>
+                                <li>倉庫面積：500 坪</li>
+                                <li>物料類型：機構件（大型）、電子元件（小型高價）、光學零件（需防塵）、包材</li>
+                                <li>目前痛點：找料時間長、動線交叉、光學件易沾塵</li>
+                                <li>預計增加的物料量：增加 30%</li>
+                            </ul>
+                        </div>
+                        <div class="prompt-section">
+                            <h5>三、期望 (Expectation)</h5>
+                            <p>請幫我規劃倉庫空間配置，包含：</p>
+                            <ol>
+                                <li>分區建議（依物料特性）</li>
+                                <li>貨架類型選用（層架、棧板架、防塵櫃等）</li>
+                                <li>動線規劃（收料→儲存→揀料→發料）</li>
+                                <li>特殊環境需求（溫濕度、防塵、防靜電）</li>
+                                <li>空間配置示意圖描述</li>
+                            </ol>
+                        </div>
+                    </div>
+                    <button class="copy-btn" onclick="copyPrompt(this)">複製範本</button>
+                </div>
+
+                <!-- Prompt 18 -->
+                <div class="prompt-card">
+                    <div class="prompt-header">
+                        <span class="prompt-number">18</span>
+                        <div class="prompt-meta">
+                            <h4>倉庫部門 - 物料進出貨流程 SOP</h4>
+                            <span class="prompt-dept">倉管人員</span>
+                        </div>
+                    </div>
+                    <div class="prompt-content">
+                        <div class="prompt-section">
+                            <h5>一、角色 (Role)</h5>
+                            <p>你是一位擁有 10 年經驗的「倉儲作業流程專家」，專精於建立標準化的進出貨流程，熟悉 ERP 系統與條碼管理。</p>
+                        </div>
+                        <div class="prompt-section">
+                            <h5>二、情境 (Context)</h5>
+                            <p>我是東捷科技倉庫部門的人員，需要為新進同仁撰寫物料進出貨的 SOP。</p>
+                            <ul>
+                                <li>進貨來源：國內供應商、國外進口、廠內自製件</li>
+                                <li>出貨對象：生產線領料、客戶出貨、子公司調撥</li>
+                                <li>使用系統：SAP</li>
+                                <li>特殊要求：光學件需開箱檢驗、高價品需雙人複核</li>
+                            </ul>
+                        </div>
+                        <div class="prompt-section">
+                            <h5>三、期望 (Expectation)</h5>
+                            <p>請分別產出「進貨」與「出貨」的 SOP，各包含：</p>
+                            <ol>
+                                <li>流程圖（文字描述）</li>
+                                <li>各步驟負責人與作業內容</li>
+                                <li>系統操作要點</li>
+                                <li>單據與標籤要求</li>
+                                <li>異常處理流程（如數量不符、品質不良）</li>
+                            </ol>
+                        </div>
+                    </div>
+                    <button class="copy-btn" onclick="copyPrompt(this)">複製範本</button>
+                </div>
+
+                <!-- Prompt 19 -->
+                <div class="prompt-card">
+                    <div class="prompt-header">
+                        <span class="prompt-number">19</span>
+                        <div class="prompt-meta">
+                            <h4>倉庫部門 - 呆滯料處理建議</h4>
+                            <span class="prompt-dept">倉管主管</span>
+                        </div>
+                    </div>
+                    <div class="prompt-content">
+                        <div class="prompt-section">
+                            <h5>一、角色 (Role)</h5>
+                            <p>你是一位擁有 15 年經驗的「物料管理顧問」，專精於製造業的呆滯料分析與處理策略，熟悉會計稅務對存貨的相關規定。</p>
+                        </div>
+                        <div class="prompt-section">
+                            <h5>二、情境 (Context)</h5>
+                            <p>我是東捷科技倉庫部門的管理人員，年底需要清理呆滯料。呆滯定義：超過 6 個月無異動。</p>
+                            <ul>
+                                <li>光學鏡頭組（AOI 用）：12 套，金額 NT$ 1,200,000，呆滯原因：設計變更</li>
+                                <li>伺服馬達（舊機型用）：8 顆，金額 NT$ 480,000，呆滯原因：客戶取消</li>
+                                <li>雷射模組（備品）：3 套，金額 NT$ 900,000，呆滯原因：預測失準</li>
+                                <li>客製包材：500 組，金額 NT$ 150,000，呆滯原因：客戶取消 / MOQ 過量</li>
+                                <li>公司政策：超過 2 年需提列 100% 備抵損失</li>
+                            </ul>
+                        </div>
+                        <div class="prompt-section">
+                            <h5>三、期望 (Expectation)</h5>
+                            <p>請幫我產出一份呆滯料處理建議報告，包含：</p>
+                            <ol>
+                                <li>呆滯料分類（依原因、依金額大小）</li>
+                                <li>各類呆滯料的處理建議（轉用、退回供應商、報廢、拍賣）</li>
+                                <li>財務影響評估</li>
+                                <li>預防呆滯的改善建議</li>
+                                <li>執行時程規劃</li>
+                            </ol>
+                        </div>
+                    </div>
+                    <button class="copy-btn" onclick="copyPrompt(this)">複製範本</button>
+                </div>
+
+                <!-- Prompt 20 -->
+                <div class="prompt-card">
+                    <div class="prompt-header">
+                        <span class="prompt-number">20</span>
+                        <div class="prompt-meta">
+                            <h4>倉庫部門 - 安全庫存設定</h4>
+                            <span class="prompt-dept">倉管人員</span>
+                        </div>
+                    </div>
+                    <div class="prompt-content">
+                        <div class="prompt-section">
+                            <h5>一、角色 (Role)</h5>
+                            <p>你是一位擁有 10 年經驗的「供應鏈管理專家」，專精於製造業的庫存策略，熟悉安全庫存、再訂點（ROP）等計算方法。</p>
+                        </div>
+                        <div class="prompt-section">
+                            <h5>二、情境 (Context)</h5>
+                            <p>我是東捷科技倉庫部門的人員，需要重新檢視關鍵零件的安全庫存設定。</p>
+                            <ul>
+                                <li>光學鏡頭：單價 NT$ 25,000，供應商：台灣 X 光學，採購前置時間 21 天</li>
+                                <li>伺服馬達：單價 NT$ 18,000，供應商：日本 Y 電機，採購前置時間 45 天</li>
+                                <li>雷射模組：單價 NT$ 300,000，供應商：德國 Z Laser，採購前置時間 60 天</li>
+                                <li>供應風險：日本進口受船期影響，德國供應商需排產可能延遲 2-3 週</li>
+                            </ul>
+                        </div>
+                        <div class="prompt-section">
+                            <h5>三、期望 (Expectation)</h5>
+                            <p>請幫我計算並建議：</p>
+                            <ol>
+                                <li>安全庫存數量（含計算邏輯）</li>
+                                <li>再訂購點（ROP）</li>
+                                <li>最大庫存量建議</li>
+                                <li>建議的訂購週期與批量</li>
+                                <li>監控指標（如何知道該補貨了）</li>
+                            </ol>
+                        </div>
+                    </div>
+                    <button class="copy-btn" onclick="copyPrompt(this)">複製範本</button>
+                </div>
+
+                <!-- 採購部門情境 -->
+                <div class="prompt-divider">
+                    <span>🛒 採購部門情境</span>
+                </div>
+
+                <!-- Prompt 21 -->
+                <div class="prompt-card">
+                    <div class="prompt-header">
+                        <span class="prompt-number">21</span>
+                        <div class="prompt-meta">
+                            <h4>採購部門 - 供應商評鑑報告</h4>
+                            <span class="prompt-dept">採購人員</span>
+                        </div>
+                    </div>
+                    <div class="prompt-content">
+                        <div class="prompt-section">
+                            <h5>一、角色 (Role)</h5>
+                            <p>你是一位擁有 15 年經驗的「供應鏈管理顧問」，專精於精密設備製造業的供應商管理，熟悉 QCD（品質、成本、交期）評鑑方法論。</p>
+                        </div>
+                        <div class="prompt-section">
+                            <h5>二、情境 (Context)</h5>
+                            <p>我是東捷科技採購部門的人員，需要對關鍵供應商進行年度評鑑。</p>
+                            <ul>
+                                <li>供應商名稱：日本 Y 電機股份有限公司</li>
+                                <li>供應品項：伺服馬達、驅動器</li>
+                                <li>過去一年數據：交貨批次 48 批、準時交貨率 91%、進料檢驗合格率 98.5%、客訴件數 2 件</li>
+                                <li>配合度表現：技術支援即時，但交期變動時回覆速度偏慢</li>
+                            </ul>
+                        </div>
+                        <div class="prompt-section">
+                            <h5>三、期望 (Expectation)</h5>
+                            <p>請幫我產出一份供應商評鑑報告，包含：</p>
+                            <ol>
+                                <li>評鑑項目與權重（品質、交期、價格、服務、技術能力）</li>
+                                <li>各項目評分與總分</li>
+                                <li>等級判定（A/B/C/D）</li>
+                                <li>優缺點分析</li>
+                                <li>後續合作建議（續用、輔導改善、尋找替代）</li>
+                                <li>改善要求事項（若適用）</li>
+                            </ol>
+                        </div>
+                    </div>
+                    <button class="copy-btn" onclick="copyPrompt(this)">複製範本</button>
+                </div>
+
+                <!-- Prompt 22 -->
+                <div class="prompt-card">
+                    <div class="prompt-header">
+                        <span class="prompt-number">22</span>
+                        <div class="prompt-meta">
+                            <h4>採購部門 - 詢價比價分析</h4>
+                            <span class="prompt-dept">採購人員</span>
+                        </div>
+                    </div>
+                    <div class="prompt-content">
+                        <div class="prompt-section">
+                            <h5>一、角色 (Role)</h5>
+                            <p>你是一位擁有 10 年經驗的「策略採購專家」，專精於精密零組件的採購談判，擅長進行供應商報價分析與成本拆解。</p>
+                        </div>
+                        <div class="prompt-section">
+                            <h5>二、情境 (Context)</h5>
+                            <p>我是東捷科技採購部門的人員，正在為精密線性滑軌（AOI 用）進行詢價比價。</p>
+                            <ul>
+                                <li>需求數量：年用量 600 組</li>
+                                <li>規格要求：重複定位精度 ≤ ±5 μm、行程 600 mm、須通過 200 萬次壽命測試</li>
+                                <li>供應商 A（台灣）：單價 NT$ 4,800，交期 4 週，付款條件 30 天</li>
+                                <li>供應商 B（日本）：單價 NT$ 5,600，交期 6 週，付款條件 60 天</li>
+                                <li>供應商 C（中國）：單價 NT$ 4,200，交期 5 週，付款條件 30 天</li>
+                                <li>轉換成本：新供應商需重新驗證，預估成本 NT$ 200,000</li>
+                            </ul>
+                        </div>
+                        <div class="prompt-section">
+                            <h5>三、期望 (Expectation)</h5>
+                            <p>請幫我產出一份詢價比價分析表，包含：</p>
+                            <ol>
+                                <li>報價比較表（單價、年度總金額、交期、付款條件）</li>
+                                <li>總持有成本分析（TCO，含運費、驗證成本、庫存成本）</li>
+                                <li>各供應商優劣勢比較</li>
+                                <li>風險評估（單一來源風險、品質風險）</li>
+                                <li>採購建議與議價策略</li>
+                            </ol>
+                        </div>
+                    </div>
+                    <button class="copy-btn" onclick="copyPrompt(this)">複製範本</button>
+                </div>
+
+                <!-- Prompt 23 -->
+                <div class="prompt-card">
+                    <div class="prompt-header">
+                        <span class="prompt-number">23</span>
+                        <div class="prompt-meta">
+                            <h4>採購部門 - 交期追蹤與催料</h4>
+                            <span class="prompt-dept">採購人員</span>
+                        </div>
+                    </div>
+                    <div class="prompt-content">
+                        <div class="prompt-section">
+                            <h5>一、角色 (Role)</h5>
+                            <p>你是一位擁有 10 年經驗的「採購執行專家」，專精於供應商交期管理，擅長撰寫專業且有效的催料信函。</p>
+                        </div>
+                        <div class="prompt-section">
+                            <h5>二、情境 (Context)</h5>
+                            <p>我是東捷科技採購部門的人員，有一批關鍵物料即將延遲，需要催促供應商。</p>
+                            <ul>
+                                <li>供應商名稱：德國 Z Laser GmbH</li>
+                                <li>採購單號：PO-2026-0215</li>
+                                <li>物料名稱：高功率雷射模組（200W）</li>
+                                <li>原訂交期：2026/03/05</li>
+                                <li>供應商回覆的延遲原因：上游關鍵光纖元件交期延誤</li>
+                                <li>對我方的影響：影響客戶 B 雷射修補機出貨，存在違約金風險</li>
+                                <li>可接受的最晚交期：2026/03/15</li>
+                            </ul>
+                        </div>
+                        <div class="prompt-section">
+                            <h5>三、期望 (Expectation)</h5>
+                            <p>請幫我草擬一封催料信函（Email），需包含：</p>
+                            <ol>
+                                <li>開頭說明訂單資訊與目前狀況</li>
+                                <li>強調延遲對我方的影響（語氣專業不失禮）</li>
+                                <li>要求明確的交期承諾與出貨計畫</li>
+                                <li>提出替代方案（如分批交貨、空運）</li>
+                                <li>後續追蹤機制（每週回報進度）</li>
+                                <li>結尾表達合作誠意但也暗示後果</li>
+                            </ol>
+                        </div>
+                    </div>
+                    <button class="copy-btn" onclick="copyPrompt(this)">複製範本</button>
+                </div>
+
+                <!-- Prompt 24 -->
+                <div class="prompt-card">
+                    <div class="prompt-header">
+                        <span class="prompt-number">24</span>
+                        <div class="prompt-meta">
+                            <h4>採購部門 - 新供應商開發評估</h4>
+                            <span class="prompt-dept">採購主管</span>
+                        </div>
+                    </div>
+                    <div class="prompt-content">
+                        <div class="prompt-section">
+                            <h5>一、角色 (Role)</h5>
+                            <p>你是一位擁有 15 年經驗的「供應商開發經理」，專精於精密設備製造業的供應商尋找與評估，熟悉新供應商導入的風險管控。</p>
+                        </div>
+                        <div class="prompt-section">
+                            <h5>二、情境 (Context)</h5>
+                            <p>我是東捷科技採購部門的人員，需要開發精密光學鏡頭的新供應商。</p>
+                            <ul>
+                                <li>開發原因：現有供應商交期長且價格持續上漲，需降低單一來源風險</li>
+                                <li>零件規格需求：AOI 用工業級光學鏡頭、解析度支援 5 μm、需提供 MTF 與壽命測試報告</li>
+                                <li>潛在供應商名單：台灣 A 光學、日本 B 光學、韓國 C Optics</li>
+                                <li>評估重點：光學設計與製造能力、量產穩定度、財務穩定度、地理位置與交期彈性</li>
+                            </ul>
+                        </div>
+                        <div class="prompt-section">
+                            <h5>三、期望 (Expectation)</h5>
+                            <p>請幫我設計一份新供應商評估流程，包含：</p>
+                            <ol>
+                                <li>評估階段與時程（書面審查 → 實地稽核 → 打樣驗證 → 小量試產）</li>
+                                <li>各階段的評估項目與查檢表</li>
+                                <li>實地稽核的重點問題清單</li>
+                                <li>打樣驗證的測試項目建議</li>
+                                <li>供應商導入的風險評估與防範措施</li>
+                                <li>核准決策流程與權責</li>
+                            </ol>
+                        </div>
+                    </div>
+                    <button class="copy-btn" onclick="copyPrompt(this)">複製範本</button>
+                </div>
+
+                <!-- Prompt 25 -->
+                <div class="prompt-card">
+                    <div class="prompt-header">
+                        <span class="prompt-number">25</span>
+                        <div class="prompt-meta">
+                            <h4>採購部門 - 年度採購成本分析</h4>
+                            <span class="prompt-dept">採購主管</span>
+                        </div>
+                    </div>
+                    <div class="prompt-content">
+                        <div class="prompt-section">
+                            <h5>一、角色 (Role)</h5>
+                            <p>你是一位擁有 MBA 背景的「採購策略分析師」，專精於製造業的採購支出分析，擅長運用數據提出成本優化建議。</p>
+                        </div>
+                        <div class="prompt-section">
+                            <h5>二、情境 (Context)</h5>
+                            <p>我是東捷科技採購部門的主管，需要向高層報告年度採購成本分析。</p>
+                            <ul>
+                                <li>年度採購總金額：NT$ 320,000,000</li>
+                                <li>主要品類佔比：機構件 38%、電子元件 32%、光學零件 20%、包材與其他 10%</li>
+                                <li>主要供應商集中度：前 5 大供應商佔 62% 採購額</li>
+                                <li>與去年比較：整體採購成本上升 6.5%，光學零件類別上升 12%（原物料與匯率影響）</li>
+                                <li>今年的成本節省行動：導入第二來源供應商、年度框架合約談判、設計變更降低零件數量</li>
+                            </ul>
+                        </div>
+                        <div class="prompt-section">
+                            <h5>三、期望 (Expectation)</h5>
+                            <p>請幫我產出一份年度採購成本分析報告，包含：</p>
+                            <ol>
+                                <li>採購支出總覽（總金額、品類佔比、年度變化）</li>
+                                <li>價格趨勢分析（哪些漲、哪些跌、原因）</li>
+                                <li>供應商集中度分析與風險提示</li>
+                                <li>今年成本節省成果量化</li>
+                                <li>明年的成本優化機會點</li>
+                                <li>建議的採購策略方向</li>
+                            </ol>
+                        </div>
+                    </div>
+                    <button class="copy-btn" onclick="copyPrompt(this)">複製範本</button>
+                </div>
+            </div>
+
+            <div class="prompts-summary">
+                <h3>範本總覽</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>部門</th>
+                            <th>應用情境</th>
+                            <th>適用對象</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>1</td><td>研發</td><td>技術規格書</td><td>RD 工程師</td></tr>
+                        <tr><td>2</td><td>業務</td><td>客戶提案簡報</td><td>業務人員</td></tr>
+                        <tr><td>3</td><td>工程</td><td>故障排除 SOP</td><td>FAE / 維修工程師</td></tr>
+                        <tr><td>4</td><td>專案</td><td>設備導入計畫</td><td>PM</td></tr>
+                        <tr><td>5</td><td>人資</td><td>技術人才招募</td><td>HR</td></tr>
+                        <tr><td>6</td><td>行銷</td><td>展覽攤位文宣</td><td>行銷人員</td></tr>
+                        <tr><td>7</td><td>品保</td><td>客訴處理回覆</td><td>品保 / 客服</td></tr>
+                        <tr><td>8</td><td>研發</td><td>專利技術揭露</td><td>RD / 智財</td></tr>
+                        <tr><td>9</td><td>業務</td><td>競品分析報告</td><td>業務主管</td></tr>
+                        <tr><td>10</td><td>管理</td><td>月會營運報告</td><td>幕僚 / 主管</td></tr>
+                        <tr><td colspan="4" style="background: rgba(255,215,0,0.1); font-weight: bold;">🏭 生產部門</td></tr>
+                        <tr><td>11</td><td>生產</td><td>生產排程優化</td><td>生產排程人員</td></tr>
+                        <tr><td>12</td><td>生產</td><td>設備組裝 SOP</td><td>生產組長</td></tr>
+                        <tr><td>13</td><td>生產</td><td>生產異常分析</td><td>品保人員</td></tr>
+                        <tr><td>14</td><td>生產</td><td>產能規劃</td><td>生產主管</td></tr>
+                        <tr><td>15</td><td>生產</td><td>設備測試報告</td><td>測試工程師</td></tr>
+                        <tr><td colspan="4" style="background: rgba(255,215,0,0.1); font-weight: bold;">📦 倉庫部門</td></tr>
+                        <tr><td>16</td><td>倉庫</td><td>盤點差異分析</td><td>倉管人員</td></tr>
+                        <tr><td>17</td><td>倉庫</td><td>倉庫空間規劃</td><td>倉庫主管</td></tr>
+                        <tr><td>18</td><td>倉庫</td><td>進出貨流程 SOP</td><td>倉管人員</td></tr>
+                        <tr><td>19</td><td>倉庫</td><td>呆滯料處理</td><td>倉管主管</td></tr>
+                        <tr><td>20</td><td>倉庫</td><td>安全庫存設定</td><td>倉管人員</td></tr>
+                        <tr><td colspan="4" style="background: rgba(255,215,0,0.1); font-weight: bold;">🛒 採購部門</td></tr>
+                        <tr><td>21</td><td>採購</td><td>供應商評鑑</td><td>採購人員</td></tr>
+                        <tr><td>22</td><td>採購</td><td>詢價比價分析</td><td>採購人員</td></tr>
+                        <tr><td>23</td><td>採購</td><td>交期追蹤催料</td><td>採購人員</td></tr>
+                        <tr><td>24</td><td>採購</td><td>新供應商開發</td><td>採購主管</td></tr>
+                        <tr><td>25</td><td>採購</td><td>年度成本分析</td><td>採購主管</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- Resources Section -->
+    <section id="resources" class="resources-section">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">🔧 實用連結</span>
+                <h2 class="section-title">課程中使用的工具與資源</h2>
+                <p class="section-desc">課堂上分享的實用網站與工具</p>
+            </div>
+            <div class="resources-grid">
+                <div class="resource-card">
+                    <div class="resource-icon">💻</div>
+                    <h3>CodePen</h3>
+                    <p>線上程式碼編輯器，可即時預覽 HTML/CSS/JS</p>
+                    <a href="https://codepen.io/" target="_blank" class="resource-link">開啟 CodePen →</a>
+                </div>
+                <div class="resource-card">
+                    <div class="resource-icon">🎙️</div>
+                    <h3>NotebookLM 教學</h3>
+                    <p>NotebookLM 完整教學資源</p>
+                    <a href="https://notebooklm.10xboost.org/" target="_blank" class="resource-link">查看教學 →</a>
+                </div>
+                <div class="resource-card">
+                    <div class="resource-icon">🎨</div>
+                    <h3>LINE 貼圖產生器</h3>
+                    <p>用 AI 快速製作 LINE 貼圖</p>
+                    <a href="https://line-sticker.manus.space/" target="_blank" class="resource-link">製作貼圖 →</a>
+                </div>
+                <div class="resource-card">
+                    <div class="resource-icon">✨</div>
+                    <h3>黃金提示詞優化師</h3>
+                    <p>阿峰老師的提示詞優化範例</p>
+                    <a href="https://gemini.google.com/share/225f4a2253ad" target="_blank" class="resource-link">查看範例 →</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <p>AI 軟體使用實作技巧</p>
+                <p>東捷科技股份有限公司 課後重點整理</p>
+                <p class="footer-date">2026 年 1 月 30 日</p>
+            </div>
+            <div class="footer-instructor">
+                <p>講師：黃敬峰（AI 峰哥）</p>
+                <p>交點文化股份有限公司</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+</body>
+</html>
