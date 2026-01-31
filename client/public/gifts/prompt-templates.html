@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prompt 範本大全 | 阿峰老師 AI 課程</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            padding: 40px 20px;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .gift-badge {
+            display: inline-block;
+            background: #FFD700;
+            color: #333;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+
+        .card h2 {
+            color: #667eea;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card h3 {
+            color: #333;
+            margin: 20px 0 10px 0;
+            font-size: 1.1em;
+        }
+
+        .prompt-box {
+            background: #f8f9fa;
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 0 8px 8px 0;
+            font-family: monospace;
+            font-size: 0.95em;
+            line-height: 1.6;
+            position: relative;
+        }
+
+        .prompt-box::before {
+            content: "複製此 Prompt";
+            position: absolute;
+            top: -10px;
+            right: 10px;
+            background: #667eea;
+            color: white;
+            padding: 2px 10px;
+            border-radius: 10px;
+            font-size: 0.7em;
+            font-family: sans-serif;
+        }
+
+        .tip {
+            background: #fff3cd;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            display: flex;
+            gap: 10px;
+        }
+
+        .tip-icon {
+            font-size: 1.5em;
+        }
+
+        .category-tag {
+            display: inline-block;
+            background: #e9ecef;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.85em;
+            margin-right: 8px;
+            margin-bottom: 8px;
+        }
+
+        .footer {
+            text-align: center;
+            color: white;
+            padding: 30px;
+            opacity: 0.9;
+        }
+
+        .footer a {
+            color: #FFD700;
+            text-decoration: none;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: #FFD700;
+            color: #333;
+            padding: 15px 40px;
+            border-radius: 30px;
+            font-weight: bold;
+            text-decoration: none;
+            margin-top: 20px;
+            transition: transform 0.2s;
+        }
+
+        .cta-button:hover {
+            transform: scale(1.05);
+        }
+
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            .header {
+                color: #333;
+            }
+            .card {
+                box-shadow: none;
+                border: 1px solid #ddd;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="gift-badge">🎁 加入好友專屬禮物</div>
+            <h1>Prompt 範本大全</h1>
+            <p>10 個萬用 Prompt，讓 AI 秒懂你的需求</p>
+            <p style="margin-top: 10px; font-size: 0.9em;">by 阿峰老師 ✨</p>
+        </div>
+
+        <!-- 萬用公式 -->
+        <div class="card">
+            <h2>🧪 萬用 Prompt 公式</h2>
+            <p>記住這個公式，任何情境都能用：</p>
+            <div class="prompt-box">
+你是 [角色]，
+請幫我 [任務]，
+用 [格式] 呈現，
+注意 [限制條件]。
+            </div>
+            <div class="tip">
+                <span class="tip-icon">💡</span>
+                <div>
+                    <strong>阿峰老師說：</strong><br>
+                    角色越具體，回答越精準。「你是專業文案寫手」比「你是作家」好 10 倍！
+                </div>
+            </div>
+        </div>
+
+        <!-- 範本 1: Email -->
+        <div class="card">
+            <h2>✉️ 範本 1：寫商業 Email</h2>
+            <span class="category-tag">業務</span>
+            <span class="category-tag">職場溝通</span>
+
+            <div class="prompt-box">
+你是一位專業的商業文案寫手，
+請幫我寫一封 [目的] 的 Email，
+
+背景：[簡述情況]
+對象：[收件人身份]
+語氣：[專業/友善/正式/輕鬆]
+
+請用以下格式：
+- 主旨行（吸引人打開）
+- 開頭問候
+- 正文（重點條列）
+- 結尾行動呼籲
+            </div>
+
+            <h3>實際範例</h3>
+            <div class="prompt-box">
+你是一位專業的商業文案寫手，
+請幫我寫一封催款的 Email，
+
+背景：客戶已逾期付款 30 天，金額 5 萬元
+對象：合作三年的老客戶
+語氣：禮貌但堅定
+
+請用以下格式：
+- 主旨行（吸引人打開）
+- 開頭問候
+- 正文（重點條列）
+- 結尾行動呼籲
+            </div>
+        </div>
+
+        <!-- 範本 2: 會議紀錄 -->
+        <div class="card">
+            <h2>📝 範本 2：整理會議紀錄</h2>
+            <span class="category-tag">效率</span>
+            <span class="category-tag">職場必備</span>
+
+            <div class="prompt-box">
+請幫我整理以下會議內容：
+
+[貼上會議逐字稿或筆記]
+
+請用以下格式輸出：
+1. 會議摘要（3-5 句話）
+2. 重點決議（條列式）
+3. 待辦事項（含負責人和期限）
+4. 下次會議議題（如有）
+            </div>
+        </div>
+
+        <!-- 範本 3: 客戶開發信 -->
+        <div class="card">
+            <h2>🎯 範本 3：寫客戶開發信</h2>
+            <span class="category-tag">業務</span>
+            <span class="category-tag">銷售</span>
+
+            <div class="prompt-box">
+你是一位 B2B 銷售專家，
+請幫我寫一封開發信給潛在客戶，
+
+我的產品/服務：[簡述]
+目標客戶：[產業/職位]
+客戶可能的痛點：[列出 2-3 個]
+我能提供的價值：[列出 2-3 個]
+
+要求：
+- 開頭不要用「您好，我是...」這種老套開場
+- 聚焦客戶痛點，不要自吹自擂
+- 結尾要有明確的行動呼籲
+- 總長度 150 字以內
+            </div>
+        </div>
+
+        <!-- 範本 4: 文件摘要 -->
+        <div class="card">
+            <h2>📄 範本 4：快速摘要文件</h2>
+            <span class="category-tag">效率</span>
+            <span class="category-tag">閱讀</span>
+
+            <div class="prompt-box">
+請分析以下文件內容：
+
+[貼上文件內容]
+
+請給我：
+1. 一句話摘要（30 字內）
+2. 三個重點（條列式）
+3. 對 [我的角色] 的影響
+4. 建議的下一步行動
+            </div>
+        </div>
+
+        <!-- 範本 5: 簡報大綱 -->
+        <div class="card">
+            <h2>📊 範本 5：製作簡報大綱</h2>
+            <span class="category-tag">提案</span>
+            <span class="category-tag">簡報</span>
+
+            <div class="prompt-box">
+你是簡報設計專家，
+請幫我設計一份 [主題] 的簡報大綱，
+
+目的：[說服/教育/報告]
+聽眾：[描述聽眾背景]
+時間：[X 分鐘]
+重點訊息：[希望聽眾記住什麼]
+
+請給我：
+1. 建議的簡報結構（幾張投影片）
+2. 每張投影片的標題和要點
+3. 開場和結尾的建議
+            </div>
+        </div>
+
+        <!-- 範本 6: 學習新技能 -->
+        <div class="card">
+            <h2>🎓 範本 6：學習新技能</h2>
+            <span class="category-tag">學習</span>
+            <span class="category-tag">自我成長</span>
+
+            <div class="prompt-box">
+你是 [領域] 的專業教練，
+我想學習 [技能名稱]，
+
+我的背景：[相關經驗或程度]
+可投入時間：每天 [X] 分鐘
+學習目標：[具體想達到什麼程度]
+
+請給我：
+1. 30 天學習計畫
+2. 推薦的學習資源（免費優先）
+3. 每週的里程碑
+4. 常見錯誤提醒
+            </div>
+        </div>
+
+        <!-- 範本 7: 社群貼文 -->
+        <div class="card">
+            <h2>📱 範本 7：寫社群貼文</h2>
+            <span class="category-tag">行銷</span>
+            <span class="category-tag">社群</span>
+
+            <div class="prompt-box">
+你是社群行銷專家，
+請幫我寫一則 [平台：FB/IG/LinkedIn] 貼文，
+
+主題：[描述]
+目標：[互動/導購/品牌曝光]
+目標受眾：[描述]
+品牌調性：[專業/親切/幽默]
+
+要求：
+- 開頭 hook 要吸引人停下來看
+- 適當使用 emoji
+- 結尾加上行動呼籲
+- [如果是 IG] 建議 5 個 hashtag
+            </div>
+        </div>
+
+        <!-- 範本 8: 翻譯潤飾 -->
+        <div class="card">
+            <h2>🌍 範本 8：翻譯與潤飾</h2>
+            <span class="category-tag">翻譯</span>
+            <span class="category-tag">寫作</span>
+
+            <div class="prompt-box">
+請將以下內容翻譯成 [目標語言]：
+
+[貼上原文]
+
+翻譯要求：
+- 語氣：[正式/口語/商務]
+- 保留專有名詞：[列出不翻譯的詞]
+- 目標讀者：[描述]
+
+完成後，請標示你不確定的翻譯，並說明原因。
+            </div>
+        </div>
+
+        <!-- 範本 9: 問題分析 -->
+        <div class="card">
+            <h2>🔍 範本 9：分析問題找解法</h2>
+            <span class="category-tag">決策</span>
+            <span class="category-tag">問題解決</span>
+
+            <div class="prompt-box">
+請幫我分析這個問題：
+
+問題描述：[詳細說明]
+目前嘗試過的解法：[列出]
+限制條件：[時間/預算/資源]
+
+請給我：
+1. 問題根本原因分析
+2. 三個可能的解決方案（含優缺點）
+3. 你的建議（說明原因）
+4. 執行第一步該做什麼
+            </div>
+        </div>
+
+        <!-- 範本 10: 腦力激盪 -->
+        <div class="card">
+            <h2>💡 範本 10：創意發想</h2>
+            <span class="category-tag">創意</span>
+            <span class="category-tag">企劃</span>
+
+            <div class="prompt-box">
+請當我的創意夥伴，
+幫我針對 [主題] 進行腦力激盪，
+
+背景：[說明情境]
+目標：[想達成什麼]
+限制：[有哪些限制]
+
+請給我：
+1. 10 個創意點子（從保守到瘋狂）
+2. 每個點子的一句話說明
+3. 標示你最推薦的 3 個（說明原因）
+            </div>
+        </div>
+
+        <!-- 進階技巧 -->
+        <div class="card">
+            <h2>🚀 進階技巧</h2>
+
+            <h3>1. 讓 AI 反問你</h3>
+            <div class="prompt-box">
+在開始之前，請先問我 3 個問題，
+確保你完全理解我的需求。
+            </div>
+
+            <h3>2. 讓 AI 扮演專家</h3>
+            <div class="prompt-box">
+請以 [麥肯錫顧問/矽谷創業家/資深HR] 的角度分析這個問題。
+            </div>
+
+            <h3>3. 要求多版本</h3>
+            <div class="prompt-box">
+請給我 3 個版本：保守版、平衡版、大膽版。
+            </div>
+
+            <h3>4. 請 AI 自我檢查</h3>
+            <div class="prompt-box">
+完成後，請檢查有沒有遺漏或錯誤，如有請自行修正。
+            </div>
+        </div>
+
+        <!-- CTA -->
+        <div class="card" style="text-align: center; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+            <h2 style="color: white;">🎉 恭喜獲得 Prompt 範本大全！</h2>
+            <p style="margin: 20px 0;">有問題隨時問我（AI 助教），我 24 小時都在！</p>
+            <p style="font-size: 0.9em; opacity: 0.9;">想學更多？阿峰老師有完整的 AI 實戰課程</p>
+            <a href="https://autolab.cloud" class="cta-button">了解更多課程 →</a>
+        </div>
+
+        <div class="footer">
+            <p>📧 聯絡阿峰老師：ai@autolab.cloud</p>
+            <p>🌐 官網：<a href="https://autolab.cloud">autolab.cloud</a></p>
+            <p style="margin-top: 20px; font-size: 0.9em;">
+                © 2026 阿峰老師 AI 課程 | 今天學，今天用！
+            </p>
+        </div>
+    </div>
+</body>
+</html>

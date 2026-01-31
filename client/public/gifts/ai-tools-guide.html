@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI 工具選擇指南 | 阿峰老師</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            padding: 40px 20px;
+        }
+
+        .header h1 {
+            font-size: 2.2em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .gift-badge {
+            display: inline-block;
+            background: #FFD700;
+            color: #333;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+
+        .tool-card {
+            display: flex;
+            gap: 20px;
+            align-items: flex-start;
+        }
+
+        .tool-icon {
+            font-size: 3em;
+            min-width: 80px;
+            text-align: center;
+        }
+
+        .tool-info h2 {
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .tool-info .tagline {
+            color: #666;
+            font-size: 0.95em;
+            margin-bottom: 10px;
+        }
+
+        .best-for {
+            background: #e8f5e9;
+            padding: 10px 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+        }
+
+        .best-for strong {
+            color: #2e7d32;
+        }
+
+        .use-cases {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .use-case {
+            background: #f0f0f0;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.85em;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            padding: 12px;
+            text-align: center;
+            border-bottom: 1px solid #eee;
+        }
+
+        .comparison-table th {
+            background: #f8f9fa;
+            font-weight: 600;
+        }
+
+        .comparison-table td:first-child {
+            text-align: left;
+            font-weight: 500;
+        }
+
+        .check {
+            color: #4caf50;
+            font-size: 1.2em;
+        }
+
+        .partial {
+            color: #ff9800;
+        }
+
+        .no {
+            color: #ccc;
+        }
+
+        .decision-flow {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 15px;
+        }
+
+        .flow-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            margin: 10px 0;
+            background: white;
+            border-radius: 8px;
+            border-left: 4px solid #11998e;
+        }
+
+        .flow-question {
+            font-weight: 500;
+        }
+
+        .flow-answer {
+            background: #11998e;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+        }
+
+        .pro-tip {
+            background: #fff3e0;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            display: flex;
+            gap: 10px;
+        }
+
+        .footer {
+            text-align: center;
+            color: white;
+            padding: 30px;
+        }
+
+        .footer a {
+            color: #FFD700;
+        }
+
+        @media (max-width: 600px) {
+            .tool-card {
+                flex-direction: column;
+                text-align: center;
+            }
+            .tool-icon {
+                min-width: auto;
+            }
+            .comparison-table {
+                font-size: 0.85em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="gift-badge">🎁 AI 工具快速指南</div>
+            <h1>5 分鐘搞懂 AI 工具怎麼選</h1>
+            <p>阿峰老師的私房推薦 ✨</p>
+        </div>
+
+        <!-- 一句話總結 -->
+        <div class="card" style="text-align: center;">
+            <h2 style="color: #11998e; margin-bottom: 15px;">🎯 阿峰老師一句話總結</h2>
+            <p style="font-size: 1.3em; line-height: 1.8;">
+                <strong>ChatGPT</strong> 是通才<br>
+                <strong>Claude</strong> 是文科生<br>
+                <strong>Gemini</strong> 是 Google 生態系專家
+            </p>
+        </div>
+
+        <!-- ChatGPT -->
+        <div class="card">
+            <div class="tool-card">
+                <div class="tool-icon">🤖</div>
+                <div class="tool-info">
+                    <h2>ChatGPT</h2>
+                    <p class="tagline">OpenAI 出品｜全能型選手</p>
+                    <div class="best-for">
+                        <strong>最適合：</strong>什麼都能做，入門首選
+                    </div>
+                    <div class="use-cases">
+                        <span class="use-case">寫文案</span>
+                        <span class="use-case">寫程式</span>
+                        <span class="use-case">翻譯</span>
+                        <span class="use-case">分析資料</span>
+                        <span class="use-case">圖片生成</span>
+                    </div>
+                </div>
+            </div>
+            <div class="pro-tip">
+                <span style="font-size: 1.5em;">💡</span>
+                <div>
+                    <strong>阿峰老師小撇步：</strong><br>
+                    用 GPT-4o 比 GPT-3.5 聰明 10 倍，建議直接訂閱 Plus（$20/月）
+                </div>
+            </div>
+        </div>
+
+        <!-- Claude -->
+        <div class="card">
+            <div class="tool-card">
+                <div class="tool-icon">📚</div>
+                <div class="tool-info">
+                    <h2>Claude</h2>
+                    <p class="tagline">Anthropic 出品｜長文分析王</p>
+                    <div class="best-for">
+                        <strong>最適合：</strong>處理長文件、深度分析、寫作潤飾
+                    </div>
+                    <div class="use-cases">
+                        <span class="use-case">分析報告</span>
+                        <span class="use-case">整理會議記錄</span>
+                        <span class="use-case">論文摘要</span>
+                        <span class="use-case">合約審閱</span>
+                        <span class="use-case">寫作修改</span>
+                    </div>
+                </div>
+            </div>
+            <div class="pro-tip">
+                <span style="font-size: 1.5em;">💡</span>
+                <div>
+                    <strong>阿峰老師小撇步：</strong><br>
+                    Claude 可以一次處理 10 萬字！貼整本書給它都沒問題
+                </div>
+            </div>
+        </div>
+
+        <!-- Gemini -->
+        <div class="card">
+            <div class="tool-card">
+                <div class="tool-icon">✨</div>
+                <div class="tool-info">
+                    <h2>Gemini</h2>
+                    <p class="tagline">Google 出品｜Google 生態系整合</p>
+                    <div class="best-for">
+                        <strong>最適合：</strong>Gmail、Google Docs 使用者
+                    </div>
+                    <div class="use-cases">
+                        <span class="use-case">搜尋最新資訊</span>
+                        <span class="use-case">分析 Google Doc</span>
+                        <span class="use-case">整合 Gmail</span>
+                        <span class="use-case">YouTube 摘要</span>
+                    </div>
+                </div>
+            </div>
+            <div class="pro-tip">
+                <span style="font-size: 1.5em;">💡</span>
+                <div>
+                    <strong>阿峰老師小撇步：</strong><br>
+                    直接貼 Google Doc 連結，Gemini 能立刻分析內容！
+                </div>
+            </div>
+        </div>
+
+        <!-- 其他推薦 -->
+        <div class="card">
+            <h2 style="color: #11998e; margin-bottom: 20px;">🌟 特定用途推薦</h2>
+
+            <div class="flow-item">
+                <div class="flow-question">要查最新資訊？</div>
+                <div class="flow-answer">Perplexity AI</div>
+            </div>
+
+            <div class="flow-item">
+                <div class="flow-question">把文件變 Podcast？</div>
+                <div class="flow-answer">NotebookLM</div>
+            </div>
+
+            <div class="flow-item">
+                <div class="flow-question">生成圖片（專業級）？</div>
+                <div class="flow-answer">Midjourney</div>
+            </div>
+
+            <div class="flow-item">
+                <div class="flow-question">快速去背景？</div>
+                <div class="flow-answer">remove.bg</div>
+            </div>
+
+            <div class="flow-item">
+                <div class="flow-question">寫程式要幫手？</div>
+                <div class="flow-answer">GitHub Copilot</div>
+            </div>
+        </div>
+
+        <!-- 比較表 -->
+        <div class="card">
+            <h2 style="color: #11998e; margin-bottom: 15px;">📊 功能比較表</h2>
+            <table class="comparison-table">
+                <tr>
+                    <th>功能</th>
+                    <th>ChatGPT</th>
+                    <th>Claude</th>
+                    <th>Gemini</th>
+                </tr>
+                <tr>
+                    <td>中文能力</td>
+                    <td class="check">⭐⭐⭐</td>
+                    <td class="check">⭐⭐⭐</td>
+                    <td class="check">⭐⭐⭐</td>
+                </tr>
+                <tr>
+                    <td>長文處理</td>
+                    <td class="partial">⭐⭐</td>
+                    <td class="check">⭐⭐⭐</td>
+                    <td class="check">⭐⭐⭐</td>
+                </tr>
+                <tr>
+                    <td>圖片生成</td>
+                    <td class="check">⭐⭐⭐</td>
+                    <td class="no">✗</td>
+                    <td class="check">⭐⭐</td>
+                </tr>
+                <tr>
+                    <td>圖片分析</td>
+                    <td class="check">⭐⭐⭐</td>
+                    <td class="check">⭐⭐⭐</td>
+                    <td class="check">⭐⭐⭐</td>
+                </tr>
+                <tr>
+                    <td>即時搜尋</td>
+                    <td class="check">⭐⭐</td>
+                    <td class="no">✗</td>
+                    <td class="check">⭐⭐⭐</td>
+                </tr>
+                <tr>
+                    <td>程式能力</td>
+                    <td class="check">⭐⭐⭐</td>
+                    <td class="check">⭐⭐⭐</td>
+                    <td class="check">⭐⭐</td>
+                </tr>
+                <tr>
+                    <td>免費版</td>
+                    <td class="check">✓ 有</td>
+                    <td class="check">✓ 有</td>
+                    <td class="check">✓ 有</td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- 決策流程 -->
+        <div class="card">
+            <h2 style="color: #11998e; margin-bottom: 15px;">🤔 不知道用哪個？</h2>
+            <div class="decision-flow">
+                <div class="flow-item">
+                    <div class="flow-question">我是 AI 新手</div>
+                    <div class="flow-answer">→ 先用 ChatGPT</div>
+                </div>
+                <div class="flow-item">
+                    <div class="flow-question">我要處理超長文件</div>
+                    <div class="flow-answer">→ 用 Claude</div>
+                </div>
+                <div class="flow-item">
+                    <div class="flow-question">我主要用 Google 工具</div>
+                    <div class="flow-answer">→ 用 Gemini</div>
+                </div>
+                <div class="flow-item">
+                    <div class="flow-question">都想試試看</div>
+                    <div class="flow-answer">→ 三個都註冊！都免費</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 快速連結 -->
+        <div class="card">
+            <h2 style="color: #11998e; margin-bottom: 15px;">🔗 快速註冊連結</h2>
+            <div style="line-height: 2;">
+                <p>• <strong>ChatGPT</strong>：<a href="https://chat.openai.com" target="_blank">chat.openai.com</a></p>
+                <p>• <strong>Claude</strong>：<a href="https://claude.ai" target="_blank">claude.ai</a></p>
+                <p>• <strong>Gemini</strong>：<a href="https://gemini.google.com" target="_blank">gemini.google.com</a></p>
+                <p>• <strong>Perplexity</strong>：<a href="https://perplexity.ai" target="_blank">perplexity.ai</a></p>
+                <p>• <strong>NotebookLM</strong>：<a href="https://notebooklm.google.com" target="_blank">notebooklm.google.com</a></p>
+            </div>
+        </div>
+
+        <!-- CTA -->
+        <div class="card" style="text-align: center; background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); color: white;">
+            <h2 style="color: white;">👋 有問題？問我！</h2>
+            <p style="margin: 15px 0;">我是阿峰老師的 AI 助教，24 小時都在</p>
+            <p style="font-size: 0.9em; opacity: 0.9;">回到 LINE 對話，直接問我任何 AI 問題！</p>
+        </div>
+
+        <div class="footer">
+            <p>📧 聯絡阿峰老師：ai@autolab.cloud</p>
+            <p>🌐 官網：<a href="https://autolab.cloud">autolab.cloud</a></p>
+            <p style="margin-top: 15px; font-size: 0.9em;">
+                今天學，今天用！🚀
+            </p>
+        </div>
+    </div>
+</body>
+</html>
