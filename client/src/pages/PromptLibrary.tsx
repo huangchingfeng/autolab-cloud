@@ -40,6 +40,20 @@ export default function PromptLibrary() {
                 涵蓋工作、學習、創意等多種應用場景。每個提示詞都經過阿峰老師的在地化調整，
                 更符合台灣使用者的需求。
               </p>
+              <div className="flex flex-col sm:flex-row gap-3 justify-center pt-2">
+                <a
+                  href="/prompt-generator/"
+                  className="inline-flex items-center justify-center rounded-md text-sm font-medium bg-primary text-primary-foreground hover:bg-primary/90 h-11 px-8 transition-colors"
+                >
+                  開啟 276 個提示詞產生器
+                </a>
+                <a
+                  href="#prompt-examples"
+                  className="inline-flex items-center justify-center rounded-md text-sm font-medium border border-input bg-background hover:bg-accent hover:text-accent-foreground h-11 px-8 transition-colors"
+                >
+                  先看提示詞範例
+                </a>
+              </div>
             </div>
 
             {/* 使用說明 */}
@@ -80,7 +94,7 @@ export default function PromptLibrary() {
         </section>
 
         {/* 提示詞範例區 */}
-        <section className="py-16 md:py-24 bg-background">
+        <section id="prompt-examples" className="py-16 md:py-24 bg-background">
           <div className="container max-w-6xl">
             <div className="space-y-8">
               {/* 範例 1：客製化運動週期規劃 */}

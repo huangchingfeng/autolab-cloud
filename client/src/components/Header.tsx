@@ -28,6 +28,7 @@ export default function Header() {
     },
     { name: "1對1教練", href: "/coaching" },
     { name: "教學主題與工具", href: "/topics" },
+    { name: "提示詞產生器", href: "/prompt-generator/", staticLink: true },
     { name: "提示詞庫", href: "/prompt-library" },
     { name: "客戶見證", href: "/clients" },
     { name: "部落格", href: "/blog" },
@@ -93,6 +94,16 @@ export default function Header() {
             }
 
             // 一般連結
+            if (item.staticLink) {
+              return (
+                <a key={item.name} href={item.href}>
+                  <span className="text-sm font-medium transition-colors hover:text-primary cursor-pointer text-muted-foreground">
+                    {item.name}
+                  </span>
+                </a>
+              );
+            }
+
             return (
               <Link key={item.name} href={item.href}>
                 <span
@@ -170,6 +181,19 @@ export default function Header() {
               }
 
               // 一般連結
+              if (item.staticLink) {
+                return (
+                  <a key={item.name} href={item.href}>
+                    <span
+                      className="block py-2 text-sm font-medium hover:text-primary cursor-pointer text-muted-foreground"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      {item.name}
+                    </span>
+                  </a>
+                );
+              }
+
               return (
                 <Link key={item.name} href={item.href}>
                   <span
