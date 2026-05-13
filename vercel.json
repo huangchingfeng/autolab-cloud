@@ -21,6 +21,8 @@
     { "src": "/20260331-hochun-ai/(.*)", "dest": "/20260331-hochun-ai/$1" },
     { "src": "/20260421-energy-notebooklm/?", "dest": "/20260421-energy-notebooklm/index.html" },
     { "src": "/20260421-energy-notebooklm/(.*)", "dest": "/20260421-energy-notebooklm/$1" },
+    { "src": "/20260513-jijia-tainan-epa/?", "dest": "/20260513-jijia-tainan-epa/index.html" },
+    { "src": "/20260513-jijia-tainan-epa/(.*)", "dest": "/20260513-jijia-tainan-epa/$1" },
     { "src": "/api/test", "dest": "/api/test" },
     { "src": "/api/(.*)", "dest": "/api" },
     { "src": "/(.*)", "dest": "/index.html" }
