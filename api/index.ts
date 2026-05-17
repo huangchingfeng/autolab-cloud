@@ -1,15 +1,22 @@
-/**
- * Vercel Serverless API - Placeholder
- * Full API is deployed on Render
- */
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 
 const RENDER_API_URL = process.env.RENDER_API_URL;
+let appPromise: Promise<NonNullable<Awaited<ReturnType<typeof loadApp>>>> | null = null;
+
+async function loadApp() {
+  const module = await import('../server/_core/app');
+  return module.default;
+}
+
+function getApp() {
+  appPromise ??= loadApp();
+  return appPromise;
+}
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   const path = req.url || '/';
 
-  // If Render API is configured, proxy requests
+  // If a dedicated Render API is configured, keep using it as the primary backend.
   if (RENDER_API_URL) {
     try {
       const targetUrl = `${RENDER_API_URL}${path}`;
@@ -31,19 +38,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     }
   }
 
-  // Health check
-  if (path.includes('/health')) {
-    return res.status(200).json({
-      status: 'ok',
-      timestamp: new Date().toISOString(),
-      hasDb: !!process.env.DATABASE_URL,
-      renderApi: !!RENDER_API_URL
-    });
-  }
-
-  // Default - API not fully configured
-  return res.status(503).json({
-    error: 'API backend not configured',
-    message: 'Full API deployment in progress'
-  });
+  const app = await getApp();
+  return app(req, res);
 }

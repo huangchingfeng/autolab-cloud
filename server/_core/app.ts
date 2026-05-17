@@ -4,15 +4,28 @@
  */
 
 import "dotenv/config";
-import { clerkMiddleware } from "@clerk/express";
 import { createExpressMiddleware } from "@trpc/server/adapters/express";
-import express from "express";
+import express, { type RequestHandler } from "express";
 import path from "path";
 import { appRouter } from "../routers";
 import sitemapRouter from "../routes/sitemap";
 import { createContext } from "./context";
 import { ENV } from "./env";
 import { registerPaymentRoutes } from "./payment";
+
+function createLazyClerkMiddleware(): RequestHandler {
+  let middlewarePromise: Promise<RequestHandler> | null = null;
+
+  return async (req, res, next) => {
+    try {
+      middlewarePromise ??= import("@clerk/express").then(({ clerkMiddleware }) => clerkMiddleware());
+      const middleware = await middlewarePromise;
+      return middleware(req, res, next);
+    } catch (error) {
+      next(error);
+    }
+  };
+}
 
 export function createApp() {
   const app = express();
@@ -28,7 +41,7 @@ export function createApp() {
   // Clerk middleware for authentication. Public endpoints can still run locally
   // when Clerk env vars are not configured.
   if (ENV.clerkSecretKey && ENV.clerkPublishableKey) {
-    app.use(clerkMiddleware());
+    app.use(createLazyClerkMiddleware());
   } else {
     console.warn("[Auth] Clerk env vars not configured; auth middleware disabled.");
   }

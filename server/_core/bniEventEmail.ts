@@ -1,9 +1,20 @@
 import type { Event } from "../../drizzle/schema";
-import { format } from "date-fns/format";
-import { zhTW } from "date-fns/locale/zh-TW";
+
+function formatTaiwanEventDate(dateValue: Date | string | number) {
+  const parts = new Intl.DateTimeFormat("zh-TW", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    weekday: "short",
+    timeZone: "Asia/Taipei",
+  }).formatToParts(new Date(dateValue));
+
+  const get = (type: Intl.DateTimeFormatPartTypes) => parts.find((part) => part.type === type)?.value ?? "";
+  return `${get("year")}年${get("month")}月${get("day")}日 (${get("weekday")})`;
+}
 
 export function generateBNIEventConfirmationEmail(name: string, event: Event): string {
-  const eventDate = format(new Date(event.eventDate), "yyyy年MM月dd日 (E)", { locale: zhTW });
+  const eventDate = formatTaiwanEventDate(event.eventDate);
   const mapUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(event.locationDetails || event.location)}`;
 
   return `
