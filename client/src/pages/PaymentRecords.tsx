@@ -8,8 +8,8 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Download, Search, DollarSign, Users, Clock, CheckCircle2, XCircle } from "lucide-react";
-import { formatDistanceToNow } from "date-fns";
-import { zhTW } from "date-fns/locale";
+import { formatDistanceToNow } from "date-fns/formatDistanceToNow";
+import { zhTW } from "date-fns/locale/zh-TW";
 
 export default function PaymentRecords() {
   const [search, setSearch] = useState("");

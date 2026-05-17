@@ -1,4 +1,4 @@
-import { pgTable, serial, integer, varchar, text, timestamp, boolean, pgEnum } from "drizzle-orm/pg-core";
+import { pgTable, serial, integer, varchar, text, timestamp, boolean, pgEnum, jsonb } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
 
 // ============== Enums ==============
@@ -36,6 +36,26 @@ export const courseStatusEnum = pgEnum("course_status", ["registered", "confirme
 export const notificationTypeEnum = pgEnum("notification_type", ["info", "warning", "success", "error"]);
 export const targetTypeEnum = pgEnum("target_type", ["all", "user", "role"]);
 export const targetRoleEnum = pgEnum("target_role", ["user", "admin"]);
+export const aiSuperSalesReferralSourceEnum = pgEnum("ai_super_sales_referral_source", [
+  "teacher",
+  "line_community",
+  "facebook",
+  "instagram",
+  "youtube",
+  "other",
+]);
+export const corporateInquirySourcePageEnum = pgEnum("corporate_inquiry_source_page", [
+  "general",
+  "tech",
+  "manufacturing",
+]);
+export const corporateInquiryStatusEnum = pgEnum("corporate_inquiry_status", [
+  "new",
+  "contacted",
+  "quoted",
+  "closed",
+  "cancelled",
+]);
 
 // ============== Tables ==============
 
@@ -654,3 +674,50 @@ export const courseTransfers2026Relations = relations(courseTransfers2026, ({ on
     references: [courseRegistrations2026.id],
   }),
 }));
+
+/**
+ * AI Super Sales Workshop registrations.
+ */
+export const aiSuperSalesRegistrations = pgTable("aiSuperSalesRegistrations", {
+  id: serial("id").primaryKey(),
+  name: varchar("name", { length: 100 }).notNull(),
+  email: varchar("email", { length: 320 }).notNull(),
+  phone: varchar("phone", { length: 20 }).notNull(),
+  company: varchar("company", { length: 200 }),
+  jobTitle: varchar("jobTitle", { length: 100 }),
+  selectedSessions: jsonb("selectedSessions").$type<string[]>().notNull(),
+  referralSource: aiSuperSalesReferralSourceEnum("referralSource").notNull(),
+  subscribeNewsletter: boolean("subscribeNewsletter").default(false).notNull(),
+  emailSent: boolean("emailSent").default(false).notNull(),
+  notes: text("notes"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().notNull(),
+});
+
+export type AISuperSalesRegistration = typeof aiSuperSalesRegistrations.$inferSelect;
+export type InsertAISuperSalesRegistration = typeof aiSuperSalesRegistrations.$inferInsert;
+
+/**
+ * Corporate training inquiries from public training landing pages.
+ */
+export const corporateInquiries = pgTable("corporateInquiries", {
+  id: serial("id").primaryKey(),
+  name: varchar("name", { length: 200 }).notNull(),
+  company: varchar("company", { length: 300 }).notNull(),
+  jobTitle: varchar("jobTitle", { length: 200 }).notNull(),
+  email: varchar("email", { length: 320 }).notNull(),
+  phone: varchar("phone", { length: 50 }),
+  headcount: varchar("headcount", { length: 50 }),
+  programs: text("programs"),
+  preferredTime: varchar("preferredTime", { length: 200 }),
+  notes: text("notes"),
+  sourcePage: corporateInquirySourcePageEnum("sourcePage").notNull(),
+  status: corporateInquiryStatusEnum("status").default("new").notNull(),
+  adminNotes: text("adminNotes"),
+  emailSent: boolean("emailSent").default(false).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().notNull(),
+});
+
+export type CorporateInquiry = typeof corporateInquiries.$inferSelect;
+export type InsertCorporateInquiry = typeof corporateInquiries.$inferInsert;

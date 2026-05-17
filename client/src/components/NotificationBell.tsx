@@ -10,8 +10,8 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Bell, Info, AlertTriangle, CheckCircle, XCircle, Check } from "lucide-react";
 import { Link } from "wouter";
-import { format } from "date-fns";
-import { zhTW } from "date-fns/locale";
+import { format } from "date-fns/format";
+import { zhTW } from "date-fns/locale/zh-TW";
 import { toast } from "sonner";
 
 export default function NotificationBell() {

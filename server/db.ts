@@ -1,7 +1,6 @@
 import { eq, desc, and, or, like, sql, ne, inArray, notInArray, lte, gte, count } from "drizzle-orm";
-import { drizzle } from "drizzle-orm/neon-serverless";
-import { neon } from "@neondatabase/serverless";
-import { InsertUser, users, posts, categories, tags, postTags, InsertPost, InsertCategory, InsertTag, contacts, InsertContact, events, eventRegistrations, InsertEvent, InsertEventRegistration, downloadLeads, InsertDownloadLead, orders, InsertOrder, promoCodes, InsertPromoCode, videoCourses, InsertVideoCourse, videoCoursePurchases, InsertVideoCoursePurchase, videoCourseNotes, InsertVideoCourseNote, videoCourseReviews, InsertVideoCourseReview, articleAccessWhitelist, courseRegistrations2026, InsertCourseRegistration2026, notifications, notificationReads, InsertNotification, InsertNotificationRead, courseSessions2026, InsertCourseSession2026, courseAttendance2026, InsertCourseAttendance2026, courseTransfers2026, InsertCourseTransfer2026 } from "../drizzle/schema";
+import { drizzle } from "drizzle-orm/neon-http";
+import { InsertUser, users, posts, categories, tags, postTags, InsertPost, InsertCategory, InsertTag, contacts, InsertContact, events, eventRegistrations, InsertEvent, InsertEventRegistration, downloadLeads, InsertDownloadLead, orders, InsertOrder, promoCodes, InsertPromoCode, videoCourses, InsertVideoCourse, videoCoursePurchases, InsertVideoCoursePurchase, videoCourseNotes, InsertVideoCourseNote, videoCourseReviews, InsertVideoCourseReview, articleAccessWhitelist, courseRegistrations2026, InsertCourseRegistration2026, notifications, notificationReads, InsertNotification, InsertNotificationRead, courseSessions2026, InsertCourseSession2026, courseAttendance2026, InsertCourseAttendance2026, courseTransfers2026, InsertCourseTransfer2026, aiSuperSalesRegistrations, type AISuperSalesRegistration, corporateInquiries, type InsertCorporateInquiry } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -10,8 +9,7 @@ let _db: ReturnType<typeof drizzle> | null = null;
 export async function getDb() {
   if (!_db && process.env.DATABASE_URL) {
     try {
-      const sql = neon(process.env.DATABASE_URL);
-      _db = drizzle(sql);
+      _db = drizzle(process.env.DATABASE_URL);
     } catch (error) {
       console.warn("[Database] Failed to connect:", error);
       _db = null;
@@ -132,7 +130,7 @@ export async function getPostBySlug(slug: string) {
     .from(posts)
     .leftJoin(users, eq(posts.authorId, users.id))
     .leftJoin(categories, eq(posts.categoryId, categories.id))
-    .where(eq(posts.slug, slug))
+    .where(and(eq(posts.slug, slug), eq(posts.status, "published")))
     .limit(1);
 
   if (result.length === 0) return undefined;
@@ -335,7 +333,10 @@ export async function createPost(post: InsertPost) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
 
-  const result = await db.insert(posts).values(post);
+  const [result] = await db
+    .insert(posts)
+    .values(post)
+    .returning({ id: posts.id });
   return result;
 }
 
@@ -507,7 +508,10 @@ export async function createEvent(event: InsertEvent) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
 
-  const result = await db.insert(events).values(event);
+  const [result] = await db
+    .insert(events)
+    .values(event)
+    .returning({ id: events.id });
   return result;
 }
 
@@ -605,7 +609,10 @@ export async function createEventRegistration(registration: InsertEventRegistrat
   const db = await getDb();
   if (!db) throw new Error("Database not available");
 
-  const result = await db.insert(eventRegistrations).values(registration);
+  const [result] = await db
+    .insert(eventRegistrations)
+    .values(registration)
+    .returning({ id: eventRegistrations.id });
   return result;
 }
 
@@ -887,7 +894,7 @@ export async function createDownloadLead(data: {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
 
-  const [result] = await db.insert(downloadLeads).values(data).$returningId();
+  const [result] = await db.insert(downloadLeads).values(data).returning({ id: downloadLeads.id });
   return result;
 }
 
@@ -920,7 +927,7 @@ export async function createPromoCode(data: InsertPromoCode) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
 
-  const [result] = await db.insert(promoCodes).values(data).$returningId();
+  const [result] = await db.insert(promoCodes).values(data).returning({ id: promoCodes.id });
   return result;
 }
 
@@ -1013,7 +1020,7 @@ export async function createOrder(data: InsertOrder) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
 
-  const [result] = await db.insert(orders).values(data).$returningId();
+  const [result] = await db.insert(orders).values(data).returning({ id: orders.id });
   return result;
 }
 
@@ -1157,8 +1164,8 @@ export async function createVideoCourse(course: InsertVideoCourse) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
 
-  const result = await db.insert(videoCourses).values(course);
-  return result[0].insertId;
+  const [result] = await db.insert(videoCourses).values(course).returning({ id: videoCourses.id });
+  return result.id;
 }
 
 export async function updateVideoCourse(id: number, course: Partial<InsertVideoCourse>) {
@@ -1249,8 +1256,8 @@ export async function createVideoCoursePurchase(purchase: InsertVideoCoursePurch
   const db = await getDb();
   if (!db) throw new Error("Database not available");
 
-  const result = await db.insert(videoCoursePurchases).values(purchase);
-  return result[0].insertId;
+  const [result] = await db.insert(videoCoursePurchases).values(purchase).returning({ id: videoCoursePurchases.id });
+  return result.id;
 }
 
 export async function getVideoCoursePurchaseByOrderNo(orderNo: string) {
@@ -1378,8 +1385,8 @@ export async function createOrUpdateVideoCourseNote(note: InsertVideoCourseNote)
     return existing[0].id;
   } else {
     // Create new note
-    const result = await db.insert(videoCourseNotes).values(note);
-    return result[0].insertId;
+    const [result] = await db.insert(videoCourseNotes).values(note).returning({ id: videoCourseNotes.id });
+    return result.id;
   }
 }
 
@@ -1412,12 +1419,12 @@ export async function createVideoCourseReview(review: InsertVideoCourseReview) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
 
-  const result = await db.insert(videoCourseReviews).values(review);
+  const [result] = await db.insert(videoCourseReviews).values(review).returning({ id: videoCourseReviews.id });
   
   // Update course rating
   await updateVideoCourseRating(review.courseId);
   
-  return result[0].insertId;
+  return result.id;
 }
 
 export async function getVideoCourseReviews(courseId: number) {
@@ -1658,13 +1665,16 @@ export async function createCourseRegistration2026(data: InsertCourseRegistratio
   const db = await getDb();
   if (!db) throw new Error("Database not available");
 
-  const result = await db.insert(courseRegistrations2026).values(data);
-  const insertId = Number(result[0].insertId);
+  const [result] = await db
+    .insert(courseRegistrations2026)
+    .values(data)
+    .returning({ id: courseRegistrations2026.id });
+  const registrationId = result.id;
   
   const registration = await db
     .select()
     .from(courseRegistrations2026)
-    .where(eq(courseRegistrations2026.id, insertId))
+    .where(eq(courseRegistrations2026.id, registrationId))
     .limit(1);
 
   return registration[0];
@@ -2177,8 +2187,8 @@ export async function createNotification(data: {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
 
-  const result = await db.insert(notifications).values(data);
-  return { id: Number(result[0].insertId), ...data };
+  const [result] = await db.insert(notifications).values(data).returning({ id: notifications.id });
+  return { id: result.id, ...data };
 }
 
 /**
@@ -2474,7 +2484,7 @@ export async function createCourseSession2026(data: {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
 
-  const result = await db.insert(courseSessions2026).values({
+  const [result] = await db.insert(courseSessions2026).values({
     sessionId: data.sessionId,
     name: data.name,
     date: data.date,
@@ -2484,9 +2494,9 @@ export async function createCourseSession2026(data: {
     maxCapacity: data.maxCapacity || 30,
     isActive: data.isActive ?? true,
     notes: data.notes,
-  });
+  }).returning({ id: courseSessions2026.id });
 
-  return { id: Number(result[0].insertId), ...data };
+  return { id: result.id, ...data };
 }
 
 /**
@@ -2634,15 +2644,15 @@ export async function getOrCreateSessionAttendance(sessionId: string) {
     const key1 = `${reg.id}-${reg.email1}`;
     if (!existingMap.has(key1)) {
       // Create new attendance record
-      const result = await db.insert(courseAttendance2026).values({
+      const [result] = await db.insert(courseAttendance2026).values({
         registrationId: reg.id,
         sessionId,
         attendeeName: reg.name1,
         attendeeEmail: reg.email1,
         isAttended: false,
-      });
+      }).returning({ id: courseAttendance2026.id });
       attendanceRecords.push({
-        id: Number(result[0].insertId),
+        id: result.id,
         registrationId: reg.id,
         sessionId,
         attendeeName: reg.name1,
@@ -2669,15 +2679,15 @@ export async function getOrCreateSessionAttendance(sessionId: string) {
     if (reg.plan === "double" && reg.name2 && reg.email2) {
       const key2 = `${reg.id}-${reg.email2}`;
       if (!existingMap.has(key2)) {
-        const result = await db.insert(courseAttendance2026).values({
+        const [result] = await db.insert(courseAttendance2026).values({
           registrationId: reg.id,
           sessionId,
           attendeeName: reg.name2,
           attendeeEmail: reg.email2,
           isAttended: false,
-        });
+        }).returning({ id: courseAttendance2026.id });
         attendanceRecords.push({
-          id: Number(result[0].insertId),
+          id: result.id,
           registrationId: reg.id,
           sessionId,
           attendeeName: reg.name2,
@@ -3021,7 +3031,7 @@ export async function updateAttendanceByRegistration(
     return { success: true, id: existingAttendance[0].id };
   } else {
     // Create new record
-    const result = await db.insert(courseAttendance2026).values({
+    const [result] = await db.insert(courseAttendance2026).values({
       sessionId,
       registrationId,
       attendeeName,
@@ -3029,9 +3039,9 @@ export async function updateAttendanceByRegistration(
       isAttended: attended,
       checkInTime: attended ? new Date() : null,
       checkedBy,
-    });
+    }).returning({ id: courseAttendance2026.id });
 
-    return { success: true, id: Number(result[0].insertId) };
+    return { success: true, id: result.id };
   }
 }
 
@@ -3149,14 +3159,14 @@ export async function executeCourseTransfer(data: {
     .where(eq(courseRegistrations2026.id, data.registrationId));
 
   // Create transfer record
-  const result = await db.insert(courseTransfers2026).values({
+  const [createdTransfer] = await db.insert(courseTransfers2026).values({
     registrationId: data.registrationId,
     attendeeEmail: data.attendeeEmail,
     fromSessionId: data.fromSessionId,
     toSessionId: data.toSessionId,
     reason: data.reason,
     transferredBy: data.transferredBy,
-  });
+  }).returning({ id: courseTransfers2026.id });
 
   // Update attendance records if any
   await db
@@ -3170,7 +3180,7 @@ export async function executeCourseTransfer(data: {
       )
     );
 
-  return { success: true, transferId: Number(result[0].insertId) };
+  return { success: true, transferId: createdTransfer.id };
 }
 
 /**
@@ -3187,4 +3197,301 @@ export async function getTransferHistory(registrationId: number) {
     .orderBy(desc(courseTransfers2026.createdAt));
 
   return transfers;
+}
+
+// ==================== AI Super Sales Workshop ====================
+
+export async function createAISuperSalesRegistration(data: {
+  name: string;
+  email: string;
+  phone: string;
+  company?: string;
+  jobTitle?: string;
+  selectedSessions: string[];
+  referralSource: "teacher" | "line_community" | "facebook" | "instagram" | "youtube" | "other";
+  subscribeNewsletter?: boolean;
+  notes?: string;
+}): Promise<AISuperSalesRegistration> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  const [created] = await db
+    .insert(aiSuperSalesRegistrations)
+    .values({
+      name: data.name,
+      email: data.email.toLowerCase(),
+      phone: data.phone,
+      company: data.company || null,
+      jobTitle: data.jobTitle || null,
+      selectedSessions: data.selectedSessions,
+      referralSource: data.referralSource,
+      subscribeNewsletter: data.subscribeNewsletter ?? false,
+      emailSent: false,
+      notes: data.notes || null,
+    })
+    .returning();
+
+  return created;
+}
+
+export async function getAISuperSalesRegistrationById(id: number) {
+  const db = await getDb();
+  if (!db) return null;
+
+  const [registration] = await db
+    .select()
+    .from(aiSuperSalesRegistrations)
+    .where(eq(aiSuperSalesRegistrations.id, id))
+    .limit(1);
+
+  return registration || null;
+}
+
+export async function getAllAISuperSalesRegistrations(options?: {
+  limit?: number;
+  offset?: number;
+  searchTerm?: string;
+}) {
+  const db = await getDb();
+  if (!db) return [];
+
+  const conditions: any[] = [];
+  if (options?.searchTerm) {
+    const searchPattern = `%${options.searchTerm}%`;
+    conditions.push(
+      or(
+        like(aiSuperSalesRegistrations.name, searchPattern),
+        like(aiSuperSalesRegistrations.email, searchPattern),
+        like(aiSuperSalesRegistrations.phone, searchPattern),
+        like(aiSuperSalesRegistrations.company, searchPattern)
+      )
+    );
+  }
+
+  let query = db
+    .select()
+    .from(aiSuperSalesRegistrations)
+    .where(conditions.length > 0 ? and(...conditions) : undefined)
+    .orderBy(desc(aiSuperSalesRegistrations.createdAt));
+
+  if (options?.limit) {
+    query = query.limit(options.limit) as typeof query;
+  }
+
+  if (options?.offset) {
+    query = query.offset(options.offset) as typeof query;
+  }
+
+  return await query;
+}
+
+export async function getAISuperSalesStats() {
+  const db = await getDb();
+  if (!db) return { total: 0 };
+
+  const [stats] = await db
+    .select({ total: count() })
+    .from(aiSuperSalesRegistrations);
+
+  return { total: stats?.total ?? 0 };
+}
+
+export async function updateAISuperSalesRegistration(
+  id: number,
+  data: {
+    name?: string;
+    email?: string;
+    phone?: string;
+    company?: string | null;
+    jobTitle?: string | null;
+    selectedSessions?: string[];
+    referralSource?: "teacher" | "line_community" | "facebook" | "instagram" | "youtube" | "other";
+    subscribeNewsletter?: boolean;
+    notes?: string | null;
+  }
+) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  await db
+    .update(aiSuperSalesRegistrations)
+    .set({ ...data, updatedAt: new Date() })
+    .where(eq(aiSuperSalesRegistrations.id, id));
+
+  return getAISuperSalesRegistrationById(id);
+}
+
+export async function deleteAISuperSalesRegistration(id: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  await db
+    .delete(aiSuperSalesRegistrations)
+    .where(eq(aiSuperSalesRegistrations.id, id));
+
+  return true;
+}
+
+export async function getAISuperSalesSessionStats() {
+  const db = await getDb();
+  if (!db) {
+    return { total: 0, session1: 0, session2: 0, session3: 0, session4: 0, allSessions: 0, byReferralSource: {} };
+  }
+
+  const allRegs = await db.select().from(aiSuperSalesRegistrations);
+  let session1 = 0;
+  let session2 = 0;
+  let session3 = 0;
+  let session4 = 0;
+  let allSessions = 0;
+  const byReferralSource: Record<string, number> = {};
+
+  for (const reg of allRegs) {
+    const sessions = Array.isArray(reg.selectedSessions) ? reg.selectedSessions : [];
+    if (sessions.includes("all")) {
+      allSessions++;
+      session1++;
+      session2++;
+      session3++;
+      session4++;
+    } else {
+      if (sessions.includes("session1")) session1++;
+      if (sessions.includes("session2")) session2++;
+      if (sessions.includes("session3")) session3++;
+      if (sessions.includes("session4")) session4++;
+    }
+
+    byReferralSource[reg.referralSource] = (byReferralSource[reg.referralSource] || 0) + 1;
+  }
+
+  return {
+    total: allRegs.length,
+    session1,
+    session2,
+    session3,
+    session4,
+    allSessions,
+    byReferralSource,
+  };
+}
+
+// ==================== Corporate Training Inquiries ====================
+
+export async function createCorporateInquiry(data: InsertCorporateInquiry) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  const [inquiry] = await db.insert(corporateInquiries).values(data).returning();
+  return inquiry;
+}
+
+export async function getAllCorporateInquiries(options?: {
+  limit?: number;
+  offset?: number;
+  status?: string;
+  sourcePage?: string;
+  search?: string;
+}) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  const conditions: any[] = [];
+  if (options?.status && options.status !== "all") {
+    conditions.push(eq(corporateInquiries.status, options.status as any));
+  }
+  if (options?.sourcePage && options.sourcePage !== "all") {
+    conditions.push(eq(corporateInquiries.sourcePage, options.sourcePage as any));
+  }
+  if (options?.search) {
+    const searchTerm = `%${options.search}%`;
+    conditions.push(
+      or(
+        like(corporateInquiries.name, searchTerm),
+        like(corporateInquiries.company, searchTerm),
+        like(corporateInquiries.email, searchTerm),
+        like(corporateInquiries.phone, searchTerm)
+      )
+    );
+  }
+
+  const whereClause = conditions.length > 0 ? and(...conditions) : undefined;
+  const [items, totalResult] = await Promise.all([
+    db
+      .select()
+      .from(corporateInquiries)
+      .where(whereClause)
+      .orderBy(desc(corporateInquiries.createdAt))
+      .limit(options?.limit || 50)
+      .offset(options?.offset || 0),
+    db.select({ count: count() }).from(corporateInquiries).where(whereClause),
+  ]);
+
+  return {
+    items,
+    total: totalResult[0]?.count || 0,
+  };
+}
+
+export async function getCorporateInquiryById(id: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  const [inquiry] = await db.select().from(corporateInquiries).where(eq(corporateInquiries.id, id));
+  return inquiry || null;
+}
+
+export async function updateCorporateInquiryStatus(
+  id: number,
+  status: "new" | "contacted" | "quoted" | "closed" | "cancelled",
+  adminNotes?: string
+) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  await db
+    .update(corporateInquiries)
+    .set({ status, adminNotes, updatedAt: new Date() })
+    .where(eq(corporateInquiries.id, id));
+
+  return getCorporateInquiryById(id);
+}
+
+export async function deleteCorporateInquiry(id: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  await db.delete(corporateInquiries).where(eq(corporateInquiries.id, id));
+  return { success: true };
+}
+
+export async function getCorporateInquiryStats() {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  const allInquiries = await db.select().from(corporateInquiries);
+  return {
+    total: allInquiries.length,
+    byStatus: {
+      new: allInquiries.filter(i => i.status === "new").length,
+      contacted: allInquiries.filter(i => i.status === "contacted").length,
+      quoted: allInquiries.filter(i => i.status === "quoted").length,
+      closed: allInquiries.filter(i => i.status === "closed").length,
+      cancelled: allInquiries.filter(i => i.status === "cancelled").length,
+    },
+    bySource: {
+      general: allInquiries.filter(i => i.sourcePage === "general").length,
+      tech: allInquiries.filter(i => i.sourcePage === "tech").length,
+      manufacturing: allInquiries.filter(i => i.sourcePage === "manufacturing").length,
+    },
+  };
+}
+
+export async function markCorporateInquiryEmailSent(id: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  await db
+    .update(corporateInquiries)
+    .set({ emailSent: true, updatedAt: new Date() })
+    .where(eq(corporateInquiries.id, id));
 }

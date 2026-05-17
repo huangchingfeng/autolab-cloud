@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Autolab Expert Review Notes</title>
+  <style>
+    body { margin: 0; background: #f7f8fb; color: #172033; font-family: -apple-system, BlinkMacSystemFont, "Noto Sans TC", sans-serif; line-height: 1.65; }
+    main { max-width: 1120px; margin: 0 auto; padding: 44px 24px; }
+    h1 { margin: 0 0 8px; font-size: 32px; }
+    h2 { margin-top: 34px; padding-top: 18px; border-top: 1px solid #dce4f0; font-size: 20px; }
+    .lead { color: #647085; font-size: 17px; }
+    .notice { background: #fff7ed; border: 1px solid #fed7aa; border-radius: 8px; padding: 14px 16px; margin: 22px 0; }
+    .danger { background: #fef2f2; border: 1px solid #fecaca; border-radius: 8px; padding: 14px 16px; margin: 22px 0; }
+    table { width: 100%; border-collapse: collapse; background: #fff; border: 1px solid #e2e7f0; border-radius: 8px; overflow: hidden; margin-top: 14px; }
+    th, td { padding: 10px 12px; border-bottom: 1px solid #e8edf5; text-align: left; vertical-align: top; font-size: 13px; }
+    th { background: #eef2f8; font-weight: 700; }
+    code, pre { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+    pre { overflow: auto; border-radius: 8px; background: #111827; color: #e5e7eb; padding: 16px; }
+    ul { padding-left: 1.2em; }
+    li { margin: 6px 0; }
+    .done { color: #166534; font-weight: 700; }
+    .blocker { color: #991b1b; font-weight: 700; }
+    .pending { color: #92400e; font-weight: 700; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Autolab Expert Review Notes</h1>
+    <p class="lead">三位專家針對 deployment、資料搬遷、安全切換做的只讀審查彙整。此文件是 staging/preview 前的確認紀錄，不是正式切換指令。</p>
+
+    <div class="danger">
+      <strong>共同結論：</strong>目前本機 staging 準備與 Git-backed deploy gate 已完成；還不建議進 Render preview deploy，更不能 production cutover。主要阻塞是外部 staging secrets 尚未完整、preview smoke/QA 尚未執行，以及 Manus full DB dump 尚未取得。
+    </div>
+
+    <h2>專家共識</h2>
+    <table>
+      <thead><tr><th>面向</th><th>結論</th><th>狀態</th></tr></thead>
+      <tbody>
+        <tr><td>Deployment / Render</td><td>Render blueprint、staging gates、dashboard、production cutover gate 都已納入 Git-backed deploy。preview deploy 前仍必須填真實 staging env，不能使用 placeholder secrets。</td><td class="pending">待 staging secrets</td></tr>
+        <tr><td>資料搬遷</td><td><code>.manus/db</code> 是 query logs，不是 full dump；現有 prepare/import 只適合少量 staging seed，不可作正式搬遷依據。</td><td class="blocker">待 full DB dump</td></tr>
+        <tr><td>安全與切換</td><td>目前 staging 防線足夠保護 Manus production；production cutover gate 會輸出 <code>NO_GO</code> 直到 readiness、preflight、preview smoke 與 full dump 都通過。仍需補 DNS 原值、rollback owner、金流 QA 與 full preview QA。</td><td class="pending">待人工確認</td></tr>
+      </tbody>
+    </table>
+
+    <h2>已完成防線</h2>
+    <ul>
+      <li><code>.env.staging</code> 已建立且被 gitignore，權限為 <code>600</code>，目前只自動產生 <code>JWT_SECRET</code>。</li>
+      <li><code>staging:check-env</code> 與 readiness 會拒絕 placeholder、production-looking DB、Manus/TiDB/MySQL DB、Clerk live key。</li>
+      <li><code>staging:check-db-target</code> 已同步拒絕 <code>manus</code> token。</li>
+      <li><code>staging:smoke</code> 預設拒絕 <code>autolab.cloud</code> / <code>www.autolab.cloud</code>，避免把 Manus production 當 preview。</li>
+      <li><code>staging:check-sensitive-files</code> 已確認敏感路徑 12/12 會被 ignore，tracked risky files 為 0。</li>
+      <li><code>staging:check-render-env</code> 已確認 <code>.env.staging</code> 與 <code>render.yaml</code> key 對齊，沒有缺 key 或 duplicate key。</li>
+    </ul>
+
+    <h2>硬阻塞</h2>
+    <table>
+      <thead><tr><th>阻塞</th><th>原因</th><th>解除條件</th></tr></thead>
+      <tbody>
+        <tr><td>Staging secrets</td><td>目前 readiness 為 21 pass、9 warn、7 fail；缺 Neon/PostgreSQL、Clerk、Turnstile、ADMIN_USER_IDS，recommended env 也多數未填。</td><td>建立獨立 staging DB、Clerk app、Turnstile widget，填入 Render env / <code>.env.staging</code> 後重跑 strict checks。</td></tr>
+        <tr><td>Full Manus DB dump</td><td>目前只有 query logs，缺 13/24 expected tables，prepare/import 只支援少量表。</td><td>取得 SQL dump 或 per-table CSV/JSON 加 schema，再只讀 inspect。</td></tr>
+        <tr><td>Git-backed deploy</td><td>Render preview 只會拿 Git 追蹤內容；<code>staging:check-git-deploy-files</code> 最新檢查為 63/63 tracked。</td><td>此 blocker 已解除。仍不可 commit <code>.env.staging</code>、<code>_imports/</code>、<code>_reports/</code> 或 DB dump。</td></tr>
+        <tr><td>Preview QA</td><td>Smoke test 不等於 Clerk 登入、後台讀寫、表單 DB 寫入、通知信、金流 callback 都通過。</td><td>Preview URL 出來後依 <code>autolab-preview-qa-checklist.html</code> 人工驗收。</td></tr>
+      </tbody>
+    </table>
+
+    <h2>已採納修正</h2>
+    <ul>
+      <li><code>validate-db-target.mjs</code> 加入 <code>manus</code> forbidden token。</li>
+      <li><code>staging-preflight.mjs</code> 的 Render env check 改用同一份 <code>--env-file</code>。</li>
+      <li><code>staging:check-git-deploy-files</code> 已加入，用來確認 Render/staging 需要的 scripts/docs/source files 是否已納入 Git-backed deploy；最新為 63/63 tracked。</li>
+      <li><code>render.yaml</code> build command 改為 <code>npm ci --legacy-peer-deps</code>，讓 preview build 更可重現。</li>
+      <li>Production cutover 文件的正式 smoke command 加上 <code>--allow-production-domain</code>，並標註只在 DNS 已切到新 production service 後使用。</li>
+      <li>資料搬遷文件標註 current inspection 與舊 data package 數字差異，避免把 query-log 統計當成 full inventory。</li>
+    </ul>
+
+    <h2>下一步順序</h2>
+    <ol>
+      <li>建立獨立 Neon/PostgreSQL staging DB、Clerk staging app、Turnstile staging widget。</li>
+      <li>填入 <code>.env.staging</code> 或 Render env，重跑 <code>staging:check-env -- --strict</code>、<code>staging:check-db-target</code>、<code>staging:check-git-deploy-files</code>、<code>staging:check-render-env</code>、<code>staging:check-sensitive-files</code>。</li>
+      <li>確認 <code>staging:check-git-deploy-files</code> 維持全綠；不要 commit <code>.env.staging</code>、<code>_imports/</code>、<code>_reports/</code> 或 DB dump。</li>
+      <li>只對 clean staging DB 執行 schema push，再用 staging sample seed 驗證後台畫面。</li>
+      <li>部署 Render preview，不綁正式網域；跑 preview smoke、人工 QA 與 <code>production:cutover-gate</code>。</li>
+      <li>取得 Manus full DB dump，只讀 inspect，補 full migration mapper 與 validation report。</li>
+      <li>只有 full data、preview QA、rollback 表格、DNS 原值、金流決策都完成後，才進 production cutover。</li>
+    </ol>
+
+    <h2>常用確認命令</h2>
+    <pre>npm run staging:check-env -- --env-file=.env.staging --strict
+npm run staging:check-db-target -- --env-file=.env.staging
+npm run staging:check-git-deploy-files
+npm run staging:check-render-env -- --env-file=.env.staging
+npm run staging:check-sensitive-files
+npm run manus:inspect-dump -- --source=/Users/huangjingfeng/Desktop/專案/_imports/manus-production-dump</pre>
+  </main>
+</body>
+</html>

@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Autolab Migration Control Center</title>
+  <style>
+    body { margin: 0; background: #f6f8fb; color: #182033; font-family: -apple-system, BlinkMacSystemFont, "Noto Sans TC", "Segoe UI", sans-serif; line-height: 1.65; }
+    main { max-width: 1180px; margin: 0 auto; padding: 44px 24px 64px; }
+    h1 { margin: 0 0 8px; font-size: 32px; line-height: 1.2; }
+    h2 { margin-top: 34px; padding-top: 18px; border-top: 1px solid #dce4f0; font-size: 21px; }
+    a { color: #155eef; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    code, pre { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+    pre { overflow: auto; border-radius: 8px; background: #111827; color: #e5e7eb; padding: 16px; }
+    table { width: 100%; border-collapse: collapse; background: #fff; border: 1px solid #e2e7f0; border-radius: 8px; overflow: hidden; }
+    th, td { padding: 10px 12px; border-bottom: 1px solid #e8edf5; text-align: left; vertical-align: top; font-size: 13px; }
+    th { background: #eef2f8; font-weight: 700; }
+    ul { padding-left: 1.2em; }
+    li { margin: 5px 0; }
+    .lead { color: #637084; font-size: 17px; }
+    .notice { background: #fff7ed; border: 1px solid #fed7aa; border-radius: 8px; padding: 14px 16px; margin: 22px 0; }
+    .grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin: 18px 0 8px; }
+    .card { background: #fff; border: 1px solid #e2e7f0; border-radius: 8px; padding: 14px 16px; }
+    .num { display: block; font-size: 26px; font-weight: 800; line-height: 1.15; }
+    .meta { color: #657185; font-size: 13px; }
+    .badge { display: inline-flex; border-radius: 999px; padding: 3px 8px; font-size: 12px; font-weight: 800; }
+    .pass { background: #dcfce7; color: #166534; }
+    .warn { background: #fef3c7; color: #92400e; }
+    .fail { background: #fee2e2; color: #991b1b; }
+    @media (max-width: 960px) { .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    @media (max-width: 640px) { .grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Autolab Migration Control Center</h1>
+    <p class="lead">本頁由 <code>npm run staging:dashboard</code> 從最新報告重新產生，用來追蹤 Autolab 從 Manus 搬到自有 staging/production 的真實狀態。</p>
+
+    <div class="notice">
+      <strong>安全原則：</strong>目前只做本機與 staging 準備；不覆蓋 Manus production、不改正式 DNS、不把 <code>autolab.cloud</code> 指到未驗證環境。
+    </div>
+
+    <div class="grid">
+      <div class="card"><span class="num">21/9/7</span><span class="meta">readiness pass/warn/fail</span></div>
+      <div class="card"><span class="num">9/2</span><span class="meta">preflight passed/failed</span></div>
+      <div class="card"><span class="num">14/0</span><span class="meta">local smoke passed/failed</span></div>
+      <div class="card"><span class="num">65/65</span><span class="meta">Git deploy files tracked</span></div>
+      <div class="card"><span class="num">0</span><span class="meta">risky sensitive files tracked</span></div>
+      <div class="card"><span class="num">staging/autolab-own-hosting-health</span><span class="meta">current branch</span></div>
+    </div>
+
+    <h2>Migration Gates</h2>
+    <table>
+      <thead><tr><th>Status</th><th>Gate</th><th>Current Detail</th></tr></thead>
+      <tbody>
+      <tr>
+        <td><span class="badge pass">PASS</span></td>
+        <td>現有 Manus production</td>
+        <td>本機 staging 分支繼續準備；尚未推送、部署、改 DNS 或替換目前 Manus 網站。</td>
+      </tr>
+      <tr>
+        <td><span class="badge pass">PASS</span></td>
+        <td>Git-backed deploy 檔案</td>
+        <td>65/65 required files tracked by Git; 65/65 exist on disk.</td>
+      </tr>
+      <tr>
+        <td><span class="badge pass">PASS</span></td>
+        <td>敏感檔案防護</td>
+        <td>12/12 expected sensitive paths ignored; 0 risky files tracked.</td>
+      </tr>
+      <tr>
+        <td><span class="badge pass">PASS</span></td>
+        <td>Documented command references</td>
+        <td>98/98 documented package-script references exist.</td>
+      </tr>
+      <tr>
+        <td><span class="badge pass">PASS</span></td>
+        <td>本機 production smoke</td>
+        <td>14 passed, 0 failed. Course video range is covered by this smoke check.</td>
+      </tr>
+      <tr>
+        <td><span class="badge fail">BLOCKED</span></td>
+        <td>Staging preflight</td>
+        <td>9 passed, 0 allowed failures, 2 failed. Failed: Staging readiness report, Staging DB target safety check.</td>
+      </tr>
+      <tr>
+        <td><span class="badge fail">BLOCKED</span></td>
+        <td>Staging secrets</td>
+        <td>Still blocked by 7 required env checks: DATABASE_URL, CLERK_SECRET_KEY, CLERK_PUBLISHABLE_KEY, VITE_CLERK_PUBLISHABLE_KEY, ADMIN_USER_IDS, TURNSTILE_SECRET_KEY, VITE_TURNSTILE_SITE_KEY.</td>
+      </tr>
+      <tr>
+        <td><span class="badge pass">PASS</span></td>
+        <td>Render env blueprint</td>
+        <td>27 env keys checked; 0 missing in render.yaml; 0 extra; 0 duplicates.</td>
+      </tr>
+      <tr>
+        <td><span class="badge pass">PASS</span></td>
+        <td>Report freshness</td>
+        <td>9/9 required reports are fresh within 24 hours.</td>
+      </tr>
+      <tr>
+        <td><span class="badge fail">BLOCKED</span></td>
+        <td>Manus production data</td>
+        <td>Current .manus/db material is query logs, not a full production database dump. Full dump/media/delta is still required before real cutover.</td>
+      </tr>
+      <tr>
+        <td><span class="badge fail">BLOCKED</span></td>
+        <td>Production cutover gate</td>
+        <td>Latest cutover gate decision: NO_GO; 6 pass, 4 fail.</td>
+      </tr></tbody>
+    </table>
+
+    <h2>Current Blockers</h2>
+    <ul><li>Required env: DATABASE_URL</li><li>Required env: CLERK_SECRET_KEY</li><li>Required env: CLERK_PUBLISHABLE_KEY</li><li>Required env: VITE_CLERK_PUBLISHABLE_KEY</li><li>Required env: ADMIN_USER_IDS</li><li>Required env: TURNSTILE_SECRET_KEY</li><li>Required env: VITE_TURNSTILE_SITE_KEY</li><li>Staging readiness report</li><li>Staging DB target safety check</li><li>Full Manus production database dump</li></ul>
+
+    <h2>Warnings To Review</h2>
+    <ul><li>Recommended env: RESEND_API_KEY - Missing, placeholder, or unsafe staging value</li><li>Recommended env: EMAIL_FROM - Missing, placeholder, or unsafe staging value</li><li>Recommended env: VITE_APP_URL - Missing, placeholder, or unsafe staging value</li><li>Recommended env: R2_ACCOUNT_ID - Missing, placeholder, or unsafe staging value</li><li>Recommended env: R2_ACCESS_KEY_ID - Missing, placeholder, or unsafe staging value</li><li>Recommended env: R2_SECRET_ACCESS_KEY - Missing, placeholder, or unsafe staging value</li><li>Recommended env: R2_PUBLIC_URL - Missing, placeholder, or unsafe staging value</li><li>Recommended env: VITE_GOOGLE_MAPS_API_KEY - Missing, placeholder, or unsafe staging value</li><li>Drizzle migration journal dialect - Existing journal dialect is mysql; use db:push only on clean staging until migration history is normalized.</li></ul>
+
+    <h2>External Dependency Scan</h2>
+    <table>
+      <thead><tr><th>Kind</th><th>Count</th></tr></thead>
+      <tbody>
+      <tr>
+        <td>external-link</td>
+        <td>248</td>
+      </tr>
+      <tr>
+        <td>external-asset</td>
+        <td>33</td>
+      </tr>
+      <tr>
+        <td>invalid</td>
+        <td>8</td>
+      </tr>
+      <tr>
+        <td>manus-tool-link</td>
+        <td>7</td>
+      </tr>
+      <tr>
+        <td>manus-invitation-link</td>
+        <td>6</td>
+      </tr></tbody>
+    </table>
+
+    <h2>Reports</h2>
+    <div class="grid">
+      <div class="card"><strong>Preflight</strong><a href="/Users/huangjingfeng/Desktop/專案/_reports/autolab-staging-preflight.html">Open report</a></div>
+      <div class="card"><strong>Local smoke</strong><a href="/Users/huangjingfeng/Desktop/專案/_reports/autolab-staging-smoke-local.html">Open report</a></div>
+      <div class="card"><strong>Readiness</strong><a href="/Users/huangjingfeng/Desktop/專案/_reports/autolab-staging-readiness.html">Open report</a></div>
+      <div class="card"><strong>Git deploy files</strong><a href="/Users/huangjingfeng/Desktop/專案/_reports/autolab-git-deploy-files.html">Open report</a></div>
+      <div class="card"><strong>Doc command check</strong><a href="/Users/huangjingfeng/Desktop/專案/_reports/autolab-doc-command-check.html">Open report</a></div>
+      <div class="card"><strong>Sensitive file guard</strong><a href="/Users/huangjingfeng/Desktop/專案/_reports/autolab-sensitive-file-guard.html">Open report</a></div>
+      <div class="card"><strong>Render env check</strong><a href="/Users/huangjingfeng/Desktop/專案/_reports/autolab-render-env-check.html">Open report</a></div>
+      <div class="card"><strong>Report freshness</strong><a href="/Users/huangjingfeng/Desktop/專案/_reports/autolab-report-freshness.html">Open report</a></div>
+      <div class="card"><strong>Production cutover gate</strong><a href="/Users/huangjingfeng/Desktop/專案/_reports/autolab-production-cutover-gate.html">Open report</a></div>
+      <div class="card"><strong>External dependencies</strong><a href="/Users/huangjingfeng/Desktop/專案/_reports/autolab-external-dependencies.html">Open report</a></div>
+      <div class="card"><strong>Manus dump inspection</strong><a href="/Users/huangjingfeng/Desktop/專案/_reports/autolab-manus-dump-inspection-current.html">Open report</a></div>
+    </div>
+
+    <h2>Next Safe Steps</h2>
+    <table>
+      <thead><tr><th>Order</th><th>Action</th><th>Done When</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>取得真的 Neon staging <code>DATABASE_URL</code>，不是 placeholder，也不是 production。</td><td><code>npm run staging:check-db-target -- --env-file=.env.staging</code> passes.</td></tr>
+        <tr><td>2</td><td>建立 Clerk test app 並填入 <code>sk_test_</code> / <code>pk_test_</code> 與 <code>ADMIN_USER_IDS</code>。</td><td>Readiness required Clerk checks pass.</td></tr>
+        <tr><td>3</td><td>建立 Turnstile staging site key/secret。</td><td>Readiness Turnstile checks pass.</td></tr>
+        <tr><td>4</td><td>完整跑 preflight，再部署 preview URL。</td><td>Only production cutover remains blocked.</td></tr>
+        <tr><td>5</td><td>取得 Manus 完整 production DB dump、media、delta window。</td><td>Staging import and sampling reports pass.</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Commands</h2>
+    <pre>npm run staging:dashboard -- --json=/Users/huangjingfeng/Desktop/專案/_reports/autolab-migration-dashboard.json
+npm run staging:readiness -- --env-file=.env.staging --html=/Users/huangjingfeng/Desktop/專案/_reports/autolab-staging-readiness.html --json=/Users/huangjingfeng/Desktop/專案/_reports/autolab-staging-readiness.json
+npm run staging:preflight -- --env-file=.env.staging --base-url=http://localhost:3131
+npm run staging:check-db-target -- --env-file=.env.staging
+npm run staging:check-sensitive-files -- --html=/Users/huangjingfeng/Desktop/專案/_reports/autolab-sensitive-file-guard.html --json=/Users/huangjingfeng/Desktop/專案/_reports/autolab-sensitive-file-guard.json</pre>
+
+    <p class="meta">Generated at 2026-05-15T14:20:20.003Z from <code>/Users/huangjingfeng/Desktop/專案/_reports</code>.</p>
+  </main>
+</body>
+</html>

@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AutoLab 測試站上線清單</title>
+  <style>
+    body {
+      margin: 0;
+      background: #f6f8fb;
+      color: #172033;
+      font-family: -apple-system, BlinkMacSystemFont, "Noto Sans TC", sans-serif;
+      line-height: 1.7;
+    }
+    main {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 48px 24px 72px;
+    }
+    h1 {
+      margin: 0 0 10px;
+      font-size: 34px;
+      line-height: 1.25;
+    }
+    h2 {
+      margin: 34px 0 12px;
+      padding-top: 24px;
+      border-top: 1px solid #dce3ed;
+      font-size: 22px;
+    }
+    .lead {
+      margin: 0 0 24px;
+      color: #5a6678;
+      font-size: 17px;
+    }
+    .notice {
+      margin: 24px 0;
+      padding: 16px 18px;
+      border: 1px solid #bfdbfe;
+      border-radius: 8px;
+      background: #eff6ff;
+      color: #1e3a8a;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      overflow: hidden;
+      border: 1px solid #dfe6f0;
+      border-radius: 8px;
+      background: #fff;
+    }
+    th, td {
+      padding: 11px 12px;
+      border-bottom: 1px solid #e7edf5;
+      text-align: left;
+      vertical-align: top;
+      font-size: 14px;
+    }
+    th {
+      background: #eef3f9;
+      font-weight: 700;
+    }
+    tr:last-child td {
+      border-bottom: 0;
+    }
+    code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 13px;
+    }
+    ol, ul {
+      padding-left: 22px;
+    }
+    li + li {
+      margin-top: 8px;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>AutoLab 測試站上線清單</h1>
+    <p class="lead">目標是先把新版網站放到測試網址，不取代 Manus 上的正式網站。測試站確認沒問題後，才安排正式網域切換。</p>
+
+    <div class="notice">
+      目前程式已完成本機 build。測試站不能上線的主要原因不是程式，而是正式環境的金鑰與資料庫還沒填。
+    </div>
+
+    <h2>你需要先準備的必要資料</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>項目</th>
+          <th>用途</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td><code>DATABASE_URL</code></td><td>網站後台、文章、報名、課程資料要存放的資料庫連線。</td></tr>
+        <tr><td><code>CLERK_SECRET_KEY</code></td><td>後台登入系統的伺服器金鑰。</td></tr>
+        <tr><td><code>CLERK_PUBLISHABLE_KEY</code></td><td>後台登入系統的前端金鑰。</td></tr>
+        <tr><td><code>VITE_CLERK_PUBLISHABLE_KEY</code></td><td>前端打包時需要的 Clerk 登入金鑰，通常和上一項同值。</td></tr>
+        <tr><td><code>JWT_SECRET</code></td><td>網站登入 session 使用的安全字串。</td></tr>
+        <tr><td><code>ADMIN_USER_IDS</code></td><td>誰可以進後台管理。填 Clerk 的 user id。</td></tr>
+        <tr><td><code>TURNSTILE_SECRET_KEY</code></td><td>表單防機器人驗證的後端金鑰。</td></tr>
+        <tr><td><code>VITE_TURNSTILE_SITE_KEY</code></td><td>表單防機器人驗證的前端金鑰。</td></tr>
+      </tbody>
+    </table>
+
+    <h2>AI 功能需要的資料</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>項目</th>
+          <th>用途</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td><code>GEMINI_API_KEY</code></td><td>AI 發文助理與保險業務 AI 工具箱產生內容。</td></tr>
+      </tbody>
+    </table>
+
+    <h2>建議一起準備</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>項目</th>
+          <th>用途</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td><code>RESEND_API_KEY</code> / <code>EMAIL_FROM</code></td><td>聯絡表單、報名通知、後台通知寄信。</td></tr>
+        <tr><td><code>R2_ACCOUNT_ID</code> 等 R2 金鑰</td><td>圖片、檔案、課程素材儲存。</td></tr>
+        <tr><td><code>VITE_GOOGLE_MAPS_API_KEY</code></td><td>如果網站地圖區塊要正常顯示才需要。</td></tr>
+        <tr><td><code>VITE_APP_URL</code></td><td>測試站網址。Render 建好測試站後再填。</td></tr>
+      </tbody>
+    </table>
+
+    <h2>接下來流程</h2>
+    <ol>
+      <li>建立 Render 測試站，不綁定 <code>autolab.cloud</code>。</li>
+      <li>建立 staging 資料庫，填入上面的必要環境變數。</li>
+      <li>部署新版網站到 Render 測試網址。</li>
+      <li>測試首頁、保險工具箱、後台登入、AI 發文助理、文章排程。</li>
+      <li>確認沒問題後，才規劃正式網域切換。</li>
+    </ol>
+
+    <h2>目前已通過</h2>
+    <ul>
+      <li>前端 build 成功。</li>
+      <li>後端 build 成功。</li>
+      <li>Render 環境變數欄位檢查通過。</li>
+      <li>敏感檔案檢查通過。</li>
+      <li>部署必要檔案檢查通過。</li>
+    </ul>
+  </main>
+</body>
+</html>

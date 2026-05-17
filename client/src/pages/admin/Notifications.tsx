@@ -38,8 +38,8 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Bell, Plus, Trash2, RefreshCw, Info, AlertTriangle, CheckCircle, XCircle } from "lucide-react";
 import { toast } from "sonner";
-import { format } from "date-fns";
-import { zhTW } from "date-fns/locale";
+import { format } from "date-fns/format";
+import { zhTW } from "date-fns/locale/zh-TW";
 
 export default function Notifications() {
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);

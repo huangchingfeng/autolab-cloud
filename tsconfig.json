@@ -16,6 +16,18 @@
     "baseUrl": ".",
     "types": ["node", "vite/client"],
     "paths": {
+      "@aws-sdk/client-s3": ["./server/_core/types/aws-sdk.d.ts"],
+      "@aws-sdk/s3-request-presigner": ["./server/_core/types/aws-s3-presigner.d.ts"],
+      "date-fns": ["./server/_core/types/date-fns.d.ts"],
+      "date-fns/format": ["./server/_core/types/date-fns.d.ts"],
+      "date-fns/formatDistanceToNow": ["./server/_core/types/date-fns.d.ts"],
+      "date-fns/locale": ["./server/_core/types/date-fns-locale.d.ts"],
+      "date-fns/locale/zh-CN": ["./server/_core/types/date-fns-locale.d.ts"],
+      "date-fns/locale/zh-TW": ["./server/_core/types/date-fns-locale.d.ts"],
+      "react-day-picker": ["./server/_core/types/react-day-picker.d.ts"],
+      "react-resizable-panels": ["./server/_core/types/react-resizable-panels.d.ts"],
+      "recharts": ["./server/_core/types/recharts.d.ts"],
+      "streamdown": ["./server/_core/types/streamdown.d.ts"],
       "@/*": ["./client/src/*"],
       "@shared/*": ["./shared/*"]
     }

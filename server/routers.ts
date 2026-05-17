@@ -12,6 +12,7 @@ import { sendEmail, generateContactConfirmationEmail, generateEventConfirmationE
 import { generateBNIEventConfirmationEmail } from "./_core/bniEventEmail";
 import { ENV } from "./_core/env";
 import { translateText, translateBatch, type SupportedLanguage } from "./translation";
+import { chatCompletion } from "./_core/llm";
 
 // Admin-only procedure
 const adminProcedure = protectedProcedure.use(({ ctx, next }) => {
@@ -20,6 +21,170 @@ const adminProcedure = protectedProcedure.use(({ ctx, next }) => {
   }
   return next({ ctx });
 });
+
+const generatePostDraftInputSchema = z.object({
+  sourceContent: z.string().optional(),
+  topic: z.string().optional(),
+  audience: z.string().optional(),
+  goal: z.string().optional(),
+  sourceNotes: z.string().optional(),
+  tone: z.string().optional(),
+  cta: z.string().optional(),
+}).refine(
+  (input) => Boolean((input.sourceContent || input.sourceNotes || input.topic || "").trim()),
+  { message: "請貼上原文或素材內容" }
+);
+
+const generatedPostDraftSchema = z.object({
+  title: z.string().min(1),
+  slug: z.string().optional(),
+  excerpt: z.string().optional(),
+  content: z.string().min(1),
+  suggestedTags: z.array(z.string()).optional(),
+  seoTitle: z.string().optional(),
+  seoDescription: z.string().optional(),
+  linePost: z.string().optional(),
+});
+
+const insuranceToolIdSchema = z.enum([
+  "fire",
+  "protectionGap",
+  "interviewQuestions",
+  "policySummary",
+  "lineFollowup",
+  "objectionPractice",
+]);
+
+type InsuranceToolId = z.infer<typeof insuranceToolIdSchema>;
+
+const insuranceToolLabels: Record<InsuranceToolId, string> = {
+  fire: "FIRE 退休目標系統",
+  protectionGap: "家庭保障缺口盤點器",
+  interviewQuestions: "客戶訪談提問產生器",
+  policySummary: "保單健檢摘要器",
+  lineFollowup: "LINE 跟進訊息產生器",
+  objectionPractice: "異議處理練習器",
+};
+
+const insuranceToolInstructions: Record<InsuranceToolId, string> = {
+  fire: "根據退休目標、家庭責任、現金流與資產狀況，整理簡化退休目標討論、風險缺口、待確認資料與下一次訪談問題。不要做具體投資或保險商品推薦。",
+  protectionGap: "根據家庭成員、收入責任、負債、教育費與緊急預備金，整理保障缺口討論清單、優先確認問題與客戶教育重點。不要判定應買哪張商品。",
+  interviewQuestions: "根據客戶背景與業務目標，產生初談、複談、成交前確認問題，問題要自然、專業、不壓迫。",
+  policySummary: "根據去識別化保單重點，整理白話摘要、可能需要補問的地方、不可直接判斷的限制與給客戶看的說明。不可宣稱既有保單好壞或直接建議解約。",
+  lineFollowup: "根據客戶階段與溝通目的，產生 3 種 LINE 跟進訊息，語氣溫和、短句、清楚下一步，不誇大、不施壓。",
+  objectionPractice: "根據客戶異議，產生理解客戶、釐清問題、教育觀念、邀約下一步的回應架構，並提供角色扮演練習腳本。",
+};
+
+const insuranceToolInputSchema = z.object({
+  tool: insuranceToolIdSchema,
+  fields: z.record(z.string(), z.string().max(2000)).default({}),
+}).refine(
+  (input) => Object.values(input.fields).some(value => value.trim().length > 0),
+  { message: "請至少填寫一個欄位" }
+).refine(
+  (input) => Object.values(input.fields).join("\n").length <= 7000,
+  { message: "輸入內容太長，請先刪減或分段使用" }
+);
+
+function slugifyPostTitle(input: string) {
+  const slug = input
+    .normalize("NFKD")
+    .toLowerCase()
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .slice(0, 90);
+
+  return slug || `ai-post-${Date.now()}`;
+}
+
+function compactExcerpt(input: string) {
+  return input
+    .replace(/[#*_`>\-[\]()]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim()
+    .slice(0, 180);
+}
+
+function extractJsonObject(raw: string) {
+  const withoutFence = raw
+    .trim()
+    .replace(/^```(?:json)?/i, "")
+    .replace(/```$/i, "")
+    .trim();
+  const start = withoutFence.indexOf("{");
+  const end = withoutFence.lastIndexOf("}");
+  if (start === -1 || end === -1 || end <= start) {
+    throw new Error("AI response did not contain a JSON object");
+  }
+  return withoutFence.slice(start, end + 1);
+}
+
+function parseGeneratedPostDraft(raw: string, fallbackTopic: string) {
+  try {
+    const parsed = JSON.parse(extractJsonObject(raw));
+    const result = generatedPostDraftSchema.safeParse(parsed);
+    if (!result.success) {
+      throw new Error("AI response JSON did not match expected draft shape");
+    }
+
+    const data = result.data;
+    const content = data.content.trim();
+    const title = data.title.trim() || fallbackTopic.trim();
+    const suggestedTags = [...new Set((data.suggestedTags || []).map(tag => tag.trim()).filter(Boolean))].slice(0, 8);
+
+    return {
+      title,
+      slug: slugifyPostTitle(data.slug || title || fallbackTopic),
+      excerpt: data.excerpt?.trim() || compactExcerpt(content),
+      content,
+      suggestedTags,
+      seoTitle: data.seoTitle?.trim() || title,
+      seoDescription: data.seoDescription?.trim() || data.excerpt?.trim() || compactExcerpt(content),
+      linePost: data.linePost?.trim() || "",
+    };
+  } catch (error) {
+    console.warn("[AI Writer] Falling back to raw draft content:", error);
+    const content = raw.trim();
+    const title = fallbackTopic.trim();
+    return {
+      title,
+      slug: slugifyPostTitle(title),
+      excerpt: compactExcerpt(content),
+      content,
+      suggestedTags: [],
+      seoTitle: title,
+      seoDescription: compactExcerpt(content),
+      linePost: "",
+    };
+  }
+}
+
+function formatInsuranceFields(fields: Record<string, string>) {
+  return Object.entries(fields)
+    .filter(([, value]) => value.trim())
+    .map(([key, value]) => `- ${key}: ${value.trim()}`)
+    .join("\n");
+}
+
+function buildInsuranceToolPrompt(tool: InsuranceToolId, fields: Record<string, string>) {
+  return [
+    `工具：${insuranceToolLabels[tool]}`,
+    `任務：${insuranceToolInstructions[tool]}`,
+    "",
+    "使用者輸入：",
+    formatInsuranceFields(fields),
+    "",
+    "請用 Markdown 輸出，格式如下：",
+    "## 重點摘要",
+    "## 可對客戶說明的白話版本",
+    "## 業務員下一步",
+    "## 需要再確認的資料",
+    "## 合規提醒",
+    "",
+    "輸出要務實、短段落、可直接讓保險業務員拿去修改使用。",
+  ].join("\n");
+}
 
 export const appRouter = router({
   system: systemRouter,
@@ -33,6 +198,51 @@ export const appRouter = router({
         success: true,
       } as const;
     }),
+  }),
+
+  insuranceTools: router({
+    generate: publicProcedure
+      .input(insuranceToolInputSchema)
+      .mutation(async ({ input }) => {
+        if (!ENV.geminiApiKey) {
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: "AI 工具暫時無法使用，請先確認 GEMINI_API_KEY 是否設定。",
+          });
+        }
+
+        const systemPrompt = [
+          "你是 AutoLab 保險業務 AI 工具箱。",
+          "請使用繁體中文與台灣保險業務情境，協助業務員整理客戶溝通草稿、訪談問題、服務提醒與教育型說明。",
+          "你不能推薦具體保險商品、不能比較哪張保單最好、不能宣稱保證獲利或保證理賠，也不能替代所屬公司、法遵、核保、稅務或法律意見。",
+          "如果資料不足，請列為待確認，不要自行編造客戶資料、數字、病史、商品條款、費率或法規結論。",
+          "不要要求使用者輸入身分證、完整生日、病歷、保單號碼等敏感個資。",
+          "每份輸出都必須標示為草稿，提醒業務員依公司規範確認後再使用。",
+        ].join("\n");
+
+        try {
+          const output = await chatCompletion(
+            [
+              { role: "system", content: systemPrompt },
+              { role: "user", content: buildInsuranceToolPrompt(input.tool, input.fields) },
+            ],
+            { maxTokens: 3000, temperature: 0.55 }
+          );
+
+          return {
+            tool: input.tool,
+            title: insuranceToolLabels[input.tool],
+            output,
+            generatedAt: new Date().toISOString(),
+          };
+        } catch (error) {
+          console.error("[Insurance Tools] Failed to generate output:", error);
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: "保險工具產生失敗，請稍後再試。",
+          });
+        }
+      }),
   }),
 
   blog: router({
@@ -155,6 +365,68 @@ export const appRouter = router({
         return post;
       }),
 
+    generatePostDraft: adminProcedure
+      .input(generatePostDraftInputSchema)
+      .mutation(async ({ input }) => {
+        const sourceContent = (input.sourceContent || input.sourceNotes || input.topic || "").trim();
+        const topic = input.topic?.trim() || "依據素材改寫成阿峰老師風格文章";
+        const audience = input.audience?.trim() || "企業主、人資主管、業務主管、想導入 AI 的工作者";
+        const goal = input.goal?.trim() || "把素材改寫成阿峰老師風格的部落格文章，建立信任並導流企業內訓諮詢";
+        const tone = input.tone?.trim() || "專業、務實、像阿峰老師親自分享";
+        const cta = input.cta?.trim() || "引導讀者加 LINE 或填寫企業內訓諮詢表單";
+
+        const systemPrompt = [
+          "你是 AutoLab / AI 峰哥網站的內容主編。",
+          "你的任務不是憑空寫文章，而是把使用者提供的原文、逐字稿、筆記或素材，改寫成阿峰老師風格的部落格文章。",
+          "阿峰老師風格：繁體中文、台灣商務語境、專業但好懂、像企業 AI 教練在說明，重視實戰步驟、流程、工具落地和業務成果。",
+          "必須保留原文重點與事實，不要編造不存在的客戶名稱、數字、經歷、價格、日期或案例。",
+          "可以重組段落、補小標、補轉場與行動建議，但新增內容必須是通用方法論，不可假裝來自原文。",
+          "只輸出 JSON，不要加 Markdown code fence。",
+        ].join("\n");
+
+        const userPrompt = [
+          `改寫方向/標題：${topic}`,
+          `目標讀者：${audience}`,
+          `文章目的：${goal}`,
+          `語氣：${tone}`,
+          `CTA：${cta}`,
+          input.sourceNotes?.trim() && input.sourceContent?.trim() ? `額外補充要求：\n${input.sourceNotes.trim()}` : "",
+          "",
+          "原文/素材如下，請以此為主要依據改寫：",
+          sourceContent,
+          "",
+          "請輸出以下 JSON 欄位：",
+          "{",
+          '  "title": "文章標題",',
+          '  "slug": "英文小寫網址代稱，例如 ai-sales-workflow",',
+          '  "excerpt": "120 字內摘要",',
+          '  "content": "Markdown 文章，含 H2/H3、小標、條列、結尾 CTA，約 1200-1800 字",',
+          '  "suggestedTags": ["AI工具", "企業內訓"],',
+          '  "seoTitle": "SEO 標題，60 字內",',
+          '  "seoDescription": "SEO 描述，150 字內",',
+          '  "linePost": "可貼到 LINE 社群的短版貼文，120-220 字"',
+          "}",
+        ].filter(Boolean).join("\n");
+
+        try {
+          const raw = await chatCompletion(
+            [
+              { role: "system", content: systemPrompt },
+              { role: "user", content: userPrompt },
+            ],
+            { maxTokens: 4096, temperature: 0.7 }
+          );
+
+          return parseGeneratedPostDraft(raw, topic);
+        } catch (error) {
+          console.error("[AI Writer] Failed to generate post draft:", error);
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: "AI 產文失敗，請確認 GEMINI_API_KEY 是否設定，或稍後再試。",
+          });
+        }
+      }),
+
     createPost: adminProcedure
       .input(z.object({
         title: z.string().min(1),
@@ -175,9 +447,7 @@ export const appRouter = router({
           authorId: ctx.user.id,
         });
 
-        // MySQL2 returns insertId as a bigint, need to convert to number
-        const insertId = (result as any).insertId;
-        const postId = typeof insertId === 'bigint' ? Number(insertId) : Number(insertId || 0);
+        const postId = result.id;
 
         // Add tags if provided
         if (tagIds && tagIds.length > 0) {
@@ -388,8 +658,7 @@ export const appRouter = router({
           bniChapter: input.bniChapter || null,
         });
 
-        const insertId = (result as any).insertId;
-        const registrationId = typeof insertId === 'bigint' ? Number(insertId) : Number(insertId || 0);
+        const registrationId = result.id;
 
         // Send confirmation email
         try {
@@ -476,8 +745,7 @@ export const appRouter = router({
           referralSource: 'other',
         });
 
-        const insertId = (result as any).insertId;
-        const registrationId = typeof insertId === 'bigint' ? Number(insertId) : Number(insertId || 0);
+        const registrationId = result.id;
 
         // Send confirmation email
         try {
@@ -550,8 +818,7 @@ export const appRouter = router({
           highlights: highlights ? JSON.stringify(highlights) : null,
           targetAudience: targetAudience ? JSON.stringify(targetAudience) : null,
         });
-        const insertId = (result as any).insertId;
-        return { success: true, eventId: typeof insertId === 'bigint' ? Number(insertId) : Number(insertId || 0) };
+        return { success: true, eventId: result.id };
       }),
 
     updateEvent: adminProcedure
@@ -749,8 +1016,7 @@ export const appRouter = router({
       }))
       .mutation(async ({ input }) => {
         const result = await db.createEventRegistration(input);
-        const insertId = (result as any).insertId;
-        return { success: true, registrationId: typeof insertId === 'bigint' ? Number(insertId) : Number(insertId || 0) };
+        return { success: true, registrationId: result.id };
       }),
 
     updateEventRegistration: adminProcedure
@@ -2064,6 +2330,259 @@ export const appRouter = router({
     markAllAsRead: protectedProcedure
       .mutation(async ({ ctx }) => {
         return await db.markAllNotificationsAsRead(ctx.user.id, ctx.user.role);
+      }),
+  }),
+
+  // AI Super Sales Workshop Registration API
+  aiSuperSales: router({
+    register: publicProcedure
+      .input(z.object({
+        name: z.string().min(1, "請輸入姓名"),
+        email: z.string().email("請輸入有效的 Email"),
+        phone: z.string().min(1, "請輸入電話"),
+        company: z.string().optional(),
+        jobTitle: z.string().optional(),
+        selectedSessions: z.array(z.string()).min(1, "請選擇至少一個場次"),
+        referralSource: z.enum(["teacher", "line_community", "facebook", "instagram", "youtube", "other"]),
+        subscribeNewsletter: z.boolean().optional(),
+      }))
+      .mutation(async ({ input }) => {
+        const registration = await db.createAISuperSalesRegistration(input);
+
+        const sessionMap: Record<string, string> = {
+          session1: "第一場：2/20 (四) 19:00-21:30",
+          session2: "第二場：3/6 (四) 19:00-21:30",
+          session3: "第三場：3/20 (四) 19:00-21:30",
+          session4: "第四場：4/10 (四) 19:00-21:30",
+        };
+        const sessionsDisplay = input.selectedSessions.includes("all")
+          ? "四場全報"
+          : input.selectedSessions.map(session => sessionMap[session] || session).join(", ");
+
+        const referralSourceMap: Record<string, string> = {
+          teacher: "阿峰老師",
+          line_community: "阿峰老師LINE社群",
+          facebook: "Facebook",
+          instagram: "Instagram",
+          youtube: "YouTube",
+          other: "其他",
+        };
+        const referralSourceDisplay = referralSourceMap[input.referralSource] || input.referralSource;
+
+        try {
+          await notifyOwner({
+            title: "AI 超級業務實戰班新報名！",
+            content: `姓名: ${input.name}\nEmail: ${input.email}\n電話: ${input.phone}\n公司: ${input.company || "未填寫"}\n職稱: ${input.jobTitle || "未填寫"}\n報名場次: ${sessionsDisplay}\n資訊來源: ${referralSourceDisplay}`,
+          });
+        } catch (error) {
+          console.error("[AISuperSales] Failed to notify owner:", error);
+        }
+
+        try {
+          await sendEmail({
+            to: "nikeshoxmiles@gmail.com",
+            subject: "AI 超級業務實戰班新報名",
+            html: `
+              <h2>AI 超級業務實戰班新報名</h2>
+              <p><strong>姓名:</strong> ${input.name}</p>
+              <p><strong>Email:</strong> ${input.email}</p>
+              <p><strong>電話:</strong> ${input.phone}</p>
+              <p><strong>公司:</strong> ${input.company || "未填寫"}</p>
+              <p><strong>職稱:</strong> ${input.jobTitle || "未填寫"}</p>
+              <p><strong>報名場次:</strong> ${sessionsDisplay}</p>
+              <p><strong>資訊來源:</strong> ${referralSourceDisplay}</p>
+              <p><strong>訂閱電子報:</strong> ${input.subscribeNewsletter ? "是" : "否"}</p>
+            `,
+          });
+        } catch (error) {
+          console.error("[AISuperSales] Failed to send notification email:", error);
+        }
+
+        return {
+          success: true,
+          registrationId: registration.id,
+        };
+      }),
+
+    getAllRegistrations: adminProcedure
+      .input(z.object({
+        limit: z.number().optional(),
+        offset: z.number().optional(),
+        searchTerm: z.string().optional(),
+      }).optional())
+      .query(async ({ input }) => {
+        return await db.getAllAISuperSalesRegistrations(input);
+      }),
+
+    exportCSV: adminProcedure.query(async () => {
+      return await db.getAllAISuperSalesRegistrations();
+    }),
+
+    getStats: adminProcedure.query(async () => {
+      return await db.getAISuperSalesStats();
+    }),
+
+    getSessionStats: adminProcedure.query(async () => {
+      return await db.getAISuperSalesSessionStats();
+    }),
+
+    updateRegistration: adminProcedure
+      .input(z.object({
+        id: z.number(),
+        name: z.string().min(1).optional(),
+        email: z.string().email().optional(),
+        phone: z.string().min(1).optional(),
+        company: z.string().nullable().optional(),
+        jobTitle: z.string().nullable().optional(),
+        selectedSessions: z.array(z.string()).min(1).optional(),
+        referralSource: z.enum(["teacher", "line_community", "facebook", "instagram", "youtube", "other"]).optional(),
+        subscribeNewsletter: z.boolean().optional(),
+        notes: z.string().nullable().optional(),
+      }))
+      .mutation(async ({ input }) => {
+        const { id, ...data } = input;
+        const updated = await db.updateAISuperSalesRegistration(id, data);
+        if (!updated) {
+          throw new TRPCError({ code: "NOT_FOUND", message: "Registration not found" });
+        }
+        return updated;
+      }),
+
+    deleteRegistration: adminProcedure
+      .input(z.object({ id: z.number() }))
+      .mutation(async ({ input }) => {
+        await db.deleteAISuperSalesRegistration(input.id);
+        return { success: true };
+      }),
+
+    adminCreateRegistration: adminProcedure
+      .input(z.object({
+        name: z.string().min(1, "請輸入姓名"),
+        email: z.string().email("請輸入有效的 Email"),
+        phone: z.string().min(1, "請輸入電話"),
+        company: z.string().optional(),
+        jobTitle: z.string().optional(),
+        selectedSessions: z.array(z.string()).min(1, "請選擇至少一個場次"),
+        referralSource: z.enum(["teacher", "line_community", "facebook", "instagram", "youtube", "other"]),
+        subscribeNewsletter: z.boolean().optional(),
+        notes: z.string().optional(),
+      }))
+      .mutation(async ({ input }) => {
+        return await db.createAISuperSalesRegistration(input);
+      }),
+  }),
+
+  // Corporate Training Inquiry API
+  corporateInquiry: router({
+    submit: publicProcedure
+      .input(z.object({
+        name: z.string().min(1, "請填寫姓名"),
+        company: z.string().min(1, "請填寫公司名稱"),
+        jobTitle: z.string().min(1, "請填寫職稱"),
+        email: z.string().email("請填寫有效的 Email"),
+        phone: z.string().optional(),
+        headcount: z.string().optional(),
+        programs: z.array(z.string()).optional(),
+        preferredTime: z.string().optional(),
+        notes: z.string().optional(),
+        sourcePage: z.enum(["general", "tech", "manufacturing"]),
+      }))
+      .mutation(async ({ input }) => {
+        const inquiry = await db.createCorporateInquiry({
+          ...input,
+          phone: input.phone || null,
+          headcount: input.headcount || null,
+          programs: input.programs ? JSON.stringify(input.programs) : null,
+          preferredTime: input.preferredTime || null,
+          notes: input.notes || null,
+        });
+
+        const sourcePageLabel = {
+          general: "(全產業) 企業內訓",
+          tech: "科技業 AI 實戰工作坊",
+          manufacturing: "製造業 AI 實戰工作坊",
+        }[input.sourcePage];
+        const programsList = input.programs?.join("、") || "未選擇";
+
+        try {
+          await sendEmail({
+            to: "nikeshoxmiles@gmail.com",
+            subject: `【企業邀課】${input.company} - ${sourcePageLabel}`,
+            html: `
+              <h2>新的企業邀課諮詢</h2>
+              <p><strong>來源頁面:</strong> ${sourcePageLabel}</p>
+              <p><strong>姓名:</strong> ${input.name}</p>
+              <p><strong>公司:</strong> ${input.company}</p>
+              <p><strong>職稱:</strong> ${input.jobTitle}</p>
+              <p><strong>Email:</strong> <a href="mailto:${input.email}">${input.email}</a></p>
+              <p><strong>電話:</strong> ${input.phone || "未填寫"}</p>
+              <p><strong>預計人數:</strong> ${input.headcount || "未填寫"}</p>
+              <p><strong>有興趣方案:</strong> ${programsList}</p>
+              <p><strong>預計時間:</strong> ${input.preferredTime || "未填寫"}</p>
+              <p><strong>其他需求:</strong> ${input.notes || "無"}</p>
+            `,
+          });
+          await db.markCorporateInquiryEmailSent(inquiry.id);
+        } catch (error) {
+          console.error("[CorporateInquiry] Failed to send notification email:", error);
+        }
+
+        try {
+          await notifyOwner({
+            title: `企業邀課：${input.company}`,
+            content: `${input.name}（${input.jobTitle}）從${sourcePageLabel}頁面提交了邀課諮詢。\n公司：${input.company}\nEmail：${input.email}\n電話：${input.phone || "未填寫"}\n方案：${programsList}`,
+          });
+        } catch (error) {
+          console.error("[CorporateInquiry] Failed to notify owner:", error);
+        }
+
+        return { success: true, id: inquiry.id };
+      }),
+
+    getAll: adminProcedure
+      .input(z.object({
+        limit: z.number().optional(),
+        offset: z.number().optional(),
+        status: z.string().optional(),
+        sourcePage: z.string().optional(),
+        search: z.string().optional(),
+      }).optional())
+      .query(async ({ input }) => {
+        return await db.getAllCorporateInquiries(input);
+      }),
+
+    getStats: adminProcedure.query(async () => {
+      return await db.getCorporateInquiryStats();
+    }),
+
+    getById: adminProcedure
+      .input(z.object({ id: z.number() }))
+      .query(async ({ input }) => {
+        const inquiry = await db.getCorporateInquiryById(input.id);
+        if (!inquiry) {
+          throw new TRPCError({ code: "NOT_FOUND", message: "找不到此邀課申請" });
+        }
+        return inquiry;
+      }),
+
+    updateStatus: adminProcedure
+      .input(z.object({
+        id: z.number(),
+        status: z.enum(["new", "contacted", "quoted", "closed", "cancelled"]),
+        adminNotes: z.string().optional(),
+      }))
+      .mutation(async ({ input }) => {
+        const updated = await db.updateCorporateInquiryStatus(input.id, input.status, input.adminNotes);
+        if (!updated) {
+          throw new TRPCError({ code: "NOT_FOUND", message: "找不到此邀課申請" });
+        }
+        return updated;
+      }),
+
+    delete: adminProcedure
+      .input(z.object({ id: z.number() }))
+      .mutation(async ({ input }) => {
+        return await db.deleteCorporateInquiry(input.id);
       }),
   }),
 

@@ -23,8 +23,8 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Plus, Pencil, Trash2, Eye } from "lucide-react";
-import { format } from "date-fns";
-import { zhTW } from "date-fns/locale";
+import { format } from "date-fns/format";
+import { zhTW } from "date-fns/locale/zh-TW";
 import { toast } from "sonner";
 
 export default function AdminPosts() {

@@ -3,8 +3,8 @@
  * 替代原本的 Manus OAuth 系統
  */
 
-import { clerkClient } from "@clerk/express";
-import type { Request } from "express";
+import { clerkClient, getAuth } from "@clerk/express";
+import type { NextFunction, Request, Response } from "express";
 import type { User } from "../../drizzle/schema";
 import * as db from "../db";
 import { ENV } from "./env";
@@ -23,17 +23,13 @@ export interface ClerkUser {
  * 從 Clerk 的 Authorization header 取得使用者
  */
 export async function getClerkUser(req: Request): Promise<ClerkUser | null> {
-  const authHeader = req.headers.authorization;
-
-  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+  if (!ENV.clerkSecretKey || !ENV.clerkPublishableKey) {
     return null;
   }
 
-  const token = authHeader.slice(7);
-
   try {
-    // 驗證 JWT token 並取得使用者 ID
-    const { sub: userId } = await clerkClient.verifyToken(token);
+    const auth = getAuth(req);
+    const userId = auth.userId;
 
     if (!userId) {
       return null;
@@ -77,7 +73,7 @@ export async function authenticateRequest(req: Request): Promise<User | null> {
   });
 
   const user = await db.getUserByOpenId(clerkUser.id);
-  return user;
+  return user ?? null;
 }
 
 /**
@@ -91,8 +87,10 @@ export function isAdmin(user: User | null): boolean {
 /**
  * Express middleware: 要求已登入
  */
-export function requireAuth(req: Request, res: any, next: any) {
-  if (!req.auth?.userId) {
+export function requireAuth(req: Request, res: Response, next: NextFunction) {
+  const auth = getAuth(req);
+
+  if (!auth.userId) {
     return res.status(401).json({ error: "Unauthorized" });
   }
   next();
@@ -101,12 +99,14 @@ export function requireAuth(req: Request, res: any, next: any) {
 /**
  * Express middleware: 要求管理員權限
  */
-export async function requireAdmin(req: Request, res: any, next: any) {
-  if (!req.auth?.userId) {
+export async function requireAdmin(req: Request, res: Response, next: NextFunction) {
+  const auth = getAuth(req);
+
+  if (!auth.userId) {
     return res.status(401).json({ error: "Unauthorized" });
   }
 
-  if (!ENV.adminUserIds.includes(req.auth.userId)) {
+  if (!ENV.adminUserIds.includes(auth.userId)) {
     return res.status(403).json({ error: "Forbidden - Admin only" });
   }
 

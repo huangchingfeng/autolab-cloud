@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AutoLab 目前建置狀態</title>
+  <style>
+    body {
+      margin: 0;
+      background: #f6f8fb;
+      color: #172033;
+      font-family: -apple-system, BlinkMacSystemFont, "Noto Sans TC", sans-serif;
+      line-height: 1.7;
+    }
+    main {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 48px 24px 72px;
+    }
+    h1 {
+      margin: 0 0 8px;
+      font-size: 34px;
+      line-height: 1.25;
+    }
+    h2 {
+      margin: 34px 0 12px;
+      padding-top: 22px;
+      border-top: 1px solid #dce3ed;
+      font-size: 22px;
+    }
+    .lead {
+      margin: 0 0 22px;
+      color: #5b6878;
+      font-size: 17px;
+    }
+    .ok, .block {
+      margin: 22px 0;
+      padding: 16px 18px;
+      border-radius: 8px;
+      border: 1px solid;
+    }
+    .ok {
+      background: #ecfdf5;
+      border-color: #bbf7d0;
+      color: #166534;
+    }
+    .block {
+      background: #fff7ed;
+      border-color: #fed7aa;
+      color: #9a3412;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      overflow: hidden;
+      border: 1px solid #dfe6f0;
+      border-radius: 8px;
+      background: #fff;
+    }
+    th, td {
+      padding: 11px 12px;
+      border-bottom: 1px solid #e7edf5;
+      text-align: left;
+      vertical-align: top;
+      font-size: 14px;
+    }
+    th {
+      background: #eef3f9;
+      font-weight: 700;
+    }
+    tr:last-child td {
+      border-bottom: 0;
+    }
+    code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 13px;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>AutoLab 目前建置狀態</h1>
+    <p class="lead">更新日期：2026-05-17。這份狀態只針對本機新版與測試站，不會影響目前 Manus 上的正式網站。</p>
+
+    <div class="ok">
+      目前新版網站已經可以正式 build，前端與後端輸出都已產生在 <code>dist/</code>。
+    </div>
+
+    <h2>已完成建置</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>項目</th>
+          <th>狀態</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>前端正式 build</td><td>通過</td></tr>
+        <tr><td>後端正式 build</td><td>通過</td></tr>
+        <tr><td>保險業務 AI 工具箱頁面</td><td>完成，已整合路由與頁首選單</td></tr>
+        <tr><td>AI 發文助理後台</td><td>完成草稿產生流程，需 <code>GEMINI_API_KEY</code> 才能實際產文</td></tr>
+        <tr><td>Render 環境變數欄位</td><td>render.yaml 欄位完整</td></tr>
+        <tr><td>敏感檔案檢查</td><td>通過，沒有追蹤 risky secret files</td></tr>
+      </tbody>
+    </table>
+
+    <h2>目前阻擋測試站部署的原因</h2>
+    <div class="block">
+      還不能推到 Render 測試站，因為 <code>.env.staging</code> 裡仍有 placeholder 或空值。這是外部金鑰問題，不是程式 build 問題。
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>項目</th>
+          <th>目前狀態</th>
+          <th>處理方式</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td><code>DATABASE_URL</code></td><td>看起來仍是測試 placeholder</td><td>建立真正 Neon staging database 後填入 Render</td></tr>
+        <tr><td><code>CLERK_SECRET_KEY</code></td><td>placeholder</td><td>從 Clerk 測試專案取得</td></tr>
+        <tr><td><code>CLERK_PUBLISHABLE_KEY</code></td><td>placeholder</td><td>從 Clerk 測試專案取得</td></tr>
+        <tr><td><code>VITE_CLERK_PUBLISHABLE_KEY</code></td><td>placeholder</td><td>通常與 Clerk publishable key 相同</td></tr>
+        <tr><td><code>TURNSTILE_SECRET_KEY</code></td><td>空值</td><td>從 Cloudflare Turnstile 取得</td></tr>
+        <tr><td><code>VITE_TURNSTILE_SITE_KEY</code></td><td>空值</td><td>從 Cloudflare Turnstile 取得</td></tr>
+        <tr><td><code>GEMINI_API_KEY</code></td><td>空值</td><td>從 Google AI Studio 取得，供 AI 發文與保險工具使用</td></tr>
+      </tbody>
+    </table>
+
+    <h2>下一步</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>順序</th>
+          <th>動作</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>1</td><td>補齊上方 staging 外部服務金鑰。</td></tr>
+        <tr><td>2</td><td>登入 Render CLI 或設定 Render API key。</td></tr>
+        <tr><td>3</td><td>把新版推到 GitHub 分支，Render 從 GitHub 建置測試站。</td></tr>
+        <tr><td>4</td><td>測試站確認後，再討論正式 <code>autolab.cloud</code> 切換。</td></tr>
+      </tbody>
+    </table>
+  </main>
+</body>
+</html>

@@ -271,8 +271,7 @@ describe("Event Registrations Management", () => {
         phone: "0911111111",
       });
       
-      const insertId = (createResult as any).insertId;
-      const registrationId = typeof insertId === 'bigint' ? Number(insertId) : Number(insertId || 0);
+      const registrationId = createResult.id;
       
       if (registrationId === 0) {
         console.log("Failed to create test registration, skipping test");

@@ -12,6 +12,7 @@ import { BlogTag } from "./pages/BlogTag";
 import AdminLayout from "./components/AdminLayout";
 import AdminDashboard from "./pages/admin/Dashboard";
 import AdminPosts from "./pages/admin/Posts";
+import AIWriter from "./pages/admin/AIWriter";
 import PostEditor from "./pages/admin/PostEditor";
 import CategoriesAndTags from "./pages/admin/CategoriesAndTags";
 import AdminContacts from "./pages/admin/Contacts";
@@ -23,8 +24,10 @@ import Contact from "./pages/Contact";
 import FAQ from "./pages/FAQ";
 import About from "./pages/About";
 import CorporateTraining from "./pages/CorporateTraining";
+import AISuperSales from "./pages/AISuperSales";
 import PublicCourses2026 from "./pages/PublicCourses2026";
 import AIBusinessFlywheel from "./pages/AIBusinessFlywheel";
+import InsuranceAITools from "./pages/InsuranceAITools";
 import Coaching from "./pages/Coaching";
 import Topics from "./pages/Topics";
 import PromptLibrary from "./pages/PromptLibrary";
@@ -47,6 +50,8 @@ import Course2026Sessions from "./pages/admin/Course2026Sessions";
 import PaymentRecords from "./pages/PaymentRecords";
 import AdminNotifications from "./pages/admin/Notifications";
 import EventRegistrations from "./pages/admin/EventRegistrations";
+import AISuperSalesRegistrations from "./pages/admin/AISuperSalesRegistrations";
+import CorporateInquiries from "./pages/admin/CorporateInquiries";
 import Course2026PaymentResult from "./pages/Course2026PaymentResult";
 import { LineChatPlugin } from "./components/LineChatPlugin";
 import SocialMediaButtons from "./components/SocialMediaButtons";
@@ -61,6 +66,8 @@ function Router() {
       <Route path={"/"} component={Home} />
       <Route path={"/about"} component={About} />
       <Route path={"/corporate-training"} component={CorporateTraining} />
+      <Route path={"/ai-super-sales"} component={AISuperSales} />
+      <Route path={"/insurance-ai-tools"} component={InsuranceAITools} />
       <Route path={"/public-courses"}>
         {() => <Redirect to="/2026-ai-course" />}
       </Route>
@@ -112,6 +119,13 @@ function Router() {
           </AdminLayout>
         )}
       </Route>
+      <Route path="/admin/ai-writer">
+        {() => (
+          <AdminLayout>
+            <AIWriter />
+          </AdminLayout>
+        )}
+      </Route>
       <Route path="/admin/posts/:id">
         {() => (
           <AdminLayout>
@@ -158,6 +172,20 @@ function Router() {
         {() => (
           <AdminLayout>
             <EventRegistrations />
+          </AdminLayout>
+        )}
+      </Route>
+      <Route path="/admin/ai-super-sales-registrations">
+        {() => (
+          <AdminLayout>
+            <AISuperSalesRegistrations />
+          </AdminLayout>
+        )}
+      </Route>
+      <Route path="/admin/corporate-inquiries">
+        {() => (
+          <AdminLayout>
+            <CorporateInquiries />
           </AdminLayout>
         )}
       </Route>

@@ -12,37 +12,37 @@ const videos = [
     id: 1,
     title: "AI 工具實戰應用",
     description: "學員現場操作 AI 工具解決實際工作問題",
-    url: "https://d2xsxph8kpxj0f.cloudfront.net/95179607/D8QXMb7ThVwxNTQZRzfrBM/course-videos/video-1766018137402-q34lji.mov",
+    url: "/course-videos/ai-tools-practice.mov",
   },
   {
     id: 2,
     title: "企業內訓精華",
     description: "企業團隊 AI 導入培訓現場實況",
-    url: "https://d2xsxph8kpxj0f.cloudfront.net/95179607/D8QXMb7ThVwxNTQZRzfrBM/course-videos/video-1766018142710-3t4i2.mov",
+    url: "/course-videos/corporate-training-highlights.mov",
   },
   {
     id: 3,
     title: "Prompt 工程實作",
     description: "從零開始學習提示詞設計技巧",
-    url: "https://d2xsxph8kpxj0f.cloudfront.net/95179607/D8QXMb7ThVwxNTQZRzfrBM/course-videos/video-1766018149511-3zljzr.mov",
+    url: "/course-videos/prompt-engineering-practice.mov",
   },
   {
     id: 4,
     title: "AI 自動化工作流",
     description: "建立可複用的 AI 工作流程",
-    url: "https://d2xsxph8kpxj0f.cloudfront.net/95179607/D8QXMb7ThVwxNTQZRzfrBM/course-videos/video-1766018156978-gd7vim.mov",
+    url: "/course-videos/ai-automation-workflow.mov",
   },
   {
     id: 5,
     title: "學員成果展示",
     description: "學員課後實際應用成果分享",
-    url: "https://d2xsxph8kpxj0f.cloudfront.net/95179607/D8QXMb7ThVwxNTQZRzfrBM/course-videos/video-1766018160939-s6uf1o.mov",
+    url: "/course-videos/student-showcase.mov",
   },
   {
     id: 6,
     title: "Q&A 互動時間",
     description: "課程中的問答互動精華片段",
-    url: "https://d2xsxph8kpxj0f.cloudfront.net/95179607/D8QXMb7ThVwxNTQZRzfrBM/course-videos/video-1766018167185-0szbk.mov",
+    url: "/course-videos/qa-session.mov",
   },
 ];
 

@@ -3,7 +3,7 @@ import { trpc } from "@/lib/trpc";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { FileText, FolderOpen, Tag, Plus } from "lucide-react";
+import { FileText, FolderOpen, Tag, Plus, Sparkles } from "lucide-react";
 
 export default function AdminDashboard() {
   const { user, loading: authLoading } = useAuth();
@@ -95,6 +95,12 @@ export default function AdminDashboard() {
             <Link href="/admin/posts/new" className="flex flex-col items-center gap-2">
               <Plus className="h-6 w-6" />
               <span>新增文章</span>
+            </Link>
+          </Button>
+          <Button asChild variant="outline" className="h-24 flex-col gap-2">
+            <Link href="/admin/ai-writer" className="flex flex-col items-center gap-2">
+              <Sparkles className="h-6 w-6" />
+              <span>AI 發文助理</span>
             </Link>
           </Button>
           <Button asChild variant="outline" className="h-24 flex-col gap-2">

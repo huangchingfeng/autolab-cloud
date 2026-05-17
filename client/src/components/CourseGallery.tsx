@@ -147,47 +147,47 @@ export function CourseGallery({ images, title = "課程內容預覽" }: CourseGa
 // NotebookLM 課程專用圖片資料
 export const notebookLMCourseImages: GalleryImage[] = [
   {
-    url: "https://d2xsxph8kpxj0f.cloudfront.net/95179607/D8QXMb7ThVwxNTQZRzfrBM/notebooklm-course/notebooklm-2026-ai-upgrade-y0c251ob.png",
+    url: "/images/notebooklm-course/notebooklm-2026-ai-upgrade.png",
     title: "2026 年 AI 升級",
     description: "別讓你的 AI 隊友停留在舊版本"
   },
   {
-    url: "https://d2xsxph8kpxj0f.cloudfront.net/95179607/D8QXMb7ThVwxNTQZRzfrBM/notebooklm-course/notebooklm-iceberg-potential-5noxgebz.png",
+    url: "/images/notebooklm-course/notebooklm-iceberg-potential.png",
     title: "NotebookLM 的隱藏潛力",
     description: "你只發揮了 20% 的實力"
   },
   {
-    url: "https://d2xsxph8kpxj0f.cloudfront.net/95179607/D8QXMb7ThVwxNTQZRzfrBM/notebooklm-course/notebooklm-old-pain-points-2u8po5i7.png",
+    url: "/images/notebooklm-course/notebooklm-old-pain-points.png",
     title: "舊方法的痛點",
     description: "資料孤島、AI 機械化、產出中斷"
   },
   {
-    url: "https://d2xsxph8kpxj0f.cloudfront.net/95179607/D8QXMb7ThVwxNTQZRzfrBM/notebooklm-course/notebooklm-thinking-partner-92i2ns75.png",
+    url: "/images/notebooklm-course/notebooklm-thinking-partner.png",
     title: "思考夥伴的真正樣貌",
     description: "從被動整理到主動策略"
   },
   {
-    url: "https://d2xsxph8kpxj0f.cloudfront.net/95179607/D8QXMb7ThVwxNTQZRzfrBM/notebooklm-course/notebooklm-solution-1-multimodal-u732lq1r.png",
+    url: "/images/notebooklm-course/notebooklm-solution-1-multimodal.png",
     title: "新解法一：多模態整合",
     description: "讓 AI 聽懂你的世界"
   },
   {
-    url: "https://d2xsxph8kpxj0f.cloudfront.net/95179607/D8QXMb7ThVwxNTQZRzfrBM/notebooklm-course/notebooklm-solution-2-podcast-hjtk8n8n.png",
+    url: "/images/notebooklm-course/notebooklm-solution-2-podcast.png",
     title: "新解法二：AI Podcast",
     description: "把報告變成精彩 Podcast"
   },
   {
-    url: "https://d2xsxph8kpxj0f.cloudfront.net/95179607/D8QXMb7ThVwxNTQZRzfrBM/notebooklm-course/notebooklm-solution-3-creation-kuir2a6t.png",
+    url: "/images/notebooklm-course/notebooklm-solution-3-creation.png",
     title: "新解法三：一鍵創作",
     description: "從對話到最終成果"
   },
   {
-    url: "https://d2xsxph8kpxj0f.cloudfront.net/95179607/D8QXMb7ThVwxNTQZRzfrBM/notebooklm-course/notebooklm-2026-superpower-kqjnv7l5.png",
+    url: "/images/notebooklm-course/notebooklm-2026-superpower.png",
     title: "2026 職場超能力者",
     description: "業務銷售、個人品牌、專案管理"
   },
   {
-    url: "https://d2xsxph8kpxj0f.cloudfront.net/95179607/D8QXMb7ThVwxNTQZRzfrBM/notebooklm-course/notebooklm-testimonial-gift-ji9lecqu.png",
+    url: "/images/notebooklm-course/notebooklm-testimonial-gift.png",
     title: "學員好評與豪華大禮包",
     description: "完整操作簡報、50+ Prompt 範本、課程回放"
   }
@@ -197,67 +197,67 @@ export const notebookLMCourseImages: GalleryImage[] = [
 // 學員成果展示圖片資料
 export const studentWorksImages: GalleryImage[] = [
   {
-    url: "https://d2xsxph8kpxj0f.cloudfront.net/95179607/D8QXMb7ThVwxNTQZRzfrBM/notebooklm-course/student-works/student-work-01-32mrn46q.png",
+    url: "/images/notebooklm-course/student-works/student-work-01.png",
     title: "學員作品 1",
     description: "NotebookLM 實戰成果"
   },
   {
-    url: "https://d2xsxph8kpxj0f.cloudfront.net/95179607/D8QXMb7ThVwxNTQZRzfrBM/notebooklm-course/student-works/student-work-02-hi6r1szh.png",
+    url: "/images/notebooklm-course/student-works/student-work-02.png",
     title: "學員作品 2",
     description: "NotebookLM 實戰成果"
   },
   {
-    url: "https://d2xsxph8kpxj0f.cloudfront.net/95179607/D8QXMb7ThVwxNTQZRzfrBM/notebooklm-course/student-works/student-work-03-09qmh6y7.png",
+    url: "/images/notebooklm-course/student-works/student-work-03.png",
     title: "學員作品 3",
     description: "NotebookLM 實戰成果"
   },
   {
-    url: "https://d2xsxph8kpxj0f.cloudfront.net/95179607/D8QXMb7ThVwxNTQZRzfrBM/notebooklm-course/student-works/student-work-04-fcbuqgsq.png",
+    url: "/images/notebooklm-course/student-works/student-work-04.png",
     title: "學員作品 4",
     description: "NotebookLM 實戰成果"
   },
   {
-    url: "https://d2xsxph8kpxj0f.cloudfront.net/95179607/D8QXMb7ThVwxNTQZRzfrBM/notebooklm-course/student-works/student-work-05-fgdrnhdo.png",
+    url: "/images/notebooklm-course/student-works/student-work-05.png",
     title: "學員作品 5",
     description: "NotebookLM 實戰成果"
   },
   {
-    url: "https://d2xsxph8kpxj0f.cloudfront.net/95179607/D8QXMb7ThVwxNTQZRzfrBM/notebooklm-course/student-works/student-work-06-4amdy5hr.png",
+    url: "/images/notebooklm-course/student-works/student-work-06.png",
     title: "學員作品 6",
     description: "NotebookLM 實戰成果"
   },
   {
-    url: "https://d2xsxph8kpxj0f.cloudfront.net/95179607/D8QXMb7ThVwxNTQZRzfrBM/notebooklm-course/student-works/student-work-07-nhaw66l2.png",
+    url: "/images/notebooklm-course/student-works/student-work-07.png",
     title: "學員作品 7",
     description: "NotebookLM 實戰成果"
   },
   {
-    url: "https://d2xsxph8kpxj0f.cloudfront.net/95179607/D8QXMb7ThVwxNTQZRzfrBM/notebooklm-course/student-works/student-work-08-4xveac5i.png",
+    url: "/images/notebooklm-course/student-works/student-work-08.png",
     title: "學員作品 8",
     description: "NotebookLM 實戰成果"
   },
   {
-    url: "https://d2xsxph8kpxj0f.cloudfront.net/95179607/D8QXMb7ThVwxNTQZRzfrBM/notebooklm-course/student-works/student-work-09-2w9wql90.png",
+    url: "/images/notebooklm-course/student-works/student-work-09.png",
     title: "學員作品 9",
     description: "NotebookLM 實戰成果"
   },
   {
-    url: "https://d2xsxph8kpxj0f.cloudfront.net/95179607/D8QXMb7ThVwxNTQZRzfrBM/notebooklm-course/student-works/student-work-10-fybimiar.png",
+    url: "/images/notebooklm-course/student-works/student-work-10.png",
     title: "學員作品 10",
     description: "NotebookLM 實戰成果"
   },
   {
-    url: "https://d2xsxph8kpxj0f.cloudfront.net/95179607/D8QXMb7ThVwxNTQZRzfrBM/notebooklm-course/student-works/student-work-11-s4kw7uyg.png",
+    url: "/images/notebooklm-course/student-works/student-work-11.png",
     title: "學員作品 11",
     description: "NotebookLM 實戰成果"
   },
   {
-    url: "https://d2xsxph8kpxj0f.cloudfront.net/95179607/D8QXMb7ThVwxNTQZRzfrBM/notebooklm-course/student-works/student-work-12-1yyoo98z.png",
+    url: "/images/notebooklm-course/student-works/student-work-12.png",
     title: "學員作品 12",
     description: "NotebookLM 實戰成果"
   },
   {
-    url: "https://d2xsxph8kpxj0f.cloudfront.net/95179607/D8QXMb7ThVwxNTQZRzfrBM/notebooklm-course/student-works/student-work-13-9aiy0fno.png",
+    url: "/images/notebooklm-course/student-works/student-work-13.png",
     title: "學員作品 13",
     description: "NotebookLM 實戰成果"
   }

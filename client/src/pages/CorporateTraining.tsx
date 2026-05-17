@@ -1,12 +1,17 @@
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { Target, Users, Lightbulb, Zap } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { JsonLdSchema, defaultOrganizationSchema } from "@/components/JsonLdSchema";
 import Breadcrumb from "@/components/Breadcrumb";
-import { useEffect } from "react";
+import { trpc } from "@/lib/trpc";
+import { useEffect, useState } from "react";
 import { Link } from "wouter";
+import { toast } from "sonner";
 
 export default function CorporateTraining() {
   useEffect(() => {
@@ -50,6 +55,75 @@ export default function CorporateTraining() {
     "AI 自動化工作流設計",
     "企業AI導入與變革管理"
   ];
+
+  const programOptions = [
+    "企業 AI 基礎導入",
+    "主管與部門工作流設計",
+    "內容行銷與提案效率",
+    "資料分析與決策支援",
+    "客製化顧問陪跑",
+  ];
+
+  const [inquiryForm, setInquiryForm] = useState({
+    name: "",
+    company: "",
+    jobTitle: "",
+    email: "",
+    phone: "",
+    headcount: "",
+    programs: [] as string[],
+    preferredTime: "",
+    notes: "",
+  });
+
+  const submitInquiry = trpc.corporateInquiry.submit.useMutation({
+    onSuccess: () => {
+      toast.success("已收到邀課需求，我們會盡快與您聯繫。");
+      setInquiryForm({
+        name: "",
+        company: "",
+        jobTitle: "",
+        email: "",
+        phone: "",
+        headcount: "",
+        programs: [],
+        preferredTime: "",
+        notes: "",
+      });
+    },
+    onError: (error) => {
+      toast.error(`送出失敗：${error.message}`);
+    },
+  });
+
+  const updateInquiryField = (field: keyof typeof inquiryForm, value: string) => {
+    setInquiryForm(prev => ({ ...prev, [field]: value }));
+  };
+
+  const toggleProgram = (program: string) => {
+    setInquiryForm(prev => ({
+      ...prev,
+      programs: prev.programs.includes(program)
+        ? prev.programs.filter(item => item !== program)
+        : [...prev.programs, program],
+    }));
+  };
+
+  const handleInquirySubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    submitInquiry.mutate({
+      name: inquiryForm.name,
+      company: inquiryForm.company,
+      jobTitle: inquiryForm.jobTitle,
+      email: inquiryForm.email,
+      phone: inquiryForm.phone || undefined,
+      headcount: inquiryForm.headcount || undefined,
+      programs: inquiryForm.programs.length > 0 ? inquiryForm.programs : undefined,
+      preferredTime: inquiryForm.preferredTime || undefined,
+      notes: inquiryForm.notes || undefined,
+      sourcePage: "general",
+    });
+  };
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
@@ -190,6 +264,131 @@ export default function CorporateTraining() {
                     </Button>
                   </div>
                 </div>
+              </CardContent>
+            </Card>
+          </div>
+        </section>
+
+        <section id="contact" className="py-20 md:py-32 bg-background">
+          <div className="container">
+            <div className="max-w-3xl mx-auto text-center space-y-4 mb-12">
+              <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
+                企業邀課需求
+              </h2>
+              <p className="text-lg text-muted-foreground">
+                留下團隊需求與預計時程，後台會同步建立一筆可追蹤的邀課資料。
+              </p>
+            </div>
+
+            <Card className="max-w-4xl mx-auto">
+              <CardHeader>
+                <CardTitle>邀課表單</CardTitle>
+                <CardDescription>星號欄位為必填</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <form onSubmit={handleInquirySubmit} className="space-y-6">
+                  <div className="grid gap-4 md:grid-cols-2">
+                    <div className="space-y-2">
+                      <Label htmlFor="inquiry-name">姓名 *</Label>
+                      <Input
+                        id="inquiry-name"
+                        value={inquiryForm.name}
+                        onChange={event => updateInquiryField("name", event.target.value)}
+                        required
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="inquiry-company">公司名稱 *</Label>
+                      <Input
+                        id="inquiry-company"
+                        value={inquiryForm.company}
+                        onChange={event => updateInquiryField("company", event.target.value)}
+                        required
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="inquiry-job-title">職稱 *</Label>
+                      <Input
+                        id="inquiry-job-title"
+                        value={inquiryForm.jobTitle}
+                        onChange={event => updateInquiryField("jobTitle", event.target.value)}
+                        required
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="inquiry-email">Email *</Label>
+                      <Input
+                        id="inquiry-email"
+                        type="email"
+                        value={inquiryForm.email}
+                        onChange={event => updateInquiryField("email", event.target.value)}
+                        required
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="inquiry-phone">電話</Label>
+                      <Input
+                        id="inquiry-phone"
+                        value={inquiryForm.phone}
+                        onChange={event => updateInquiryField("phone", event.target.value)}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="inquiry-headcount">預計人數</Label>
+                      <Input
+                        id="inquiry-headcount"
+                        value={inquiryForm.headcount}
+                        onChange={event => updateInquiryField("headcount", event.target.value)}
+                        placeholder="例如：20-30 人"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-3">
+                    <Label>有興趣的方向</Label>
+                    <div className="grid gap-3 md:grid-cols-2">
+                      {programOptions.map(program => (
+                        <label
+                          key={program}
+                          className="flex items-center gap-3 rounded-md border px-3 py-2 text-sm"
+                        >
+                          <input
+                            type="checkbox"
+                            checked={inquiryForm.programs.includes(program)}
+                            onChange={() => toggleProgram(program)}
+                            className="h-4 w-4"
+                          />
+                          <span>{program}</span>
+                        </label>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="grid gap-4 md:grid-cols-2">
+                    <div className="space-y-2">
+                      <Label htmlFor="inquiry-time">預計時間</Label>
+                      <Input
+                        id="inquiry-time"
+                        value={inquiryForm.preferredTime}
+                        onChange={event => updateInquiryField("preferredTime", event.target.value)}
+                        placeholder="例如：6 月下旬、週五下午"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="inquiry-notes">其他需求</Label>
+                      <Textarea
+                        id="inquiry-notes"
+                        value={inquiryForm.notes}
+                        onChange={event => updateInquiryField("notes", event.target.value)}
+                        placeholder="可簡述產業、部門、想解決的工作情境"
+                      />
+                    </div>
+                  </div>
+
+                  <Button type="submit" size="lg" disabled={submitInquiry.isPending}>
+                    {submitInquiry.isPending ? "送出中..." : "送出邀課需求"}
+                  </Button>
+                </form>
               </CardContent>
             </Card>
           </div>

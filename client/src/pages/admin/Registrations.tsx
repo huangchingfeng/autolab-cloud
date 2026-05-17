@@ -29,8 +29,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { Trash2, Mail, Phone, Building2, Search, Download, Filter, BarChart3, Bell } from "lucide-react";
-import { format } from "date-fns";
-import { zhTW } from "date-fns/locale";
+import { format } from "date-fns/format";
+import { zhTW } from "date-fns/locale/zh-TW";
 
 const STATUS_LABELS: Record<string, { label: string; variant: "default" | "secondary" | "destructive" | "outline" }> = {
   registered: { label: "已報名", variant: "default" },

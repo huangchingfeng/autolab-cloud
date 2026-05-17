@@ -3,11 +3,7 @@
  * Separated from server startup for Vercel serverless compatibility
  */
 
-// Only load dotenv in development - Vercel provides env vars automatically
-if (process.env.NODE_ENV !== "production") {
-  require("dotenv/config");
-}
-
+import "dotenv/config";
 import { clerkMiddleware } from "@clerk/express";
 import { createExpressMiddleware } from "@trpc/server/adapters/express";
 import express from "express";
@@ -15,6 +11,7 @@ import path from "path";
 import { appRouter } from "../routers";
 import sitemapRouter from "../routes/sitemap";
 import { createContext } from "./context";
+import { ENV } from "./env";
 import { registerPaymentRoutes } from "./payment";
 
 export function createApp() {
@@ -28,8 +25,13 @@ export function createApp() {
   app.use(express.json({ limit: "50mb" }));
   app.use(express.urlencoded({ limit: "50mb", extended: true }));
 
-  // Clerk middleware for authentication
-  app.use(clerkMiddleware());
+  // Clerk middleware for authentication. Public endpoints can still run locally
+  // when Clerk env vars are not configured.
+  if (ENV.clerkSecretKey && ENV.clerkPublishableKey) {
+    app.use(clerkMiddleware());
+  } else {
+    console.warn("[Auth] Clerk env vars not configured; auth middleware disabled.");
+  }
 
   // Payment callback routes
   registerPaymentRoutes(app);

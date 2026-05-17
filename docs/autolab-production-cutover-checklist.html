@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Autolab Production Cutover Checklist</title>
+  <style>
+    body { margin: 0; background: #f7f8fb; color: #172033; font-family: -apple-system, BlinkMacSystemFont, "Noto Sans TC", sans-serif; line-height: 1.65; }
+    main { max-width: 1080px; margin: 0 auto; padding: 44px 24px; }
+    h1 { margin: 0 0 8px; font-size: 32px; }
+    h2 { margin-top: 34px; padding-top: 18px; border-top: 1px solid #dce4f0; font-size: 20px; }
+    .lead { color: #647085; font-size: 17px; }
+    .notice { background: #fff7ed; border: 1px solid #fed7aa; border-radius: 8px; padding: 14px 16px; margin: 22px 0; }
+    .danger { background: #fef2f2; border: 1px solid #fecaca; border-radius: 8px; padding: 14px 16px; margin: 22px 0; }
+    table { width: 100%; border-collapse: collapse; background: #fff; border: 1px solid #e2e7f0; border-radius: 8px; overflow: hidden; }
+    th, td { padding: 10px 12px; border-bottom: 1px solid #e8edf5; text-align: left; vertical-align: top; font-size: 13px; }
+    th { background: #eef2f8; font-weight: 700; }
+    code, pre { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+    pre { overflow: auto; border-radius: 8px; background: #111827; color: #e5e7eb; padding: 16px; }
+    ul { padding-left: 1.2em; }
+    li { margin: 6px 0; }
+    .required { color: #991b1b; font-weight: 700; }
+    .pending { color: #92400e; font-weight: 700; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Autolab Production Cutover Checklist</h1>
+    <p class="lead">這份清單只在 staging preview 完整通過後使用。目標是把正式網域切到自己的站，同時保留可回復到 Manus 的路徑。</p>
+
+    <div class="danger">
+      <strong>目前不可執行正式切換：</strong>還缺真實 staging secrets、完整 Manus DB dump、preview 後台登入與表單驗證。這份文件是切換前準備，不是立即切換指令。
+    </div>
+
+    <h2>Go / No-Go 條件</h2>
+    <p>先跑本機 gate。這個指令只讀取報告並輸出 Go/No-Go，不會部署、不會改 DNS。</p>
+    <pre>npm run production:cutover-gate</pre>
+    <table>
+      <thead><tr><th>條件</th><th>必要狀態</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr><td>Preview smoke</td><td><code>autolab-staging-smoke-preview.html</code> 全部通過。</td><td class="pending">待 preview</td></tr>
+        <tr><td>後台登入</td><td>Clerk staging admin 登入通過，兩個新後台頁可讀寫 staging DB。</td><td class="pending">待 preview</td></tr>
+        <tr><td>表單通知</td><td>企業邀課與 AI 超級業務報名表單都能寫入 DB，測試信箱收到通知。</td><td class="pending">待 preview</td></tr>
+        <tr><td>資料搬遷</td><td>完整 Manus DB dump 已匯入 staging 並抽樣比對。</td><td class="required">未完成</td></tr>
+        <tr><td>資產依賴</td><td>正式頁面不依賴 Manus CDN；剩餘 Manus 工具連結已確認可暫留或已替換。</td><td class="pending">待決策</td></tr>
+        <tr><td>金流</td><td>若正式站啟用金流，NewebPay production keys 與 callback URL 已在 staging 以測試流程確認。</td><td class="pending">待決策</td></tr>
+        <tr><td>Rollback</td><td>目前 Manus production 可用，DNS 原值與回切步驟已保存。</td><td class="pending">待切換前</td></tr>
+      </tbody>
+    </table>
+
+    <h2>切換前備份</h2>
+    <ul>
+      <li>匯出 staging DB：文章、活動、報名、聯絡、企業邀課、AI 超級業務報名、課程與付款相關資料。</li>
+      <li>保存 DNS 當前記錄：A、CNAME、TXT、MX、CAA，尤其是目前指向 Manus 的記錄。</li>
+      <li>保存 Render production service 設定與 env 清單，密鑰值只放在密鑰管理工具，不寫入 repo。</li>
+      <li>確認 Manus production 仍可登入與回切。</li>
+    </ul>
+
+    <h2>Production Env Gate</h2>
+    <p>Production env 不應沿用 staging key。正式切換時才把 <code>VITE_APP_URL</code> 改成正式網域。</p>
+    <table>
+      <thead><tr><th>Env</th><th>Production 原則</th></tr></thead>
+      <tbody>
+        <tr><td><code>DATABASE_URL</code></td><td>Production PostgreSQL/Neon DB，不是 Manus/TiDB，不是 staging DB。</td></tr>
+        <tr><td><code>CLERK_SECRET_KEY</code></td><td>Clerk production app 或已確認要用的正式 Clerk instance。</td></tr>
+        <tr><td><code>VITE_CLERK_PUBLISHABLE_KEY</code></td><td>與 production Clerk app 對應。</td></tr>
+        <tr><td><code>ADMIN_USER_IDS</code></td><td>正式 admin 帳號的 Clerk user id。</td></tr>
+        <tr><td><code>TURNSTILE_SECRET_KEY</code></td><td>Cloudflare Turnstile 正式網域 key。</td></tr>
+        <tr><td><code>RESEND_API_KEY</code></td><td>正式寄件網域與 sender 已驗證。</td></tr>
+        <tr><td><code>R2_PUBLIC_URL</code></td><td>正式資產 bucket 或 CDN domain。</td></tr>
+        <tr><td><code>NEWEBPAY_*</code></td><td>只有確認要啟用正式金流時才填 production key。</td></tr>
+      </tbody>
+    </table>
+
+    <h2>DNS Cutover 步驟</h2>
+    <ol>
+      <li>把 TTL 先降到短時間，等待舊 TTL 生效。</li>
+      <li>確認 production service health check 通過：<code>/api/health</code>。</li>
+      <li>確認 production service 仍可用 preview URL 開啟首頁、<code>/corporate-training</code>、<code>/ai-super-sales</code>、後台登入。</li>
+      <li>切換正式網域 DNS 到 production service。</li>
+      <li>等待憑證與網域綁定完成。</li>
+      <li>對正式網域跑 smoke test。</li>
+    </ol>
+    <pre>npm run staging:smoke -- \
+  --base-url=https://www.autolab.cloud \
+  --allow-production-domain \
+  --html=/Users/huangjingfeng/Desktop/專案/_reports/autolab-production-smoke.html \
+  --json=/Users/huangjingfeng/Desktop/專案/_reports/autolab-production-smoke.json</pre>
+    <p>這個 <code>--allow-production-domain</code> 只在 DNS 已切到新 production service 後使用。preview 或 staging 驗收時不要拿目前 Manus 正式網域當測試目標。</p>
+
+    <h2>切換後 30 分鐘觀察</h2>
+    <table>
+      <thead><tr><th>項目</th><th>檢查方式</th></tr></thead>
+      <tbody>
+        <tr><td>公開頁</td><td>首頁、企業內訓、AI 超級業務、部落格、活動、課程。</td></tr>
+        <tr><td>後台</td><td>正式 admin 登入，檢查列表與基本更新。</td></tr>
+        <tr><td>表單</td><td>送一筆測試企業邀課與一筆測試 AI 超級業務報名，確認 DB 與通知信。</td></tr>
+        <tr><td>錯誤</td><td>Render logs、瀏覽器 console、tRPC error、email delivery logs。</td></tr>
+        <tr><td>SEO 基本檔</td><td><code>/sitemap.xml</code> 與 <code>/robots.txt</code> 必須指向正式網域。</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Rollback 條件</h2>
+    <p>發生下列任一狀況，應優先回切 DNS 到 Manus 或切回上一個穩定 production service，再排查。</p>
+    <ul>
+      <li>首頁或主要公開頁 5xx 超過 5 分鐘。</li>
+      <li>後台登入完全不可用且短時間無法修復。</li>
+      <li>企業邀課或 AI 超級業務報名無法寫入資料庫。</li>
+      <li>正式金流 callback 錯誤或付款記錄不一致。</li>
+      <li>DNS/SSL 問題導致大量使用者無法訪問。</li>
+    </ul>
+
+    <h2>Rollback 步驟</h2>
+    <ol>
+      <li>把 DNS 記錄改回切換前保存的 Manus production 設定。</li>
+      <li>確認正式網域回到 Manus 可開啟。</li>
+      <li>保留新 production service 與 logs，不要立即刪除，方便排查。</li>
+      <li>匯出切換期間新站收到的表單資料，避免遺失。</li>
+      <li>修復後重新走 preview QA，不直接再次切正式網域。</li>
+    </ol>
+
+    <div class="notice">
+      <strong>操作原則：</strong>正式切換只在 checklist 全部確認後執行；任何資料庫 schema 或資料匯入寫入都只對明確標記的 staging/production target 執行。
+    </div>
+  </main>
+</body>
+</html>

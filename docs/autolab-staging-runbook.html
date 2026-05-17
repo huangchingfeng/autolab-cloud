@@ -1,0 +1,294 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Autolab Staging Migration Runbook</title>
+  <style>
+    body {
+      margin: 0;
+      background: #f7f8fb;
+      color: #172033;
+      font-family: -apple-system, BlinkMacSystemFont, "Noto Sans TC", "Segoe UI", sans-serif;
+      line-height: 1.65;
+    }
+    main {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 48px 24px;
+    }
+    h1 {
+      margin: 0 0 8px;
+      font-size: 34px;
+      line-height: 1.2;
+    }
+    h2 {
+      margin-top: 36px;
+      padding-top: 20px;
+      border-top: 1px solid #dce4f0;
+      font-size: 22px;
+    }
+    code, pre {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    }
+    pre {
+      overflow: auto;
+      border-radius: 8px;
+      background: #111827;
+      color: #e5e7eb;
+      padding: 16px;
+    }
+    .lead {
+      color: #5d6a7d;
+      font-size: 17px;
+    }
+    .notice {
+      background: #fff7ed;
+      border: 1px solid #fed7aa;
+      border-radius: 8px;
+      padding: 14px 16px;
+      margin: 24px 0;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+    .card {
+      background: #fff;
+      border: 1px solid #e2e7f0;
+      border-radius: 8px;
+      padding: 16px;
+    }
+    ul {
+      padding-left: 1.2em;
+    }
+    li {
+      margin: 6px 0;
+    }
+    @media (max-width: 760px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Autolab Staging Migration Runbook</h1>
+    <p class="lead">目標是在獨立 staging 環境完成網站、後台、資料庫、表單通知與資料匯入驗證後，才安排正式網域切換。</p>
+
+    <div class="notice">
+      <strong>保護線上站：</strong>在 staging 完成前，不改 <code>autolab.cloud</code> DNS、不覆蓋 Manus production、不把 production domain 填進 staging env。
+    </div>
+
+    <h2>Current Working Paths</h2>
+    <div class="grid">
+      <div class="card">
+        <strong>正式專案</strong>
+        <p><code>/Users/huangjingfeng/Desktop/專案/autolab-cloud-website</code></p>
+      </div>
+      <div class="card">
+        <strong>Manus 匯出來源</strong>
+        <p><code>/Users/huangjingfeng/Desktop/專案/_imports/aifengge-website-manus-source</code></p>
+      </div>
+      <div class="card">
+        <strong>工作分支</strong>
+        <p><code>staging/autolab-own-hosting-health</code></p>
+      </div>
+      <div class="card">
+        <strong>Manus DB 盤點報告</strong>
+        <p><code>/Users/huangjingfeng/Desktop/專案/_reports/autolab-manus-db-inventory.html</code></p>
+      </div>
+      <div class="card">
+        <strong>Manus 可匯入資料包</strong>
+        <p><code>/Users/huangjingfeng/Desktop/專案/_reports/autolab-manus-data-package.html</code></p>
+      </div>
+      <div class="card">
+        <strong>目前 dump/query log 檢查</strong>
+        <p><code>/Users/huangjingfeng/Desktop/專案/_reports/autolab-manus-dump-inspection-current.html</code></p>
+      </div>
+      <div class="card">
+        <strong>外部依賴盤點</strong>
+        <p><code>/Users/huangjingfeng/Desktop/專案/_reports/autolab-external-dependencies.html</code></p>
+      </div>
+      <div class="card">
+        <strong>Staging Preflight</strong>
+        <p><code>/Users/huangjingfeng/Desktop/專案/_reports/autolab-staging-preflight.html</code></p>
+      </div>
+      <div class="card">
+        <strong>密鑰清單</strong>
+        <p><code>/Users/huangjingfeng/Desktop/專案/autolab-cloud-website/docs/autolab-staging-secrets-checklist.html</code></p>
+      </div>
+      <div class="card">
+        <strong>Staging 服務設定清單</strong>
+        <p><code>/Users/huangjingfeng/Desktop/專案/autolab-cloud-website/docs/autolab-staging-services-setup.html</code></p>
+      </div>
+      <div class="card">
+        <strong>搬站總入口</strong>
+        <p><code>/Users/huangjingfeng/Desktop/專案/autolab-cloud-website/docs/autolab-migration-index.html</code></p>
+      </div>
+      <div class="card">
+        <strong>Preview QA 清單</strong>
+        <p><code>/Users/huangjingfeng/Desktop/專案/autolab-cloud-website/docs/autolab-preview-qa-checklist.html</code></p>
+      </div>
+      <div class="card">
+        <strong>Manus 資料搬遷計畫</strong>
+        <p><code>/Users/huangjingfeng/Desktop/專案/autolab-cloud-website/docs/autolab-manus-data-migration-plan.html</code></p>
+      </div>
+      <div class="card">
+        <strong>Manus 資料請求範本</strong>
+        <p><code>/Users/huangjingfeng/Desktop/專案/autolab-cloud-website/docs/autolab-manus-data-request.html</code></p>
+      </div>
+      <div class="card">
+        <strong>正式切換與回復清單</strong>
+        <p><code>/Users/huangjingfeng/Desktop/專案/autolab-cloud-website/docs/autolab-production-cutover-checklist.html</code></p>
+      </div>
+      <div class="card">
+        <strong>敏感檔檢查報告</strong>
+        <p><code>/Users/huangjingfeng/Desktop/專案/_reports/autolab-sensitive-file-guard.html</code></p>
+      </div>
+    </div>
+
+    <h2>Staging Env Gate</h2>
+    <p>先建立私密 <code>.env.staging</code>，填入真正的 staging service keys。可以用 bootstrap 腳本建立檔案並自動產生 <code>JWT_SECRET</code>；它不會覆蓋既有檔案，除非明確加 <code>--force</code>。</p>
+    <pre>npm run staging:init-env -- \
+  --write \
+  --html=/Users/huangjingfeng/Desktop/專案/_reports/autolab-staging-env-bootstrap.html \
+  --json=/Users/huangjingfeng/Desktop/專案/_reports/autolab-staging-env-bootstrap.json
+
+npm run staging:check-env -- --env-file=.env.staging</pre>
+    <p>必填值包含 <code>DATABASE_URL</code>、<code>CLERK_SECRET_KEY</code>、<code>CLERK_PUBLISHABLE_KEY</code>、<code>VITE_CLERK_PUBLISHABLE_KEY</code>、<code>JWT_SECRET</code>、<code>ADMIN_USER_IDS</code>、<code>TURNSTILE_SECRET_KEY</code>、<code>VITE_TURNSTILE_SITE_KEY</code>。</p>
+    <p>建議也補齊 <code>RESEND_API_KEY</code>、<code>EMAIL_FROM</code>、R2 相關 env 與 <code>VITE_GOOGLE_MAPS_API_KEY</code>。R2 影響後台圖片上傳，Google Maps key 影響地圖顯示。</p>
+    <p>密鑰收集清單：<code>docs/autolab-staging-secrets-checklist.html</code>。服務建立順序與設定檢查：<code>docs/autolab-staging-services-setup.html</code>。</p>
+
+    <h2>Sensitive File Gate</h2>
+    <p>在取得任何完整 DB dump、匯入資料包、Render env 或本地 <code>.env.staging</code> 後，先確認這些檔案不會被 git 追蹤。</p>
+    <pre>npm run staging:check-sensitive-files -- \
+  --html=/Users/huangjingfeng/Desktop/專案/_reports/autolab-sensitive-file-guard.html \
+  --json=/Users/huangjingfeng/Desktop/專案/_reports/autolab-sensitive-file-guard.json</pre>
+    <p>目前檢查會覆蓋 <code>.env</code>、<code>.env.staging</code>、<code>_imports/</code>、<code>_reports/</code>、database dump、副檔名壓縮 dump 與鏡像資產。若顯示 tracked risky files，先處理再繼續部署。</p>
+
+    <h2>Database Gate</h2>
+    <p>只對 staging database 執行 schema push。不要用 Manus/TiDB production DB，也不要用未確認的 production Neon DB。</p>
+    <pre>set -a
+source .env.staging
+set +a
+npm run staging:check-db-target -- --env-file=.env.staging
+
+ALLOW_STAGING_SCHEMA_PUSH=true \
+STAGING_DB_CONFIRM=autolab-staging \
+npm run db:push:staging -- --env-file=.env.staging --apply</pre>
+    <p>目前既有 Drizzle migration journal 仍是舊 MySQL 歷史，staging 目標則是 PostgreSQL/Neon。不要在未整理 migration history 前把舊 migration 直接套到 production；先用乾淨 staging DB 驗證 <code>db:push</code> 與資料匯入。</p>
+
+    <h2>Data Inventory</h2>
+    <p>目前 `.manus/db` 是查詢結果紀錄，不是完整 dump。可先用盤點報告判斷資料缺口；正式匯入前，建議再取得完整資料庫匯出。</p>
+    <pre>npm run manus:inventory -- \
+  --html=/Users/huangjingfeng/Desktop/專案/_reports/autolab-manus-db-inventory.html \
+  --json=/Users/huangjingfeng/Desktop/專案/_reports/autolab-manus-db-inventory.json</pre>
+
+    <h2>Data Package Gate</h2>
+    <p>用查詢紀錄可整理出「可匯入」與「需要人工補資料」的資料包。這不是完整搬站資料，只能作為 staging 預填資料或匯入前審核。</p>
+    <pre>npm run manus:prepare-data -- \
+  --html=/Users/huangjingfeng/Desktop/專案/_reports/autolab-manus-data-package.html \
+  --json=/Users/huangjingfeng/Desktop/專案/_reports/autolab-manus-data-package.json
+
+npm run manus:import-data -- \
+  --data=/Users/huangjingfeng/Desktop/專案/_reports/autolab-manus-data-package.json</pre>
+    <p>目前查詢紀錄可安全匯入的資料很少：分類 4 筆、標籤 7 筆、postTags 3 筆、文章 1 筆、活動 1 筆。多數文章、活動與報名資料缺少必填欄位，正式搬資料前仍需要完整資料庫 dump。</p>
+    <p>真正寫入 staging DB 時，必須明確加上保護旗標：</p>
+    <pre>ALLOW_STAGING_DB_WRITE=true \
+STAGING_IMPORT_CONFIRM=autolab-staging \
+npm run manus:import-data -- \
+  --data=/Users/huangjingfeng/Desktop/專案/_reports/autolab-manus-data-package.json \
+  --tables=categories,tags \
+  --apply</pre>
+
+    <h2>Staging Sample Data Gate</h2>
+    <p>完整 Manus DB dump 取得前，可以先塞一小批 staging-only 測試資料，用來驗證文章、聯絡人、企業邀課、AI 超級業務報名與兩個新後台列表。預設 dry-run，不會寫入資料庫。</p>
+    <pre>npm run staging:seed-sample-data -- \
+  --env-file=.env.staging \
+  --html=/Users/huangjingfeng/Desktop/專案/_reports/autolab-staging-sample-seed.html \
+  --json=/Users/huangjingfeng/Desktop/專案/_reports/autolab-staging-sample-seed.json</pre>
+    <p>只有確認 <code>.env.staging</code> 指向 clean staging PostgreSQL 後，才可寫入：</p>
+    <pre>ALLOW_STAGING_DB_WRITE=true \
+STAGING_SEED_CONFIRM=autolab-staging \
+npm run staging:seed-sample-data -- \
+  --env-file=.env.staging \
+  --apply \
+  --html=/Users/huangjingfeng/Desktop/專案/_reports/autolab-staging-sample-seed.html \
+  --json=/Users/huangjingfeng/Desktop/專案/_reports/autolab-staging-sample-seed.json</pre>
+
+    <h2>Verification Commands</h2>
+    <pre>npm run assets:mirror-cloudfront
+npm run assets:check-static
+npm run staging:init-env -- --html=/Users/huangjingfeng/Desktop/專案/_reports/autolab-staging-env-bootstrap.html --json=/Users/huangjingfeng/Desktop/專案/_reports/autolab-staging-env-bootstrap.json
+npm run staging:check-sensitive-files -- --html=/Users/huangjingfeng/Desktop/專案/_reports/autolab-sensitive-file-guard.html --json=/Users/huangjingfeng/Desktop/專案/_reports/autolab-sensitive-file-guard.json
+npm run staging:check-git-deploy-files -- --html=/Users/huangjingfeng/Desktop/專案/_reports/autolab-git-deploy-files.html --json=/Users/huangjingfeng/Desktop/專案/_reports/autolab-git-deploy-files.json
+npm run staging:check-render-env -- --html=/Users/huangjingfeng/Desktop/專案/_reports/autolab-render-env-check.html --json=/Users/huangjingfeng/Desktop/專案/_reports/autolab-render-env-check.json
+npm run staging:seed-sample-data -- --env-file=.env.staging --html=/Users/huangjingfeng/Desktop/專案/_reports/autolab-staging-sample-seed.html --json=/Users/huangjingfeng/Desktop/專案/_reports/autolab-staging-sample-seed.json
+npm run check -- --pretty false
+npm test
+npm run build</pre>
+    <p>也可以用一條命令跑完整 preflight。這會鏡像資產、檢查本地資產、檢查敏感檔保護、盤點外部依賴、產生 readiness、跑 DB 目標保護、型別、測試、build，並在 build 後自動啟動本機 production server 跑 smoke test，再關掉 server。現在還沒有真實 staging env 時，可暫時允許 env failure；正式部署前請移除 <code>--allow-env-failures</code>。</p>
+    <pre>npm run staging:preflight -- --allow-env-failures</pre>
+    <p>如果只想重跑 build 與本機 smoke，可暫時跳過測試；如果已經有外部 preview URL，則可以用 <code>--skip-smoke</code> 跳過本機 smoke，改跑 preview smoke。</p>
+    <pre>npm run staging:preflight -- --allow-env-failures --skip-tests
+npm run staging:preflight -- --allow-env-failures --skip-smoke</pre>
+
+    <h2>External Dependency Audit</h2>
+    <p>正式轉移前要確認頁面不再依賴 Manus CDN。BNI 活動頁原本的 <code>files.manuscdn.com</code> 圖片已先複製到本地 <code>client/public/images/manus-event/</code>。CloudFront PDF、NotebookLM 課程圖片與課程影片也已鏡像到本地 public；目前剩下的 Manus 相關項目是工具站與邀請連結，需要後續決定是否改成自己的工具頁。</p>
+    <pre>npm run audit:external-deps -- \
+  --html=/Users/huangjingfeng/Desktop/專案/_reports/autolab-external-dependencies.html \
+  --json=/Users/huangjingfeng/Desktop/專案/_reports/autolab-external-dependencies.json</pre>
+
+    <p>如需重新下載 CloudFront 來源資產，可重跑鏡像腳本。這批資產會讓 public 增加約 343MB：下載檔約 69MB、NotebookLM 圖片約 49MB、課程影片約 219MB。</p>
+    <pre>npm run assets:mirror-cloudfront</pre>
+    <p>這些鏡像資產被視為可重建檔案，不建議直接 commit 進 git；Render build 會先跑鏡像與靜態資產檢查，再 build。正式環境建議改放 Cloudflare R2 或其他 CDN，repo 只保留清單與路徑。</p>
+
+    <h2>Local Production Smoke Test</h2>
+    <p>沒有 staging secrets 時，可以用明確的假值啟動打包後 server，只測公開頁與本地靜態資產。這不會寫入資料庫，也不會碰 production。</p>
+    <pre>PORT=3131 \
+NODE_ENV=production \
+DATABASE_URL=postgresql://smoke:smoke@localhost:5432/autolab_staging_smoke \
+CLERK_SECRET_KEY=smoke \
+JWT_SECRET=smoke \
+SITEMAP_SKIP_DYNAMIC=true \
+npm start
+
+curl -sS -i http://localhost:3131/api/health
+curl -sS -o /dev/null -w '%{http_code} %{content_type}\n' http://localhost:3131/sitemap.xml
+curl -sS -o /dev/null -w '%{http_code} %{content_type}\n' http://localhost:3131/robots.txt
+curl -sS -o /dev/null -w '%{http_code} %{content_type}\n' http://localhost:3131/
+curl -sS -o /dev/null -w '%{http_code} %{content_type}\n' http://localhost:3131/ai-super-sales
+curl -sS -o /dev/null -w '%{http_code} %{content_type} %{size_download}\n' http://localhost:3131/images/manus-event/content-alchemy.png
+curl -sS -o /dev/null -w '%{http_code} %{content_type} %{size_download}\n' http://localhost:3131/downloads/gemini-ai-strategy-guide.pdf
+curl -sS -o /dev/null -w '%{http_code} %{content_type} %{size_download}\n' http://localhost:3131/images/notebooklm-course/notebooklm-2026-ai-upgrade.png
+curl -sS -r 0-1023 -o /dev/null -w '%{http_code} %{content_type} %{size_download}\n' http://localhost:3131/course-videos/ai-tools-practice.mov</pre>
+    <p>也可以直接跑自動 smoke test，會輸出 JSON/HTML 報告。</p>
+    <pre>npm run staging:smoke -- \
+  --base-url=http://localhost:3131 \
+  --html=/Users/huangjingfeng/Desktop/專案/_reports/autolab-staging-smoke-local.html \
+  --json=/Users/huangjingfeng/Desktop/專案/_reports/autolab-staging-smoke-local.json</pre>
+    <p>自動 smoke 目前會檢查公開頁、sitemap、robots、本地圖片/PDF/影片，以及兩個後台 SPA 入口：<code>/admin/ai-super-sales-registrations</code> 與 <code>/admin/corporate-inquiries</code>。後台資料與登入權限仍需等 staging Clerk 與 staging DB 就緒後驗證。</p>
+
+    <h2>Preview Deploy Gate</h2>
+    <ul>
+      <li>部署到 staging/preview URL，例如 Render preview，不綁定 <code>autolab.cloud</code>。</li>
+      <li>確認公開頁：首頁、部落格、活動頁、<code>/corporate-training</code>、<code>/ai-super-sales</code>。</li>
+      <li>確認後台頁：<code>/admin/corporate-inquiries</code>、<code>/admin/ai-super-sales-registrations</code>。</li>
+      <li>用 staging email 測試表單通知，不使用正式金流。</li>
+    </ul>
+    <p>Render preview URL 出來後，直接對該 URL 跑 smoke test：</p>
+    <pre>npm run staging:smoke -- \
+  --base-url=https://YOUR-RENDER-PREVIEW.onrender.com \
+  --html=/Users/huangjingfeng/Desktop/專案/_reports/autolab-staging-smoke-preview.html \
+  --json=/Users/huangjingfeng/Desktop/專案/_reports/autolab-staging-smoke-preview.json</pre>
+    <p><code>staging:smoke</code> 預設會拒絕直接測 <code>https://www.autolab.cloud</code> 或 <code>https://autolab.cloud</code>，避免把目前 Manus production 誤當 preview。</p>
+    <p>只有 preview smoke test、後台登入、兩個新後台頁與表單通知都通過後，才進 production cutover。</p>
+
+    <h2>Production Cutover Gate</h2>
+    <p>只有在 staging 驗證通過、資料匯入完整、表單通知與登入後台都確認後，才安排 DNS 切換。切換前保留 rollback 計畫與目前 Manus production 可用狀態。</p>
+  </main>
+</body>
+</html>

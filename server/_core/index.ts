@@ -3,7 +3,6 @@ import { createServer } from "http";
 import net from "net";
 import { app } from "./app";
 import { ENV, validateEnv } from "./env";
-import { setupVite } from "./vite";
 
 // 驗證環境變數
 validateEnv();
@@ -32,6 +31,8 @@ async function startServer() {
 
   // development mode uses Vite for HMR
   if (process.env.NODE_ENV === "development") {
+    const viteModulePath = new URL("./vite.ts", import.meta.url).pathname;
+    const { setupVite } = await import(viteModulePath);
     await setupVite(app, server);
   }
 

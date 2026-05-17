@@ -41,6 +41,11 @@ export const ENV = {
   // Gemini API
   geminiApiKey: process.env.GEMINI_API_KEY ?? "",
 
+  // Manus/Forge-compatible proxy settings kept for imported utility modules.
+  // These are optional outside Manus and should remain unset in normal staging.
+  forgeApiUrl: process.env.BUILT_IN_FORGE_API_URL ?? "",
+  forgeApiKey: process.env.BUILT_IN_FORGE_API_KEY ?? "",
+
   // Make.com Webhook for newsletter subscription
   makeWebhookUrl: process.env.MAKE_WEBHOOK_URL ?? "",
 

@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Autolab Preview QA Checklist</title>
+  <style>
+    body { margin: 0; background: #f7f8fb; color: #172033; font-family: -apple-system, BlinkMacSystemFont, "Noto Sans TC", sans-serif; line-height: 1.65; }
+    main { max-width: 1080px; margin: 0 auto; padding: 44px 24px; }
+    h1 { margin: 0 0 8px; font-size: 32px; }
+    h2 { margin-top: 34px; padding-top: 18px; border-top: 1px solid #dce4f0; font-size: 20px; }
+    h3 { margin: 18px 0 8px; font-size: 16px; }
+    .lead { color: #647085; font-size: 17px; }
+    .notice { background: #fff7ed; border: 1px solid #fed7aa; border-radius: 8px; padding: 14px 16px; margin: 22px 0; }
+    .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+    .card { background: #fff; border: 1px solid #e2e7f0; border-radius: 8px; padding: 16px; }
+    table { width: 100%; border-collapse: collapse; background: #fff; border: 1px solid #e2e7f0; border-radius: 8px; overflow: hidden; }
+    th, td { padding: 10px 12px; border-bottom: 1px solid #e8edf5; text-align: left; vertical-align: top; font-size: 13px; }
+    th { background: #eef2f8; font-weight: 700; }
+    code, pre { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+    pre { overflow: auto; border-radius: 8px; background: #111827; color: #e5e7eb; padding: 16px; }
+    ul { padding-left: 1.2em; }
+    li { margin: 6px 0; }
+    .pending { color: #92400e; font-weight: 700; }
+    .blocker { color: #991b1b; font-weight: 700; }
+    @media (max-width: 820px) { .grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Autolab Preview QA Checklist</h1>
+    <p class="lead">這份清單用於 Render preview 或其他 staging URL 出來後驗收。目標是先確認新站可用，再考慮正式網域切換。</p>
+
+    <div class="notice">
+      <strong>保護線上站：</strong>驗收期間不改 <code>autolab.cloud</code> DNS、不關閉 Manus production、不把正式金流導到 preview。
+    </div>
+
+    <h2>Preview URL 基本資料</h2>
+    <div class="grid">
+      <div class="card">
+        <strong>Preview URL</strong>
+        <p><code>https://YOUR-RENDER-PREVIEW.onrender.com</code></p>
+      </div>
+      <div class="card">
+        <strong>Staging Env</strong>
+        <p><code>VITE_APP_URL</code> 必須填 preview/staging URL，不可填正式網域。</p>
+      </div>
+      <div class="card">
+        <strong>資料庫</strong>
+        <p>必須是 clean staging PostgreSQL/Neon DB。</p>
+      </div>
+      <div class="card">
+        <strong>登入</strong>
+        <p>必須使用 Clerk staging app 與 staging admin user。</p>
+      </div>
+    </div>
+
+    <h2>自動檢查</h2>
+    <p>Preview URL 出來前先確認本地敏感檔沒有被追蹤；Preview URL 出來後再跑 smoke test。smoke 只確認 HTTP、SPA fallback、公開頁、後台入口與靜態資產可達。</p>
+    <pre>npm run staging:check-sensitive-files -- \
+  --html=/Users/huangjingfeng/Desktop/專案/_reports/autolab-sensitive-file-guard.html \
+  --json=/Users/huangjingfeng/Desktop/專案/_reports/autolab-sensitive-file-guard.json</pre>
+    <pre>npm run staging:smoke -- \
+  --base-url=https://YOUR-RENDER-PREVIEW.onrender.com \
+  --html=/Users/huangjingfeng/Desktop/專案/_reports/autolab-staging-smoke-preview.html \
+  --json=/Users/huangjingfeng/Desktop/專案/_reports/autolab-staging-smoke-preview.json</pre>
+    <p>不要把目前正式網域拿來當 preview URL；smoke script 預設會拒絕 <code>www.autolab.cloud</code>。</p>
+    <p>正式驗收前再跑不允許 env failure 的 readiness。</p>
+    <pre>npm run staging:readiness -- \
+  --env-file=.env.staging \
+  --html=/Users/huangjingfeng/Desktop/專案/_reports/autolab-staging-readiness.html \
+  --json=/Users/huangjingfeng/Desktop/專案/_reports/autolab-staging-readiness.json</pre>
+
+    <h2>公開頁驗收</h2>
+    <table>
+      <thead><tr><th>頁面</th><th>檢查重點</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr><td><code>/</code></td><td>首頁載入、導覽、CTA、圖片、聯絡表單區塊。</td><td class="pending">待 preview</td></tr>
+        <tr><td><code>/corporate-training</code></td><td>企業邀課表單可填、送出後寫入 staging DB、通知信送到測試信箱。</td><td class="pending">待 preview</td></tr>
+        <tr><td><code>/ai-super-sales</code></td><td>課程內容、免費報名表單、送出後寫入 staging DB、通知信送到測試信箱。</td><td class="pending">待 preview</td></tr>
+        <tr><td><code>/topics</code></td><td>教學主題與工具頁可載入，外部工具連結沒有誤導到未決定的 production 替代頁。</td><td class="pending">待 preview</td></tr>
+        <tr><td><code>/blog</code></td><td>列表可載入；若 staging DB 尚未完整匯入，空列表要可接受且不 500。</td><td class="pending">待 preview</td></tr>
+        <tr><td><code>/events</code></td><td>活動列表可載入；圖片與報名路由不依賴 Manus CDN。</td><td class="pending">待 preview</td></tr>
+        <tr><td><code>/courses</code></td><td>錄播課程頁可載入，影片或下載檔可被 smoke test 驗證。</td><td class="pending">待 preview</td></tr>
+        <tr><td><code>/sitemap.xml</code></td><td>URL 指向 preview/staging 網域，不指向正式網域；包含 <code>/ai-super-sales</code>。</td><td class="pending">待 preview</td></tr>
+        <tr><td><code>/robots.txt</code></td><td>Sitemap 指向 preview/staging 網域；<code>/admin/</code> disallow。</td><td class="pending">待 preview</td></tr>
+      </tbody>
+    </table>
+
+    <h2>後台驗收</h2>
+    <table>
+      <thead><tr><th>項目</th><th>檢查重點</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr><td>未登入</td><td>進入 <code>/admin</code> 應顯示登入或無權限狀態，不應暴露資料。</td><td class="pending">待 preview</td></tr>
+        <tr><td>Staging admin 登入</td><td>Clerk staging admin 可登入，<code>ADMIN_USER_IDS</code> 對應正確。</td><td class="pending">待 preview</td></tr>
+        <tr><td><code>/admin/ai-super-sales-registrations</code></td><td>列表、搜尋/篩選、狀態更新、CSV 匯出或建立資料功能依頁面能力驗收。</td><td class="pending">待 preview</td></tr>
+        <tr><td><code>/admin/corporate-inquiries</code></td><td>列表、狀態更新、備註欄、匯出功能依頁面能力驗收。</td><td class="pending">待 preview</td></tr>
+        <tr><td>既有後台</td><td>文章、活動、聯絡人、課程、付款紀錄等既有頁面仍可載入。</td><td class="pending">待 preview</td></tr>
+      </tbody>
+    </table>
+
+    <h2>資料驗收</h2>
+    <ul>
+      <li class="blocker">正式資料搬遷前仍需要完整 Manus DB dump；目前 `.manus/db` 是查詢紀錄，不是完整 dump。</li>
+      <li>可先用少量 staging seed 資料驗證畫面、表單與後台流程。</li>
+      <li>測試 seed 指令：<code>npm run staging:seed-sample-data -- --env-file=.env.staging</code>；真正寫入 staging 需加 <code>--apply</code> 與雙重保護 env。</li>
+      <li>文章、活動、報名、聯絡表單、企業邀課、AI 超級業務報名都要確認 schema 與後台讀寫。</li>
+      <li>匯入正式資料前，先在 staging DB 做 dry-run 與抽樣比對。</li>
+    </ul>
+
+    <h2>不能通過時的判斷</h2>
+    <table>
+      <thead><tr><th>症狀</th><th>優先檢查</th></tr></thead>
+      <tbody>
+        <tr><td>公開頁 500</td><td>Render logs、<code>DATABASE_URL</code>、Clerk env、build artifact 是否完整。</td></tr>
+        <tr><td>圖片/PDF/影片 404</td><td><code>npm run assets:mirror-cloudfront</code> 是否在 build 前執行，public 路徑是否存在。</td></tr>
+        <tr><td>後台進不去</td><td>Clerk staging app、<code>VITE_CLERK_PUBLISHABLE_KEY</code>、<code>ADMIN_USER_IDS</code>。</td></tr>
+        <tr><td>表單送出失敗</td><td>Turnstile key、tRPC route、staging DB table、Resend 是否只影響通知而不阻斷寫入。</td></tr>
+        <tr><td>sitemap 指到正式站</td><td><code>VITE_APP_URL</code> 是否誤填正式網域。</td></tr>
+      </tbody>
+    </table>
+  </main>
+</body>
+</html>

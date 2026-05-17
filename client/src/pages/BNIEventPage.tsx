@@ -9,8 +9,8 @@ import { Calendar, MapPin, Users, Clock, ArrowLeft, CheckCircle2, Sparkles } fro
 import { BNIEventRegistrationForm } from "@/components/BNIEventRegistrationForm";
 import { RecommendedEvents } from "@/components/RecommendedEvents";
 import { RecommendedPosts } from "@/components/RecommendedPosts";
-import { format } from "date-fns";
-import { zhTW } from "date-fns/locale";
+import { format } from "date-fns/format";
+import { zhTW } from "date-fns/locale/zh-TW";
 import { useState } from "react";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
@@ -256,10 +256,10 @@ export default function BNIEventPage() {
                 {(() => {
                   // 圖片對應到第 1-4 項（跳過第 0 項標題）
                   const stepImages = [
-                    "https://files.manuscdn.com/user_upload_by_module/session_file/95179607/tSDntSDHVhKGgNSL.png", // 1. 內容煉金術
-                    "https://files.manuscdn.com/user_upload_by_module/session_file/95179607/vnxZmnzqkKWvSKTa.png", // 2. 流量誘餌製作
-                    "https://files.manuscdn.com/user_upload_by_module/session_file/95179607/tcVHBEcydkWpKDEs.png", // 3. 私域流量收網
-                    "https://files.manuscdn.com/user_upload_by_module/session_file/95179607/DVYqsewKjEBfgpIg.png"  // 4. 電子報信任堆疊
+                    "/images/manus-event/content-alchemy.png", // 1. 內容煉金術
+                    "/images/manus-event/lead-magnet.png", // 2. 流量誘餌製作
+                    "/images/manus-event/private-traffic.png", // 3. 私域流量收網
+                    "/images/manus-event/newsletter-trust.png"  // 4. 電子報信任堆疊
                   ];
 
                   return (

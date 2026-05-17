@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Autolab Manus Data Migration Plan</title>
+  <style>
+    body { margin: 0; background: #f7f8fb; color: #172033; font-family: -apple-system, BlinkMacSystemFont, "Noto Sans TC", sans-serif; line-height: 1.65; }
+    main { max-width: 1120px; margin: 0 auto; padding: 44px 24px; }
+    h1 { margin: 0 0 8px; font-size: 32px; }
+    h2 { margin-top: 34px; padding-top: 18px; border-top: 1px solid #dce4f0; font-size: 20px; }
+    .lead { color: #647085; font-size: 17px; }
+    .notice { background: #fff7ed; border: 1px solid #fed7aa; border-radius: 8px; padding: 14px 16px; margin: 22px 0; }
+    .danger { background: #fef2f2; border: 1px solid #fecaca; border-radius: 8px; padding: 14px 16px; margin: 22px 0; }
+    table { width: 100%; border-collapse: collapse; background: #fff; border: 1px solid #e2e7f0; border-radius: 8px; overflow: hidden; margin-top: 14px; }
+    th, td { padding: 10px 12px; border-bottom: 1px solid #e8edf5; text-align: left; vertical-align: top; font-size: 13px; }
+    th { background: #eef2f8; font-weight: 700; }
+    code, pre { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+    pre { overflow: auto; border-radius: 8px; background: #111827; color: #e5e7eb; padding: 16px; }
+    ul { padding-left: 1.2em; }
+    li { margin: 6px 0; }
+    .done { color: #166534; font-weight: 700; }
+    .pending { color: #92400e; font-weight: 700; }
+    .blocker { color: #991b1b; font-weight: 700; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Autolab Manus Data Migration Plan</h1>
+    <p class="lead">這份文件描述從 Manus 來源資料搬到自有 staging/production 的資料交接、匯入、抽樣驗收流程。</p>
+
+    <div class="danger">
+      <strong>目前資料狀態：</strong><code>.manus/db</code> 是查詢紀錄，不是完整資料庫 dump。它可以協助盤點與做少量 staging seed，但不能作為正式搬站資料來源。
+    </div>
+    <div class="notice">
+      <strong>專家審查補充：</strong>目前查詢紀錄檢查報告為 <code>/Users/huangjingfeng/Desktop/專案/_reports/autolab-manus-dump-inspection-current.html</code>；它掃到 333 個檔案、約 973 rows、32 個 observed tables，但仍缺 13/24 個目前 schema 期待的 tables。下方 observed/importable 數字來自舊 query-log data package，只能證明資料不完整；收到 full dump 後必須重跑檢查並更新本文件。
+    </div>
+
+    <h2>目前已觀察到的 Manus 查詢紀錄</h2>
+    <table>
+      <thead><tr><th>資料類型</th><th>Observed</th><th>Importable</th><th>Needs Review</th><th>缺口</th></tr></thead>
+      <tbody>
+        <tr><td><code>posts</code></td><td>237</td><td>1</td><td>236</td><td>多數缺 <code>title</code>、<code>slug</code>、<code>content</code>、<code>authorId</code>。</td></tr>
+        <tr><td><code>events</code></td><td>70</td><td>1</td><td>69</td><td>多數缺 <code>title</code>、<code>slug</code>、<code>description</code>、<code>eventDate</code>、<code>location</code>。</td></tr>
+        <tr><td><code>eventRegistrations</code></td><td>6</td><td>0</td><td>6</td><td>缺 <code>eventId</code>、姓名、信箱或電話等必填欄位。</td></tr>
+        <tr><td><code>aiSuperSalesRegistrations</code></td><td>35</td><td>0</td><td>35</td><td>缺 <code>selectedSessions</code> 或 <code>referralSource</code> 等必填欄位。</td></tr>
+        <tr><td><code>categories</code></td><td>4</td><td>4</td><td>0</td><td>可作為 staging seed。</td></tr>
+        <tr><td><code>tags</code></td><td>11</td><td>7</td><td>4</td><td>部分缺 <code>name</code> 或 <code>slug</code>。</td></tr>
+        <tr><td><code>postTags</code></td><td>3</td><td>3</td><td>0</td><td>需確認 referenced post/tag 是否存在。</td></tr>
+      </tbody>
+    </table>
+
+    <h2>需要向 Manus 取得的完整資料</h2>
+    <p>正式搬站前，至少需要以下資料。格式可以是 SQL dump、CSV per table、JSON per table，重點是每張表要有完整欄位與主鍵。</p>
+    <table>
+      <thead><tr><th>資料包</th><th>必要內容</th><th>用途</th></tr></thead>
+      <tbody>
+        <tr><td>資料庫 schema</td><td>目前 Manus production DB 的 table schema、欄位型別、主鍵、唯一鍵、外鍵或索引。</td><td>比對現有 Drizzle schema，避免欄位遺漏。</td></tr>
+        <tr><td>完整 table dump</td><td>所有 production table 的完整 rows，不只查詢紀錄。</td><td>正式資料匯入 staging，再匯入 production。</td></tr>
+        <tr><td>媒體與附件清單</td><td>文章封面、活動圖、課程影片、下載檔、任何 uploads 檔案的原始 URL 與檔案。</td><td>確認不依賴 Manus CDN 或不可控資產。</td></tr>
+        <tr><td>表單與報名資料</td><td>聯絡表單、活動報名、課程報名、企業邀課、AI 超級業務報名。</td><td>後台管理與客戶跟進。</td></tr>
+        <tr><td>付款與訂單資料</td><td>訂單編號、金額、付款狀態、發票欄位、金流交易編號。</td><td>財務與課程權限驗收。正式金流資料需特別保護。</td></tr>
+        <tr><td>使用者與管理者</td><td>使用者基本資料、角色、登入識別。</td><td>需轉成 Clerk 對應策略；密碼或敏感登入材料不應直接搬入。</td></tr>
+      </tbody>
+    </table>
+
+    <h2>自有站目前 schema 對應表</h2>
+    <table>
+      <thead><tr><th>Table</th><th>重要必填欄位</th><th>搬遷策略</th></tr></thead>
+      <tbody>
+        <tr><td><code>users</code></td><td><code>openId</code>、<code>role</code></td><td>優先建立 staging admin；一般使用者需決定是否保留舊登入識別或轉 Clerk。</td></tr>
+        <tr><td><code>categories</code> / <code>tags</code></td><td><code>name</code>、<code>slug</code></td><td>可先匯入，需去重與 slug 正規化。</td></tr>
+        <tr><td><code>posts</code></td><td><code>title</code>、<code>slug</code>、<code>content</code>、<code>authorId</code></td><td>先建立作者，再匯文章；缺內容者不得自動匯入。</td></tr>
+        <tr><td><code>postTags</code></td><td><code>postId</code>、<code>tagId</code></td><td>必須在 post/tag 主鍵映射完成後匯入。</td></tr>
+        <tr><td><code>contacts</code></td><td><code>name</code>、<code>email</code>、<code>inquiryType</code>、<code>message</code></td><td>舊聯絡資料需保留狀態與備註。</td></tr>
+        <tr><td><code>events</code></td><td><code>title</code>、<code>slug</code>、<code>description</code>、<code>eventDate</code>、<code>location</code></td><td>活動本體先匯，再匯報名與訂單。</td></tr>
+        <tr><td><code>eventRegistrations</code></td><td><code>eventId</code>、<code>name</code>、<code>email</code>、<code>phone</code></td><td>依 event slug 或舊 id 建立主鍵映射。</td></tr>
+        <tr><td><code>orders</code></td><td><code>orderNo</code>、<code>eventId</code>、<code>name</code>、<code>email</code>、<code>phone</code>、金額欄位</td><td>付款資料只在 staging 抽樣驗收，正式匯入需另外做完整對帳。</td></tr>
+        <tr><td><code>videoCourses</code></td><td><code>title</code>、<code>slug</code>、<code>description</code>、<code>videoUrl</code>、<code>price</code></td><td>先確認影片檔與權限策略，避免匯入後連到不可控來源。</td></tr>
+        <tr><td><code>videoCoursePurchases</code></td><td><code>orderNo</code>、<code>userId</code>、<code>courseId</code>、金額欄位</td><td>需先完成 users 與 videoCourses 映射。</td></tr>
+        <tr><td><code>courseRegistrations2026</code></td><td><code>userType</code>、<code>plan</code>、<code>selectedSessions</code>、<code>name1</code>、<code>phone1</code>、<code>email1</code></td><td>課程報名是營運核心，匯入後要抽查名單、付款狀態、發票欄位。</td></tr>
+        <tr><td><code>courseSessions2026</code></td><td><code>sessionId</code>、<code>name</code>、<code>date</code>、<code>time</code></td><td>先匯 session，再匯 attendance 與 transfer。</td></tr>
+        <tr><td><code>courseAttendance2026</code></td><td><code>registrationId</code>、<code>sessionId</code>、<code>attendeeName</code>、<code>attendeeEmail</code></td><td>需依 registration/session 映射匯入。</td></tr>
+        <tr><td><code>courseTransfers2026</code></td><td><code>registrationId</code>、<code>attendeeEmail</code>、<code>fromSessionId</code>、<code>toSessionId</code></td><td>需在 course registration 與 sessions 完成後匯入。</td></tr>
+        <tr><td><code>aiSuperSalesRegistrations</code></td><td><code>name</code>、<code>email</code>、<code>phone</code>、<code>selectedSessions</code>、<code>referralSource</code></td><td>舊資料需補齊 session/referral 映射，避免丟失報名來源。</td></tr>
+        <tr><td><code>corporateInquiries</code></td><td><code>name</code>、<code>company</code>、<code>jobTitle</code>、<code>email</code>、<code>sourcePage</code></td><td>若 Manus 沒有舊表，從新站開始累積；若有舊企業邀課資料，需欄位映射。</td></tr>
+      </tbody>
+    </table>
+
+    <h2>建議匯入順序</h2>
+    <ol>
+      <li>建立 clean staging DB，執行 schema push。</li>
+      <li>建立 admin user 與預設 author。</li>
+      <li>匯入分類、標籤。</li>
+      <li>匯入文章與 postTags。</li>
+      <li>匯入活動、活動報名、訂單與優惠碼。</li>
+      <li>匯入錄播課程、購買紀錄、筆記、評論。</li>
+      <li>匯入 2026 課程報名、場次、出席、調課。</li>
+      <li>匯入聯絡、下載名單、企業邀課、AI 超級業務報名。</li>
+      <li>抽樣比對前台頁面、後台列表、表單統計、付款/發票欄位。</li>
+    </ol>
+
+    <h2>抽樣驗收</h2>
+    <table>
+      <thead><tr><th>類型</th><th>抽樣方式</th><th>驗收重點</th></tr></thead>
+      <tbody>
+        <tr><td>文章</td><td>至少 10 篇，包含有封面、無封面、長文、草稿、已發布。</td><td>slug、內容、封面、分類、標籤、發布狀態。</td></tr>
+        <tr><td>活動</td><td>至少 5 場，包含已結束、未來、開放報名、外部報名。</td><td>日期、地點、價格、報名開關、圖片。</td></tr>
+        <tr><td>報名與表單</td><td>每類至少 10 筆或全量少於 10 筆時全查。</td><td>姓名、電話、信箱、狀態、備註、來源。</td></tr>
+        <tr><td>訂單/付款</td><td>所有 paid/refunded/failed 狀態各抽樣。</td><td>金額、付款狀態、交易編號、發票欄位。</td></tr>
+        <tr><td>課程權限</td><td>錄播課程與 2026 課程各抽樣。</td><td>使用者、課程、付款、可存取狀態。</td></tr>
+      </tbody>
+    </table>
+
+    <h2>資料保護</h2>
+    <ul>
+      <li>完整 dump 可能包含個資、付款紀錄與聯絡資料，只放本機受控資料夾或安全儲存空間。</li>
+      <li>不要把完整 dump、真實 env、真實密鑰 commit 到 git。</li>
+      <li>staging 測試信件要避免誤寄正式客戶；必要時先改成測試收件人或關閉通知。</li>
+      <li>正式 cutover 前保存 Manus 原資料與自有站匯入結果，確保可回查。</li>
+    </ul>
+
+    <h2>目前可執行的安全命令</h2>
+    <p>拿到完整 dump 後，第一步先跑只讀檢查，不連資料庫、不匯入，只看檔案格式、表格、欄位與筆數。</p>
+    <pre>npm run manus:inspect-dump -- \
+  --source=/Users/huangjingfeng/Desktop/專案/_imports/manus-production-dump \
+  --html=/Users/huangjingfeng/Desktop/專案/_reports/autolab-manus-dump-inspection.html \
+  --json=/Users/huangjingfeng/Desktop/專案/_reports/autolab-manus-dump-inspection.json</pre>
+
+    <p>目前 zip 內的查詢紀錄也可以用同一個檢查器掃描，用來證明它不是完整 dump。</p>
+    <pre>npm run manus:inventory -- \
+  --html=/Users/huangjingfeng/Desktop/專案/_reports/autolab-manus-db-inventory.html \
+  --json=/Users/huangjingfeng/Desktop/專案/_reports/autolab-manus-db-inventory.json
+
+npm run manus:prepare-data -- \
+  --html=/Users/huangjingfeng/Desktop/專案/_reports/autolab-manus-data-package.html \
+  --json=/Users/huangjingfeng/Desktop/專案/_reports/autolab-manus-data-package.json
+
+npm run manus:import-data -- \
+  --data=/Users/huangjingfeng/Desktop/專案/_reports/autolab-manus-data-package.json</pre>
+    <p>最後一個命令預設是 dry-run；沒有明確安全旗標時不會寫入 DB。</p>
+  </main>
+</body>
+</html>

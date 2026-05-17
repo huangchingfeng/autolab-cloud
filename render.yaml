@@ -3,9 +3,9 @@
 
 services:
   - type: web
-    name: autolab-api
+    name: autolab-staging-api
     runtime: node
-    buildCommand: npm install --legacy-peer-deps && npm run build
+    buildCommand: npm ci --legacy-peer-deps && npm run assets:mirror-cloudfront && npm run assets:check-static && npm run build
     startCommand: npm start
     envVars:
       - key: NODE_ENV
@@ -16,8 +16,52 @@ services:
         sync: false
       - key: CLERK_PUBLISHABLE_KEY
         sync: false
+      - key: VITE_CLERK_PUBLISHABLE_KEY
+        sync: false
       - key: JWT_SECRET
         sync: false
+      - key: ADMIN_USER_IDS
+        sync: false
+      - key: TURNSTILE_SECRET_KEY
+        sync: false
+      - key: VITE_TURNSTILE_SITE_KEY
+        sync: false
+      - key: RESEND_API_KEY
+        sync: false
+      - key: EMAIL_FROM
+        sync: false
+      - key: R2_ACCOUNT_ID
+        sync: false
+      - key: R2_ACCESS_KEY_ID
+        sync: false
+      - key: R2_SECRET_ACCESS_KEY
+        sync: false
+      - key: R2_BUCKET_NAME
+        sync: false
+      - key: R2_PUBLIC_URL
+        sync: false
+      - key: VITE_GOOGLE_MAPS_API_KEY
+        sync: false
       - key: VITE_APP_URL
-        value: https://autolab.cloud
+        sync: false
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: NEWEBPAY_MERCHANT_ID
+        sync: false
+      - key: NEWEBPAY_HASH_KEY
+        sync: false
+      - key: NEWEBPAY_HASH_IV
+        sync: false
+      - key: NEWEBPAY_API_URL
+        value: https://ccore.newebpay.com/MPG/mpg_gateway
+      - key: MAKE_WEBHOOK_URL
+        sync: false
+      - key: ACCOUNTING_WEBHOOK_URL
+        sync: false
+      - key: ACCOUNTING_WEBHOOK_ENABLED
+        value: "false"
+      - key: VITE_ANALYTICS_ENDPOINT
+        sync: false
+      - key: VITE_ANALYTICS_WEBSITE_ID
+        sync: false
     healthCheckPath: /api/health

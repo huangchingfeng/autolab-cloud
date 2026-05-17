@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Autolab Manus Data Request</title>
+  <style>
+    body { margin: 0; background: #f7f8fb; color: #172033; font-family: -apple-system, BlinkMacSystemFont, "Noto Sans TC", sans-serif; line-height: 1.65; }
+    main { max-width: 1000px; margin: 0 auto; padding: 44px 24px; }
+    h1 { margin: 0 0 8px; font-size: 32px; }
+    h2 { margin-top: 34px; padding-top: 18px; border-top: 1px solid #dce4f0; font-size: 20px; }
+    .lead { color: #647085; font-size: 17px; }
+    .notice { background: #fff7ed; border: 1px solid #fed7aa; border-radius: 8px; padding: 14px 16px; margin: 22px 0; }
+    .copybox { background: #fff; border: 1px solid #d8e1ee; border-radius: 8px; padding: 18px; white-space: pre-wrap; font-size: 15px; }
+    table { width: 100%; border-collapse: collapse; background: #fff; border: 1px solid #e2e7f0; border-radius: 8px; overflow: hidden; margin-top: 14px; }
+    th, td { padding: 10px 12px; border-bottom: 1px solid #e8edf5; text-align: left; vertical-align: top; font-size: 13px; }
+    th { background: #eef2f8; font-weight: 700; }
+    code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+    ul { padding-left: 1.2em; }
+    li { margin: 6px 0; }
+    .required { color: #991b1b; font-weight: 700; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Autolab Manus Data Request</h1>
+    <p class="lead">這份文件用來向 Manus 或原代管環境請求完整搬站資料。內容可直接複製給窗口，或改成 email/工單。</p>
+
+    <div class="notice">
+      <strong>背景：</strong>目前本機 zip 內的 <code>.manus/db</code> 是查詢紀錄，不是完整 database dump。正式搬站需要完整資料匯出。
+    </div>
+
+    <h2>可直接複製的請求訊息</h2>
+    <div class="copybox">您好，我們要將目前 Manus 上的 Autolab / AI峰哥網站搬遷到自有主機與自有資料庫。為了避免正式網站資料遺失，請協助提供目前 production 環境的完整資料匯出。
+
+請提供以下內容：
+
+1. 完整資料庫匯出
+- 希望格式：SQL dump 優先；若不方便，CSV per table 或 JSON per table 也可以。
+- 請包含所有 production tables、所有 rows、完整欄位、主鍵、唯一鍵、外鍵或索引資訊。
+- 請不要只提供查詢紀錄或部分查詢結果。
+
+2. 資料庫 schema
+- 每張 table 的欄位名稱、型別、是否 nullable、default value、primary key、unique key、index、foreign key。
+- 若使用的不是 PostgreSQL，也請提供原資料庫類型與版本。
+
+3. 媒體與附件資料
+- 文章封面、活動圖片、課程影片、下載檔、簡報/PDF/XLSX、任何 uploads 檔案。
+- 請提供原始檔案或可下載壓縮包，並附上原 URL 對照表。
+
+4. 表單、報名與訂單資料
+- 聯絡表單、企業邀課、AI 超級業務報名、活動報名、課程報名、下載名單。
+- 若有付款/訂單/發票欄位，也請包含完整欄位與狀態。
+
+5. 匯出時間點
+- 請標註匯出時間與時區。
+- 若匯出後正式站仍會繼續收到新資料，請告知是否能在正式切換前再提供一次增量匯出。
+
+資料會先匯入 staging 環境驗證，不會直接覆蓋正式站。謝謝。</div>
+
+    <h2>交付格式要求</h2>
+    <table>
+      <thead><tr><th>項目</th><th>可接受格式</th><th>注意事項</th></tr></thead>
+      <tbody>
+        <tr><td>完整 DB</td><td><code>.sql</code>、<code>.dump</code>、table-level <code>.csv</code>、table-level <code>.json</code></td><td class="required">必須是 full export，不是 query logs。</td></tr>
+        <tr><td>Schema</td><td><code>.sql</code>、資料字典 <code>.csv</code>、文字說明</td><td>需包含 primary key、unique key、nullable、default。</td></tr>
+        <tr><td>媒體檔</td><td><code>.zip</code>、資料夾壓縮檔、可下載檔案包</td><td>需附原 URL 與新檔案路徑對照。</td></tr>
+        <tr><td>匯出說明</td><td><code>.txt</code> 或 <code>.html</code></td><td>標註匯出時間、來源環境、資料庫類型。</td></tr>
+        <tr><td>增量資料</td><td>同完整 DB 格式</td><td>切正式前如果 production 還有新表單，需要增量匯出。</td></tr>
+      </tbody>
+    </table>
+
+    <h2>收到資料後的本機放置建議</h2>
+    <table>
+      <thead><tr><th>資料</th><th>建議位置</th><th>Git 狀態</th></tr></thead>
+      <tbody>
+        <tr><td>完整 DB dump</td><td><code>/Users/huangjingfeng/Desktop/專案/_imports/manus-production-dump/</code></td><td>不可 commit。</td></tr>
+        <tr><td>媒體檔壓縮包</td><td><code>/Users/huangjingfeng/Desktop/專案/_imports/manus-production-assets/</code></td><td>不可 commit。</td></tr>
+        <tr><td>資料字典或 schema</td><td><code>/Users/huangjingfeng/Desktop/專案/_imports/manus-production-schema/</code></td><td>可視內容決定；若含敏感資料則不可 commit。</td></tr>
+        <tr><td>整理後報告</td><td><code>/Users/huangjingfeng/Desktop/專案/_reports/</code></td><td>只放摘要，不放個資或密鑰。</td></tr>
+      </tbody>
+    </table>
+
+    <h2>收到後要先檢查的問題</h2>
+    <ul>
+      <li>是否包含所有 tables，而不是只包含目前頁面查到的部分資料。</li>
+      <li>是否有 users、posts、events、registrations、orders、contacts、course registrations、AI super sales registrations、corporate inquiries。</li>
+      <li>時間欄位是否有時區，尤其是課程日期、報名時間、付款時間。</li>
+      <li>主鍵是否保留，能否建立 old id 到 new id 的 mapping。</li>
+      <li>媒體 URL 是否能下載，是否需要改到 R2 或本地 public。</li>
+      <li>是否包含個資或付款資料；若有，搬遷與備份都要限制存取。</li>
+    </ul>
+  </main>
+</body>
+</html>

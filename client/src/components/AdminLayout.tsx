@@ -2,7 +2,7 @@ import { Link, useLocation } from "wouter";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { getLoginUrl } from "@/const";
 import { Button } from "@/components/ui/button";
-import { Home, FileText, FolderOpen, Tag, LogOut, Users, Calendar, ClipboardList, PlayCircle, ShoppingCart, BarChart3, Ticket, GraduationCap, Receipt, Bell, CalendarDays, Settings2 } from "lucide-react";
+import { Home, FileText, FolderOpen, LogOut, Users, Calendar, ClipboardList, PlayCircle, ShoppingCart, BarChart3, Ticket, GraduationCap, Receipt, Bell, CalendarDays, Settings2, Building2, TrendingUp, Sparkles } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
 
@@ -62,10 +62,13 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
   const navItems = [
     { name: "儀表板", href: "/admin", icon: Home },
     { name: "文章管理", href: "/admin/posts", icon: FileText },
+    { name: "AI 發文助理", href: "/admin/ai-writer", icon: Sparkles },
     { name: "分類與標籤", href: "/admin/categories", icon: FolderOpen },
     { name: "活動管理", href: "/admin/events", icon: Calendar },
     { name: "報名管理", href: "/admin/registrations", icon: ClipboardList },
     { name: "活動報名管理", href: "/admin/event-registrations", icon: Users },
+    { name: "超級業務報名", href: "/admin/ai-super-sales-registrations", icon: TrendingUp },
+    { name: "企業邀課管理", href: "/admin/corporate-inquiries", icon: Building2 },
     { name: "2026 課程報名", href: "/admin/course2026-registrations", icon: GraduationCap },
     { name: "每日課程名單", href: "/admin/course2026-roster", icon: CalendarDays },
     { name: "課程場次管理", href: "/admin/course2026-sessions", icon: Settings2 },

@@ -1,0 +1,273 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>保險業務 AI 工具箱規劃</title>
+    <style>
+      :root {
+        --ink: #172033;
+        --muted: #5d687c;
+        --line: #dde4ef;
+        --blue: #2448bd;
+        --green: #0e7658;
+        --bg: #f6f8fb;
+        --card: #ffffff;
+      }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--ink);
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        line-height: 1.7;
+      }
+      main {
+        max-width: 1080px;
+        margin: 0 auto;
+        padding: 48px 20px 80px;
+      }
+      h1 {
+        margin: 0 0 12px;
+        font-size: clamp(34px, 5vw, 56px);
+        line-height: 1.1;
+      }
+      h2 {
+        margin: 0 0 14px;
+        font-size: 26px;
+      }
+      h3 {
+        margin: 0 0 8px;
+        font-size: 18px;
+      }
+      p {
+        margin: 0 0 14px;
+      }
+      section {
+        margin-top: 24px;
+        padding: 28px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--card);
+      }
+      ul,
+      ol {
+        padding-left: 24px;
+        margin: 12px 0 0;
+      }
+      li {
+        margin: 8px 0;
+      }
+      .eyebrow {
+        color: var(--blue);
+        font-weight: 800;
+        letter-spacing: 0.04em;
+      }
+      .lead {
+        max-width: 760px;
+        color: var(--muted);
+        font-size: 18px;
+      }
+      .pill {
+        display: inline-block;
+        margin: 6px 8px 0 0;
+        padding: 5px 10px;
+        border-radius: 999px;
+        background: #edf3ff;
+        color: #2448bd;
+        font-size: 14px;
+        font-weight: 700;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 16px;
+      }
+      .tool {
+        padding: 18px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: #fbfcff;
+      }
+      .priority {
+        color: var(--green);
+        font-weight: 800;
+      }
+      .flow {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+        gap: 12px;
+      }
+      .step {
+        padding: 16px;
+        border-radius: 8px;
+        background: #eef6f3;
+        border: 1px solid #cde6dd;
+        font-weight: 700;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 12px;
+      }
+      th,
+      td {
+        border-bottom: 1px solid var(--line);
+        padding: 12px;
+        text-align: left;
+        vertical-align: top;
+      }
+      th {
+        background: #f1f4f9;
+      }
+      code {
+        padding: 2px 5px;
+        border-radius: 4px;
+        background: #eef2f7;
+      }
+      a {
+        color: var(--blue);
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <p class="eyebrow">AutoLab 新區塊規劃</p>
+      <h1>保險業務 AI 工具箱</h1>
+      <p class="lead">
+        這個區塊定位成「給保險業務員上課後持續使用的工作台」。
+        它不是保險商品推薦器，而是協助業務員整理客戶需求、產生合規溝通素材、做教育型試算與服務追蹤。
+      </p>
+      <div>
+        <span class="pill">建議網址：/insurance-ai-tools</span>
+        <span class="pill">可接 AI 超級業務課程</span>
+        <span class="pill">工具先草稿後確認</span>
+      </div>
+
+      <section>
+        <h2>這個地方要怎麼放</h2>
+        <div class="flow">
+          <div class="step">首頁入口</div>
+          <div class="step">保險業務工具箱</div>
+          <div class="step">選擇工具</div>
+          <div class="step">輸入素材</div>
+          <div class="step">產出可修改內容</div>
+          <div class="step">下載或複製</div>
+        </div>
+        <ul>
+          <li>前台放一個公開入口：<code>/insurance-ai-tools</code>。</li>
+          <li>免費版可用 2-3 個工具，完整版給課程學員或登入會員使用。</li>
+          <li>後台可以管理工具提示詞、範本、注意事項與推薦課程 CTA。</li>
+          <li>工具輸出全部標記為「草稿」，由業務員自己確認後才能對客戶使用。</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>第一版先做的工具</h2>
+        <div class="grid">
+          <div class="tool">
+            <h3><span class="priority">01</span> FIRE 退休目標系統</h3>
+            <p>輸入年齡、家庭支出、可投資資產、退休目標與保障顧慮，產出「退休缺口、風險提醒、客戶訪談問題」。</p>
+          </div>
+          <div class="tool">
+            <h3><span class="priority">02</span> 家庭保障缺口盤點器</h3>
+            <p>整理家庭責任、房貸、子女教育、父母照顧、緊急預備金，產出保障討論清單。</p>
+          </div>
+          <div class="tool">
+            <h3><span class="priority">03</span> 客戶訪談提問產生器</h3>
+            <p>根據客戶職業、年齡、家庭狀態、擔心問題，產生初談與複談提問。</p>
+          </div>
+          <div class="tool">
+            <h3><span class="priority">04</span> 保單健檢摘要器</h3>
+            <p>貼上去識別化的保單重點，產出白話摘要、待確認問題、不可直接判斷的地方。</p>
+          </div>
+          <div class="tool">
+            <h3><span class="priority">05</span> LINE 跟進訊息產生器</h3>
+            <p>依照客戶階段產生溫和、不壓迫的跟進訊息，包含初談後、生日、保單週年、節稅季。</p>
+          </div>
+          <div class="tool">
+            <h3><span class="priority">06</span> 異議處理練習器</h3>
+            <p>輸入客戶說法，例如「我再想想」、「太貴了」，產生回應角度與角色扮演腳本。</p>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2>第二階段工具</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>工具</th>
+              <th>用途</th>
+              <th>輸出</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>社群貼文產生器</td>
+              <td>把保險觀念改成 Facebook、Threads、LINE 社群貼文。</td>
+              <td>短文、標題、CTA、注意事項。</td>
+            </tr>
+            <tr>
+              <td>轉介紹開口產生器</td>
+              <td>幫業務設計不尷尬的轉介紹邀請。</td>
+              <td>口語版、LINE 版、會後追蹤版。</td>
+            </tr>
+            <tr>
+              <td>成交會議摘要器</td>
+              <td>把會議紀錄整理成下一步。</td>
+              <td>客戶需求、待補資料、下一次會議提醒。</td>
+            </tr>
+            <tr>
+              <td>客戶分眾工具</td>
+              <td>依照客戶狀態分成新客、溫客、待追蹤、年度服務。</td>
+              <td>跟進建議與提醒文案。</td>
+            </tr>
+            <tr>
+              <td>簡報大綱產生器</td>
+              <td>協助業務做小型講座、BNI 簡報或客戶說明。</td>
+              <td>10 分鐘簡報大綱、開場、案例、結尾 CTA。</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section>
+        <h2>FIRE 系統建議設計</h2>
+        <ol>
+          <li>先問目標：想幾歲退休、每月想要多少生活費、是否有家庭責任。</li>
+          <li>再問現況：收入、支出、資產、負債、保費、緊急預備金。</li>
+          <li>計算缺口：用簡化模型估算退休資金缺口與需要討論的風險。</li>
+          <li>轉成訪談：產出業務員可以問客戶的 8-12 個問題。</li>
+          <li>轉成說明：產出客戶看得懂的白話摘要，不直接推薦商品。</li>
+        </ol>
+      </section>
+
+      <section>
+        <h2>合規邊界</h2>
+        <ul>
+          <li>不輸入身分證、完整生日、病歷、保單號碼等敏感個資。</li>
+          <li>不讓 AI 自動判斷「應該買哪一張保單」。</li>
+          <li>輸出文案要標記為草稿，需依所屬公司規定確認後使用。</li>
+          <li>避免使用保證獲利、保證本金、存款、基金等容易誤導的表述。</li>
+          <li>涉及商品條款、費率、稅務或法規，應回到公司核准資料與專業審核。</li>
+        </ul>
+        <p>
+          參考資料：
+          <a href="https://law.fsc.gov.tw/LawContent.aspx?id=FL006761&kw=%E4%B8%8D%E7%95%B6%E8%A1%8C%E7%82%BA">保險業務員管理規則</a>、
+          <a href="https://law.fsc.gov.tw/LawContent.aspx?id=FL006828&media=print">保險業招攬及核保理賠辦法</a>、
+          <a href="https://law.fsc.gov.tw/LawContent.aspx?id=GL000327">金融服務業從事廣告業務招攬及營業促銷活動辦法</a>。
+        </p>
+      </section>
+
+      <section>
+        <h2>建議開發順序</h2>
+        <ol>
+          <li>已建立工具箱入口頁：<code>/insurance-ai-tools</code>。</li>
+          <li>已先完成 6 個 AI 服務草稿工具：FIRE 系統、保障缺口、訪談提問、保單健檢、LINE 跟進、異議處理。</li>
+          <li>再加會員登入與使用次數紀錄。</li>
+          <li>最後才做客戶資料保存、CRM 與後台工具模板管理。</li>
+        </ol>
+      </section>
+    </main>
+  </body>
+</html>

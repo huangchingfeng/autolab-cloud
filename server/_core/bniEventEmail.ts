@@ -1,6 +1,6 @@
 import type { Event } from "../../drizzle/schema";
-import { format } from "date-fns";
-import { zhTW } from "date-fns/locale";
+import { format } from "date-fns/format";
+import { zhTW } from "date-fns/locale/zh-TW";
 
 export function generateBNIEventConfirmationEmail(name: string, event: Event): string {
   const eventDate = format(new Date(event.eventDate), "yyyy年MM月dd日 (E)", { locale: zhTW });

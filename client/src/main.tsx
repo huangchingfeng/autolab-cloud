@@ -12,8 +12,18 @@ import { TranslationProvider } from "./contexts/TranslationContext";
 import { Toaster } from "react-hot-toast";
 
 const CLERK_PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
+const ANALYTICS_ENDPOINT = import.meta.env.VITE_ANALYTICS_ENDPOINT;
+const ANALYTICS_WEBSITE_ID = import.meta.env.VITE_ANALYTICS_WEBSITE_ID;
 
 const queryClient = new QueryClient();
+
+if (ANALYTICS_ENDPOINT && ANALYTICS_WEBSITE_ID) {
+  const analyticsScript = document.createElement("script");
+  analyticsScript.defer = true;
+  analyticsScript.src = `${ANALYTICS_ENDPOINT}/umami`;
+  analyticsScript.dataset.websiteId = ANALYTICS_WEBSITE_ID;
+  document.head.appendChild(analyticsScript);
+}
 
 const redirectToLoginIfUnauthorized = (error: unknown) => {
   if (!(error instanceof TRPCClientError)) return;

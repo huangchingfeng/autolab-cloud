@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Autolab Migration Unblock Plan</title>
+  <style>
+    body { margin: 0; background: #f7f8fb; color: #172033; font-family: -apple-system, BlinkMacSystemFont, "Noto Sans TC", sans-serif; line-height: 1.65; }
+    main { max-width: 1120px; margin: 0 auto; padding: 44px 24px; }
+    h1 { margin: 0 0 8px; font-size: 32px; }
+    h2 { margin-top: 34px; padding-top: 18px; border-top: 1px solid #dce4f0; font-size: 20px; }
+    .lead { color: #647085; font-size: 17px; }
+    .notice { background: #fff7ed; border: 1px solid #fed7aa; border-radius: 8px; padding: 14px 16px; margin: 22px 0; }
+    .danger { background: #fef2f2; border: 1px solid #fecaca; border-radius: 8px; padding: 14px 16px; margin: 22px 0; }
+    table { width: 100%; border-collapse: collapse; background: #fff; border: 1px solid #e2e7f0; border-radius: 8px; overflow: hidden; margin-top: 14px; }
+    th, td { padding: 10px 12px; border-bottom: 1px solid #e8edf5; text-align: left; vertical-align: top; font-size: 13px; }
+    th { background: #eef2f8; font-weight: 700; }
+    code, pre { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+    pre { overflow: auto; border-radius: 8px; background: #111827; color: #e5e7eb; padding: 16px; }
+    ul { padding-left: 1.2em; }
+    li { margin: 6px 0; }
+    .owner { color: #2450a6; font-weight: 700; }
+    .blocker { color: #991b1b; font-weight: 700; }
+    .ready { color: #166534; font-weight: 700; }
+    .pending { color: #92400e; font-weight: 700; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Autolab Migration Unblock Plan</h1>
+    <p class="lead">三位專家針對目前卡關點做的解法整理。目標是先讓 staging/preview 可安全前進，但不碰 Manus production、不改 DNS。</p>
+
+    <div class="danger">
+      <strong>共同判斷：</strong>Git-backed deploy 檔案追蹤已解，現在主要卡住不是單一 bug，而是三條外部 gate 沒過：staging 外部 secrets 未建立、preview smoke/QA 尚未執行、Manus full DB dump 未取得。
+    </div>
+
+    <h2>卡關總表</h2>
+    <table>
+      <thead><tr><th>卡關</th><th>現況</th><th>誰能解</th><th>解除條件</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="ready">Git-backed deploy</td>
+          <td>必要檔案已納入 Git-backed deploy；最新 <code>staging:check-git-deploy-files</code> 為 63/63 tracked。</td>
+          <td class="owner">Codex 已完成本機 commits；尚未 push/deploy</td>
+          <td>維持 allow-list 檢查全綠，不提交 <code>.env.staging</code>、<code>_reports/</code>、<code>_imports/</code> 或 dump。</td>
+        </tr>
+        <tr>
+          <td class="blocker">Staging secrets</td>
+          <td>Readiness 為 21 pass、9 warn、7 fail；缺 DB、Clerk、Turnstile、ADMIN_USER_IDS。</td>
+          <td class="owner">需要使用者/外部後台建立；Codex 可核對與填入</td>
+          <td>建立 Neon/PostgreSQL staging DB、Clerk staging app、Turnstile widget，填入 env 後通過 strict check。</td>
+        </tr>
+        <tr>
+          <td class="blocker">Full DB dump</td>
+          <td>目前只有 Manus query logs，333 檔、約 973 rows、缺 13/24 expected tables。</td>
+          <td class="owner">需要 Manus/原供應商提供；Codex 可做只讀檢查</td>
+          <td>取得 full SQL dump 或 per-table CSV/JSON 加 schema，再先跑 <code>manus:inspect-dump</code>。</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>最快解卡順序</h2>
+    <ol>
+      <li><strong>先建 staging 外部服務：</strong>Neon DB、Clerk app、Turnstile widget 是 preview 前最低需求。</li>
+      <li><strong>用 staging env 跑 strict gate：</strong>確認 7 個 required fail 歸零，再推 schema 到 clean staging DB。</li>
+      <li><strong>部署 Render preview：</strong>不綁 <code>www.autolab.cloud</code>，先跑 smoke，再人工 QA 後台與表單。</li>
+      <li><strong>同步要求 Manus full dump：</strong>資料搬遷和 preview 功能驗收可並行，但正式 cutover 前 full dump 必須完成。</li>
+    </ol>
+
+    <h2>Git Unblock Commands</h2>
+    <p>Git-backed deploy blocker 已解除。這組命令現在用來確認 allow-list 仍全綠，不需要再用它加檔。</p>
+    <pre>cd /Users/huangjingfeng/Desktop/專案/autolab-cloud-website
+
+npm run staging:check-git-deploy-files -- \
+  --json=/Users/huangjingfeng/Desktop/專案/_reports/autolab-git-deploy-files.json \
+  --html=/Users/huangjingfeng/Desktop/專案/_reports/autolab-git-deploy-files.html
+
+jq -r '.summary' /Users/huangjingfeng/Desktop/專案/_reports/autolab-git-deploy-files.json
+jq -r '.rows[].file' /Users/huangjingfeng/Desktop/專案/_reports/autolab-git-deploy-files.json | xargs git ls-files --stage --
+git check-ignore -v -- .env .env.staging _reports/autolab-git-deploy-files.json _imports/manus-production-dump/autolab.sql.gz</pre>
+
+    <h2>Staging Secrets 最短清單</h2>
+    <table>
+      <thead><tr><th>Env</th><th>來源</th><th>要求</th></tr></thead>
+      <tbody>
+        <tr><td><code>DATABASE_URL</code></td><td>Neon/PostgreSQL</td><td>乾淨 staging DB，URL 需含 staging/dev/preview/test/neon 線索，不可是 Manus/TiDB/MySQL/production。</td></tr>
+        <tr><td><code>CLERK_SECRET_KEY</code></td><td>Clerk staging app</td><td>必須是 <code>sk_test_...</code>。</td></tr>
+        <tr><td><code>CLERK_PUBLISHABLE_KEY</code></td><td>Clerk staging app</td><td>必須是 <code>pk_test_...</code>。</td></tr>
+        <tr><td><code>VITE_CLERK_PUBLISHABLE_KEY</code></td><td>Clerk staging app</td><td>與 <code>CLERK_PUBLISHABLE_KEY</code> 相同。</td></tr>
+        <tr><td><code>ADMIN_USER_IDS</code></td><td>Clerk admin user</td><td>建立 staging admin 後取得 <code>user_...</code>。</td></tr>
+        <tr><td><code>TURNSTILE_SECRET_KEY</code></td><td>Cloudflare Turnstile staging widget</td><td>server secret。</td></tr>
+        <tr><td><code>VITE_TURNSTILE_SITE_KEY</code></td><td>Cloudflare Turnstile staging widget</td><td>frontend site key。</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Secrets 驗證命令</h2>
+    <pre>npm run staging:check-env -- --env-file=.env.staging --strict
+npm run staging:check-db-target -- --env-file=.env.staging
+npm run staging:readiness -- \
+  --env-file=.env.staging \
+  --html=/Users/huangjingfeng/Desktop/專案/_reports/autolab-staging-readiness.html \
+  --json=/Users/huangjingfeng/Desktop/專案/_reports/autolab-staging-readiness.json</pre>
+
+    <h2>Manus Full Dump 要求</h2>
+    <ul>
+      <li>完整 production DB dump，SQL 或 dump 優先；不行就每張表 CSV/JSON。</li>
+      <li>完整 schema/data dictionary：欄位型別、nullable、default、PK、unique、index、FK。</li>
+      <li>媒體與附件：文章封面、活動圖、課程影片、下載檔、PDF、簡報、XLSX、uploads。</li>
+      <li>原 URL 對照表、匯出時間、來源環境、增量 dump 機制。</li>
+    </ul>
+
+    <h2>Full Dump 第一輪只讀檢查</h2>
+    <pre>npm run manus:inspect-dump -- \
+  --source=/Users/huangjingfeng/Desktop/專案/_imports/manus-production-dump \
+  --html=/Users/huangjingfeng/Desktop/專案/_reports/autolab-manus-dump-inspection.html \
+  --json=/Users/huangjingfeng/Desktop/專案/_reports/autolab-manus-dump-inspection.json</pre>
+
+    <div class="notice">
+      <strong>目前建議：</strong>下一步是建立 staging 外部服務並填入真實 secrets；secrets、preview URL 和 full dump 都需要外部後台或供應商資料。Codex 目前能做的是持續跑 gate、檢查報告、保護 production 不被誤切。
+    </div>
+  </main>
+</body>
+</html>

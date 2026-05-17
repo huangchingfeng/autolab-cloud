@@ -451,10 +451,10 @@ export default function EventDetail() {
                         // BNI 活動的圖片穿插邏輯：第 0 項是標題，從第 1 項開始才顯示圖片
                         const isBNIEvent = event.slug?.includes('bni');
                         const stepImages = [
-                          "https://files.manuscdn.com/user_upload_by_module/session_file/95179607/tSDntSDHVhKGgNSL.png", // 1. 內容煉金術
-                          "https://files.manuscdn.com/user_upload_by_module/session_file/95179607/vnxZmnzqkKWvSKTa.png", // 2. 流量誘餌製作
-                          "https://files.manuscdn.com/user_upload_by_module/session_file/95179607/tcVHBEcydkWpKDEs.png", // 3. 私域流量收網
-                          "https://files.manuscdn.com/user_upload_by_module/session_file/95179607/DVYqsewKjEBfgpIg.png"  // 4. 電子報信任堆疊
+                          "/images/manus-event/content-alchemy.png", // 1. 內容煉金術
+                          "/images/manus-event/lead-magnet.png", // 2. 流量誘餌製作
+                          "/images/manus-event/private-traffic.png", // 3. 私域流量收網
+                          "/images/manus-event/newsletter-trust.png"  // 4. 電子報信任堆疊
                         ];
                         const imageUrl = isBNIEvent && index > 0 ? stepImages[index - 1] : null;
 

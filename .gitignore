@@ -11,10 +11,37 @@ api/index.js
 
 # Environment variables
 .env
+.env.*
+!.env.example
+!.env.staging.example
 .env.local
 .env.development.local
 .env.test.local
 .env.production.local
+
+# Private migration inputs, generated reports, and database dumps
+_imports/
+_reports/
+manus-production-dump/
+manus-dump/
+db-dumps/
+database-dumps/
+production-dump/
+*.dump
+*.pgdump
+*.backup
+*.psql
+*.sql.gz
+*.sql.zip
+*.sql.tar
+*.sql.zst
+*.sql.xz
+*.dump.gz
+*.dump.zip
+*.backup.gz
+*.db.gz
+*.sqlite.gz
+*.sqlite3.gz
 
 # IDE and editor files
 .vscode/
@@ -47,6 +74,17 @@ pids
 *.seed
 *.pid.lock
 *.bak
+
+# Generated mirrored assets. Recreate with `npm run assets:mirror-cloudfront`.
+client/public/course-videos/
+client/public/images/notebooklm-course/
+client/public/images/manus-event/
+client/public/downloads/ai-crm-efficiency-revolution.pdf
+client/public/downloads/gemini-ai-strategy-guide.pdf
+client/public/downloads/manus-ai-agent-summary.pdf
+client/public/downloads/manus-ai-system-overview.xlsx
+client/public/downloads/notebooklm-8-tips-slides.pdf
+client/public/downloads/taiwan-2026-ai-execution-system.pdf
 
 # Coverage directory used by tools like istanbul
 coverage/
@@ -100,6 +138,7 @@ jspm_packages/
 .storybook-out
 
 # Temporary folders
+.tmp/
 tmp/
 temp/
 

@@ -8,8 +8,8 @@ import { Button } from "@/components/ui/button";
 import { Calendar, User, Eye, ArrowLeft, Download, FileText } from "lucide-react";
 import { DownloadForm } from "@/components/DownloadForm";
 import { EventPromotion } from "@/components/EventPromotion";
-import { format } from "date-fns";
-import { zhTW } from "date-fns/locale";
+import { format } from "date-fns/format";
+import { zhTW } from "date-fns/locale/zh-TW";
 import { Streamdown } from "streamdown";
 import { Link } from "wouter";
 import { RelatedPosts } from "@/components/RelatedPosts";
@@ -332,7 +332,7 @@ export default function BlogPost() {
                     <DownloadForm
                       resourceSlug="google-gemini-ai-prompts-taiwan-localization"
                       resourceTitle="台灣 2026 AI 執行系統完整簡報"
-                      downloadUrl="https://d2xsxph8kpxj0f.cloudfront.net/95179607/D8QXMb7ThVwxNTQZRzfrBM/downloads/台灣_2026_AI_執行系統-cyjk61fb92.pdf"
+                      downloadUrl="/downloads/taiwan-2026-ai-execution-system.pdf"
                       buttonText="免費下載簡報"
                       description="填寫以下資訊，我們會立即將簡報下載連結寄送到您的信箱"
                     />
@@ -360,7 +360,7 @@ export default function BlogPost() {
                     <DownloadForm
                       resourceSlug="google-gemini-3-guide-flash-thinking-pro"
                       resourceTitle="Gemini AI 菁英團隊戰略指南"
-                      downloadUrl="https://d2xsxph8kpxj0f.cloudfront.net/95179607/D8QXMb7ThVwxNTQZRzfrBM/downloads/gemini-ai-strategy-guide-1766013637092.pdf"
+                      downloadUrl="/downloads/gemini-ai-strategy-guide.pdf"
                       buttonText="免費下載簡報"
                       description="填寫以下資訊即可免費下載完整簡報"
                     />
@@ -388,7 +388,7 @@ export default function BlogPost() {
                     <DownloadForm
                       resourceSlug="google-notebooklm-8-tips-visual-slides"
                       resourceTitle="NotebookLM 視覺化簡報實戰指南"
-                      downloadUrl="https://d2xsxph8kpxj0f.cloudfront.net/95179607/D8QXMb7ThVwxNTQZRzfrBM/downloads/notebooklm-8-tips-slides-1766211981791.pdf"
+                      downloadUrl="/downloads/notebooklm-8-tips-slides.pdf"
                       buttonText="免費下載簡報"
                       description="填寫以下資訊即可免費下載完整簡報"
                     />
@@ -416,7 +416,7 @@ export default function BlogPost() {
                     <DownloadForm
                       resourceSlug="ai-crm-automation-sales-engine"
                       resourceTitle="AI × CRM 效率革命 完整簡報"
-                      downloadUrl="https://d2xsxph8kpxj0f.cloudfront.net/95179607/D8QXMb7ThVwxNTQZRzfrBM/blog/ai-crm/AI_CRM_效率革命.pdf"
+                      downloadUrl="/downloads/ai-crm-efficiency-revolution.pdf"
                       buttonText="免費下載簡報"
                       description="填寫以下資訊即可免費下載完整簡報"
                     />
@@ -457,8 +457,8 @@ export default function BlogPost() {
                     <DownloadForm
                       resourceSlug="manus-ai-agent-bundle"
                       resourceTitle="Manus 課後精華資料包"
-                      downloadUrl="https://d2xsxph8kpxj0f.cloudfront.net/95179607/D8QXMb7ThVwxNTQZRzfrBM/manus-article/AI代理人Manus課後精華.pdf"
-                      downloadUrl2="https://d2xsxph8kpxj0f.cloudfront.net/95179607/D8QXMb7ThVwxNTQZRzfrBM/manus-article/ManusAI系統應用與功能特點總覽.xlsx"
+                      downloadUrl="/downloads/manus-ai-agent-summary.pdf"
+                      downloadUrl2="/downloads/manus-ai-system-overview.xlsx"
                       buttonText="免費下載資料包"
                       description="填寫以下資訊即可免費下載"
                     />

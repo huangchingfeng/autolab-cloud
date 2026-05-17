@@ -595,12 +595,12 @@ export default function AIBusinessFlywheel() {
               {/* 講師照片 */}
               <div className="w-64 h-64 rounded-full overflow-hidden border-4 flex-shrink-0" style={{ borderColor: '#1A3C6E' }}>
                 <img 
-                  src="/images/afeng-profile.jpg" 
+                  src="/teacher-photo.jpg" 
                   alt="阿峰老師" 
                   className="w-full h-full object-cover"
                   onError={(e) => {
                     const target = e.target as HTMLImageElement;
-                    target.src = 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop';
+                    target.src = '/afeng-professional-v2.jpg';
                   }}
                 />
               </div>

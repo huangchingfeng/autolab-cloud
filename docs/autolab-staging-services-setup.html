@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Autolab Staging Services Setup</title>
+  <style>
+    body { margin: 0; background: #f7f8fb; color: #172033; font-family: -apple-system, BlinkMacSystemFont, "Noto Sans TC", sans-serif; line-height: 1.65; }
+    main { max-width: 1120px; margin: 0 auto; padding: 44px 24px; }
+    h1 { margin: 0 0 8px; font-size: 32px; }
+    h2 { margin-top: 34px; padding-top: 18px; border-top: 1px solid #dce4f0; font-size: 20px; }
+    h3 { margin: 18px 0 8px; font-size: 16px; }
+    .lead { color: #647085; font-size: 17px; }
+    .notice { background: #fff7ed; border: 1px solid #fed7aa; border-radius: 8px; padding: 14px 16px; margin: 22px 0; }
+    table { width: 100%; border-collapse: collapse; background: #fff; border: 1px solid #e2e7f0; border-radius: 8px; overflow: hidden; }
+    th, td { padding: 10px 12px; border-bottom: 1px solid #e8edf5; text-align: left; vertical-align: top; font-size: 13px; }
+    th { background: #eef2f8; font-weight: 700; }
+    code, pre { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+    pre { overflow: auto; border-radius: 8px; background: #111827; color: #e5e7eb; padding: 16px; }
+    .required { color: #991b1b; font-weight: 700; }
+    .recommended { color: #92400e; font-weight: 700; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Autolab Staging Services Setup</h1>
+    <p class="lead">這份文件把 preview/staging 需要建立的外部服務拆成可執行清單。完成前不要把正式網域 <code>www.autolab.cloud</code> 指到新服務。</p>
+
+    <div class="notice">
+      <strong>隔離原則：</strong>staging 一律使用獨立 DB、獨立 Clerk app、獨立 Turnstile widget、獨立 R2 bucket，避免測試資料、登入設定或上傳檔案影響目前 Manus production。
+    </div>
+
+    <h2>Service Map</h2>
+    <table>
+      <thead><tr><th>服務</th><th>用途</th><th>必備程度</th><th>Staging 建議名稱</th></tr></thead>
+      <tbody>
+        <tr><td>Neon / PostgreSQL</td><td>網站內容、表單、後台資料</td><td class="required">必備</td><td><code>autolab-staging</code></td></tr>
+        <tr><td>Clerk</td><td>登入、後台身分驗證</td><td class="required">必備</td><td><code>Autolab Staging</code></td></tr>
+        <tr><td>Cloudflare Turnstile</td><td>表單防機器人驗證</td><td class="required">必備</td><td><code>autolab-staging</code></td></tr>
+        <tr><td>Resend</td><td>表單通知信、報名通知</td><td class="recommended">建議</td><td><code>staging.autolab.cloud</code> 或測試 sender</td></tr>
+        <tr><td>Cloudflare R2</td><td>後台圖片/檔案上傳</td><td class="recommended">建議</td><td><code>autolab-assets-staging</code></td></tr>
+        <tr><td>Render</td><td>Preview web service</td><td class="required">必備</td><td><code>autolab-cloud-staging</code></td></tr>
+        <tr><td>Google Maps API</td><td>地圖元件</td><td class="recommended">可後補</td><td>限制 preview domain</td></tr>
+        <tr><td>NewebPay</td><td>課程付款流程</td><td class="recommended">正式金流前再開</td><td>staging 先使用測試商店或保持未設定</td></tr>
+        <tr><td>Gemini API</td><td>AI 功能或匯入工具</td><td class="recommended">可後補</td><td>只填測試 quota key</td></tr>
+        <tr><td>Make / Accounting Webhook</td><td>電子報、會計拋轉</td><td class="recommended">正式切換前驗證</td><td>staging 預設關閉 accounting webhook</td></tr>
+      </tbody>
+    </table>
+
+    <h2>1. Neon / PostgreSQL</h2>
+    <table>
+      <thead><tr><th>步驟</th><th>檢查點</th></tr></thead>
+      <tbody>
+        <tr><td>建立全新的 staging project/database。</td><td>名稱應明確包含 <code>staging</code>，不要使用 Manus 或 production DB。</td></tr>
+        <tr><td>取得 pooled connection string。</td><td>填入 <code>DATABASE_URL</code>，格式為 <code>postgresql://...</code>。</td></tr>
+        <tr><td>先跑 DB target guard。</td><td><code>npm run staging:check-db-target -- --env-file=.env.staging</code></td></tr>
+        <tr><td>確認是空 DB 後才推 schema。</td><td><code>ALLOW_STAGING_SCHEMA_PUSH=true STAGING_DB_CONFIRM=autolab-staging npm run db:push:staging -- --env-file=.env.staging --apply</code></td></tr>
+      </tbody>
+    </table>
+
+    <h2>2. Clerk</h2>
+    <table>
+      <thead><tr><th>步驟</th><th>Env / 檢查點</th></tr></thead>
+      <tbody>
+        <tr><td>建立新的 Clerk application。</td><td>使用測試 app，不共用正式登入設定。</td></tr>
+        <tr><td>填入 backend/frontend keys。</td><td><code>CLERK_SECRET_KEY</code>、<code>CLERK_PUBLISHABLE_KEY</code>、<code>VITE_CLERK_PUBLISHABLE_KEY</code></td></tr>
+        <tr><td>建立管理員帳號並取 user id。</td><td><code>ADMIN_USER_IDS=user_...</code></td></tr>
+        <tr><td>設定 allowed redirect/origin。</td><td>先填 Render preview URL；正式 domain 等 cutover 前再加。</td></tr>
+      </tbody>
+    </table>
+
+    <h2>3. Turnstile</h2>
+    <table>
+      <thead><tr><th>步驟</th><th>Env / 檢查點</th></tr></thead>
+      <tbody>
+        <tr><td>建立 staging widget。</td><td>網域先放 Render preview domain。</td></tr>
+        <tr><td>填入 site key 與 secret。</td><td><code>VITE_TURNSTILE_SITE_KEY</code>、<code>TURNSTILE_SECRET_KEY</code></td></tr>
+        <tr><td>表單 QA。</td><td>Preview 上測聯絡表單、企業邀課表單、AI 超級業務報名表單。</td></tr>
+      </tbody>
+    </table>
+
+    <h2>4. Resend</h2>
+    <table>
+      <thead><tr><th>步驟</th><th>Env / 檢查點</th></tr></thead>
+      <tbody>
+        <tr><td>建立測試 API key。</td><td><code>RESEND_API_KEY</code></td></tr>
+        <tr><td>設定 sender。</td><td><code>EMAIL_FROM</code>；如果正式 domain 還沒切，不要改正式 DNS。</td></tr>
+        <tr><td>通知信測試。</td><td>只用 staging 表單送測試資料，確認收件與內容。</td></tr>
+      </tbody>
+    </table>
+
+    <h2>5. Cloudflare R2</h2>
+    <table>
+      <thead><tr><th>步驟</th><th>Env / 檢查點</th></tr></thead>
+      <tbody>
+        <tr><td>建立 staging bucket。</td><td><code>R2_BUCKET_NAME=autolab-assets-staging</code></td></tr>
+        <tr><td>建立最小權限 access key。</td><td><code>R2_ACCOUNT_ID</code>、<code>R2_ACCESS_KEY_ID</code>、<code>R2_SECRET_ACCESS_KEY</code></td></tr>
+        <tr><td>設定公開讀取 URL。</td><td><code>R2_PUBLIC_URL</code>；先用 staging URL，不接正式 CDN。</td></tr>
+        <tr><td>後台上傳 QA。</td><td>登入 admin 後測圖片上傳、預覽、儲存。</td></tr>
+      </tbody>
+    </table>
+
+    <h2>6. Render Preview</h2>
+    <table>
+      <thead><tr><th>項目</th><th>設定值</th></tr></thead>
+      <tbody>
+        <tr><td>Build command</td><td><code>npm ci --legacy-peer-deps &amp;&amp; npm run assets:mirror-cloudfront &amp;&amp; npm run assets:check-static &amp;&amp; npm run build</code></td></tr>
+        <tr><td>Start command</td><td><code>npm run start</code></td></tr>
+        <tr><td>Health check</td><td><code>/api/health</code></td></tr>
+        <tr><td>Env sync</td><td>手動填 Render env，不把 secrets commit 到 repo。</td></tr>
+        <tr><td>Custom domain</td><td>preview 階段不要綁 <code>www.autolab.cloud</code>。</td></tr>
+      </tbody>
+    </table>
+
+    <h2>7. Optional Integrations</h2>
+    <table>
+      <thead><tr><th>整合</th><th>Env</th><th>Staging 原則</th></tr></thead>
+      <tbody>
+        <tr><td>NewebPay</td><td><code>NEWEBPAY_MERCHANT_ID</code>、<code>NEWEBPAY_HASH_KEY</code>、<code>NEWEBPAY_HASH_IV</code>、<code>NEWEBPAY_API_URL</code></td><td>未驗證前不要接正式商店；Render 預設使用測試 API URL。</td></tr>
+        <tr><td>Gemini</td><td><code>GEMINI_API_KEY</code></td><td>若 AI 功能需要再填，否則 staging 可以先留空。</td></tr>
+        <tr><td>Make newsletter</td><td><code>MAKE_WEBHOOK_URL</code></td><td>先接測試 webhook，不要直接送到正式名單。</td></tr>
+        <tr><td>Accounting webhook</td><td><code>ACCOUNTING_WEBHOOK_URL</code>、<code>ACCOUNTING_WEBHOOK_ENABLED</code></td><td>staging 預設 <code>false</code>；確認測試端點後才開。</td></tr>
+        <tr><td>Analytics</td><td><code>VITE_ANALYTICS_ENDPOINT</code>、<code>VITE_ANALYTICS_WEBSITE_ID</code></td><td>可先留空，避免 preview 流量混進正式數據。</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Local Verification Commands</h2>
+    <pre>npm run staging:init-env -- \
+  --write \
+  --html=/Users/huangjingfeng/Desktop/專案/_reports/autolab-staging-env-bootstrap.html \
+  --json=/Users/huangjingfeng/Desktop/專案/_reports/autolab-staging-env-bootstrap.json
+npm run staging:check-env -- --env-file=.env.staging --strict
+npm run staging:check-sensitive-files -- \
+  --html=/Users/huangjingfeng/Desktop/專案/_reports/autolab-sensitive-file-guard.html \
+  --json=/Users/huangjingfeng/Desktop/專案/_reports/autolab-sensitive-file-guard.json
+npm run staging:check-git-deploy-files -- \
+  --html=/Users/huangjingfeng/Desktop/專案/_reports/autolab-git-deploy-files.html \
+  --json=/Users/huangjingfeng/Desktop/專案/_reports/autolab-git-deploy-files.json
+npm run staging:check-render-env -- \
+  --html=/Users/huangjingfeng/Desktop/專案/_reports/autolab-render-env-check.html \
+  --json=/Users/huangjingfeng/Desktop/專案/_reports/autolab-render-env-check.json
+npm run staging:readiness -- \
+  --env-file=.env.staging \
+  --html=/Users/huangjingfeng/Desktop/專案/_reports/autolab-staging-readiness.html \
+  --json=/Users/huangjingfeng/Desktop/專案/_reports/autolab-staging-readiness.json</pre>
+  </main>
+</body>
+</html>

@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>AutoLab 後台與內容自動化規劃</title>
+    <style>
+      body {
+        margin: 0;
+        background: #f6f7fb;
+        color: #172033;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        line-height: 1.7;
+      }
+      main {
+        max-width: 960px;
+        margin: 0 auto;
+        padding: 48px 20px 72px;
+      }
+      h1 {
+        margin: 0 0 12px;
+        font-size: clamp(32px, 5vw, 52px);
+        line-height: 1.12;
+      }
+      h2 {
+        margin: 40px 0 12px;
+        font-size: 24px;
+      }
+      p {
+        margin: 0 0 14px;
+      }
+      section {
+        margin-top: 24px;
+        padding: 28px;
+        background: #ffffff;
+        border: 1px solid #dfe4ef;
+        border-radius: 8px;
+      }
+      ul,
+      ol {
+        padding-left: 24px;
+      }
+      li {
+        margin: 8px 0;
+      }
+      .eyebrow {
+        color: #3254d3;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+      }
+      .status {
+        display: inline-block;
+        margin-top: 16px;
+        padding: 6px 10px;
+        border-radius: 999px;
+        background: #e8efff;
+        color: #2444a6;
+        font-weight: 700;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 16px;
+      }
+      .mini {
+        padding: 18px;
+        border: 1px solid #e2e7f0;
+        border-radius: 8px;
+        background: #fbfcff;
+      }
+      code {
+        padding: 2px 5px;
+        background: #eef2f7;
+        border-radius: 4px;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <p class="eyebrow">AutoLab 後台升級</p>
+      <h1>UI/UX 重新設計與部落格自動化規劃</h1>
+      <p>
+        這份規劃把 UI/UX、產品後台、資料架構與內容自動化四個方向整理成可執行版本。
+        原則是先在自己的 staging / repo 做好，不取代目前 Manus 正式站。
+      </p>
+      <span class="status">第一版已開始：貼素材改寫成阿峰老師風格</span>
+
+      <section>
+        <h2>專家共識</h2>
+        <div class="grid">
+          <div class="mini">
+            <strong>UI/UX</strong>
+            <p>保留 AI 峰哥的信任感與教練定位，主選單簡化成企業內訓、公開課程、AI 工具箱、成功案例、文章資源。</p>
+          </div>
+          <div class="mini">
+            <strong>產品後台</strong>
+            <p>先做課程營運官網，不先做大型 LMS。後台重點是文章、課程、報名、聯絡人和付款資料。</p>
+          </div>
+          <div class="mini">
+            <strong>資料架構</strong>
+            <p>現有系統已有文章、分類、標籤和活動後台，可以擴充，不需要從零重寫。</p>
+          </div>
+          <div class="mini">
+            <strong>內容自動化</strong>
+            <p>AI 先根據原文或素材改寫成阿峰老師風格草稿，人工確認後再發布。</p>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2>第一階段</h2>
+        <ol>
+          <li>新增 <code>/admin/ai-writer</code>：貼上原文、逐字稿、LINE 內容、筆記或課程重點。</li>
+          <li>後端呼叫 Gemini，把素材改寫成阿峰老師風格文章，並產生 SEO 標題、SEO 描述、LINE 貼文和建議標籤。</li>
+          <li>後台只存成 <code>draft</code> 草稿，不直接公開。</li>
+          <li>可先填排程時間，再由 <code>blog:publish-scheduled</code> 腳本到期發布。</li>
+          <li>修正公開文章查詢，草稿文章不會被公開網址讀到。</li>
+        </ol>
+      </section>
+
+      <section>
+        <h2>第二階段</h2>
+        <ul>
+          <li>增加更完整的文章狀態：scheduled、published、archived。</li>
+          <li>增加 SEO 欄位：meta title、meta description、canonical、社群分享圖。</li>
+          <li>增加內容主題池：課程案例、客戶常見問題、AI 工具教學、活動回顧。</li>
+          <li>增加審核流程：AI 草稿、人工修改、SEO 檢查、排程發布。</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>第三階段</h2>
+        <ul>
+          <li>把文章自動改寫成 LINE、Facebook、Threads、Email 版本。</li>
+          <li>每週自動產生候選題目，但仍由後台人工確認。</li>
+          <li>串接圖片產生或封面圖模板，讓文章上架更完整。</li>
+          <li>建立內容成效報表：瀏覽、詢問、報名、轉換。</li>
+        </ul>
+      </section>
+    </main>
+  </body>
+</html>
