@@ -577,6 +577,31 @@
             padding: 14px;
             text-align: center;
         }
+        .reco-item-reason {
+            display: block;
+            margin-top: 4px;
+            color: var(--primary-blue);
+            font-size: .82rem;
+            font-weight: 700;
+        }
+        .reco-loading {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--muted);
+            font-weight: 800;
+            padding: 12px 2px;
+        }
+        .reco-spinner {
+            width: 16px;
+            height: 16px;
+            border: 2px solid var(--line);
+            border-top-color: var(--primary-blue);
+            border-radius: 50%;
+            animation: reco-spin 0.7s linear infinite;
+            flex: 0 0 auto;
+        }
+        @keyframes reco-spin { to { transform: rotate(360deg); } }
 
         /* 可編輯的生成結果 */
         textarea.output-container {
@@ -7627,29 +7652,62 @@ ${promptText.trim()}
             document.body.removeChild(textarea);
         };
 
-        const renderRecommend = (query) => {
+        const renderRecoItems = (items, withReason) => {
             const box = $('#recommendResults');
-            if (!query || !query.trim()) {
-                box.empty().removeClass('show');
-                return;
-            }
-            const results = recommend(query);
-            if (!results.length) {
-                box.html('<div class="reco-empty"><i class="bi bi-emoji-neutral"></i> 找不到很貼近的模板。換個說法描述你的工作，或直接用上方搜尋／分類瀏覽看看。</div>').addClass('show');
-                return;
-            }
             let html = '<div class="reco-title"><i class="bi bi-hand-index-thumb"></i> 依你的描述，建議從這幾個開始練習：</div>';
-            results.forEach(({ template }) => {
+            items.forEach(({ template, reason }) => {
+                const reasonHtml = (withReason && reason) ? `<span class="reco-item-reason">${escapeHtml(reason)}</span>` : '';
                 html += `
                     <button class="reco-item" type="button" data-template-id="${template.id}">
                         <span class="reco-item-main">
                             <span class="reco-item-name">${escapeHtml(template.name)}</span>
                             <span class="reco-item-cat">${escapeHtml(template.category)}</span>
+                            ${reasonHtml}
                         </span>
                         <span class="reco-item-go">選這個 <i class="bi bi-arrow-right-short"></i></span>
                     </button>`;
             });
             box.html(html).addClass('show');
+        };
+
+        const renderKeywordReco = (query) => {
+            const box = $('#recommendResults');
+            const results = recommend(query);
+            if (!results.length) {
+                box.html('<div class="reco-empty"><i class="bi bi-emoji-neutral"></i> 找不到很貼近的模板。換個說法描述你的工作，或直接用上方搜尋／分類瀏覽看看。</div>').addClass('show');
+                return;
+            }
+            renderRecoItems(results.map((r) => ({ template: r.template })), false);
+        };
+
+        const renderRecommend = async (query) => {
+            const box = $('#recommendResults');
+            if (!query || !query.trim()) {
+                box.empty().removeClass('show');
+                return;
+            }
+            box.html('<div class="reco-loading"><span class="reco-spinner"></span> AI 推薦中…</div>').addClass('show');
+            try {
+                const candidates = allTemplates.map((t) => ({ id: t.id, name: t.name, category: t.category }));
+                const controller = new AbortController();
+                const timer = setTimeout(() => controller.abort(), 12000);
+                const res = await fetch('/api/recommend', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ need: query, candidates }),
+                    signal: controller.signal
+                });
+                clearTimeout(timer);
+                if (!res.ok) throw new Error('api ' + res.status);
+                const data = await res.json();
+                const items = (data.results || [])
+                    .map((r) => ({ template: templates[r.id], reason: r.reason }))
+                    .filter((x) => x.template);
+                if (!items.length) { renderKeywordReco(query); return; }
+                renderRecoItems(items, true);
+            } catch (e) {
+                renderKeywordReco(query);
+            }
         };
 
         const refreshAll = () => {
