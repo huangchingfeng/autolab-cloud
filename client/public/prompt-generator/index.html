@@ -596,70 +596,6 @@
             gap: 6px;
         }
 
-        /* 老師管理模式 */
-        .admin-bar {
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            gap: 8px;
-            padding: 12px 14px;
-            margin-bottom: 16px;
-            background: #fff7ed;
-            border: 1px solid #fed7aa;
-            border-radius: var(--radius);
-        }
-        .admin-flag {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            font-weight: 900;
-            color: #b45309;
-            margin-right: 4px;
-        }
-        .btn-tool.danger { color: #b42318; border-color: #fecdca; }
-        .btn-tool.danger:hover { background: #b42318; border-color: #b42318; color: #fff; }
-        .editor-overlay {
-            position: fixed;
-            inset: 0;
-            z-index: 1200;
-            background: rgba(16, 24, 40, 0.55);
-            display: flex;
-            align-items: flex-start;
-            justify-content: center;
-            padding: 40px 16px;
-            overflow: auto;
-        }
-        .editor-overlay[hidden] { display: none; }
-        .editor-modal {
-            width: min(760px, 100%);
-            background: #fff;
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-            display: flex;
-            flex-direction: column;
-            max-height: calc(100vh - 80px);
-        }
-        .editor-modal-head, .editor-modal-foot {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 16px 20px;
-        }
-        .editor-modal-head { border-bottom: 1px solid var(--line); }
-        .editor-modal-head h3 { margin: 0; font-weight: 900; font-size: 1.2rem; flex: 1; }
-        .editor-modal-body { padding: 16px 20px; overflow: auto; }
-        .editor-modal-body .panel-label { margin-top: 14px; }
-        .editor-modal-body .panel-label:first-child { margin-top: 0; }
-        .editor-modal-foot { border-top: 1px solid var(--line); }
-        .editor-modal-foot .spacer { flex: 1; }
-        .ed-fields { display: flex; flex-direction: column; gap: 8px; }
-        .ed-field-row { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
-        .ed-field-row .ed-f-type { flex: 0 0 88px; }
-        .ed-field-row .ed-f-id { flex: 1 1 140px; }
-        .ed-field-row .ed-f-label { flex: 1 1 140px; }
-        .ed-field-row .ed-f-placeholder { flex: 2 1 200px; }
-        .ed-field-row .ed-f-del { flex: 0 0 auto; }
-
         .brand-band {
             background: #fff;
             border-top: 1px solid var(--line);
@@ -1019,16 +955,6 @@
                         </div>
                     </div>
 
-                    <div id="adminBar" class="admin-bar" hidden>
-                        <span class="admin-flag"><i class="bi bi-shield-lock"></i> 管理模式</span>
-                        <button id="addTemplateBtn" class="btn-tool" type="button"><i class="bi bi-plus-lg"></i>新增模板</button>
-                        <button id="editTemplateBtn" class="btn-tool" type="button"><i class="bi bi-pencil"></i>編輯目前模板</button>
-                        <button id="exportBtn" class="btn-tool" type="button"><i class="bi bi-download"></i>匯出 JSON</button>
-                        <button id="importBtn" class="btn-tool" type="button"><i class="bi bi-upload"></i>匯入 JSON</button>
-                        <button id="resetTemplatesBtn" class="btn-tool" type="button"><i class="bi bi-arrow-counterclockwise"></i>還原線上版本</button>
-                        <input id="importFile" type="file" accept="application/json,.json" hidden>
-                    </div>
-
                     <div class="recommender">
                         <div class="recommender-head">
                             <h3><i class="bi bi-magic"></i> 不知道用哪個？描述你的需求，幫你推薦</h3>
@@ -1204,34 +1130,6 @@
     </main>
 
     <div id="toastStatus" class="toast-status" role="status" aria-live="polite"></div>
-
-    <div id="editorOverlay" class="editor-overlay" hidden>
-        <div class="editor-modal" role="dialog" aria-modal="true" aria-labelledby="editorTitle">
-            <div class="editor-modal-head">
-                <h3 id="editorTitle">編輯模板</h3>
-                <button id="editorClose" class="btn-tool" type="button" aria-label="關閉"><i class="bi bi-x-lg"></i></button>
-            </div>
-            <div class="editor-modal-body">
-                <label class="panel-label" for="ed_name">模板名稱</label>
-                <input id="ed_name" class="form-control" type="text" placeholder="例如：客戶開發信">
-                <label class="panel-label" for="ed_category">分類</label>
-                <input id="ed_category" class="form-control" list="categoryOptions" type="text" placeholder="例如：業務（可輸入新分類）">
-                <datalist id="categoryOptions"></datalist>
-                <label class="panel-label">輸入欄位（學生要填的空格）</label>
-                <div id="ed_fields" class="ed-fields"></div>
-                <button id="ed_addField" class="btn-tool" type="button" style="margin-top:8px;"><i class="bi bi-plus-lg"></i>新增欄位</button>
-                <label class="panel-label" for="ed_template">提示詞內容</label>
-                <p class="output-hint" style="margin:0 0 6px;"><i class="bi bi-info-circle"></i> 用 &lt;&lt;&lt;{欄位ID}&gt;&gt;&gt; 當填空，例如 &lt;&lt;&lt;{job_title}&gt;&gt;&gt;，學生填欄位後會自動代入。</p>
-                <textarea id="ed_template" class="form-control" rows="10" placeholder="請幫我撰寫一封給「<<<{customer_name}>>>」的開發信…"></textarea>
-            </div>
-            <div class="editor-modal-foot">
-                <button id="ed_delete" class="btn-tool danger" type="button"><i class="bi bi-trash"></i>刪除此模板</button>
-                <div class="spacer"></div>
-                <button id="ed_cancel" class="btn-tool" type="button">取消</button>
-                <button id="ed_save" class="btn-tool primary" type="button"><i class="bi bi-check-lg"></i>儲存</button>
-            </div>
-        </div>
-    </div>
 
 <!-- ============================== -->
 <!-- TEMPLATES START HERE           -->
@@ -7331,9 +7229,7 @@ SOP名稱：<<<{sop_title}>>>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
     $(document).ready(function() {
-        const STORAGE_KEY = 'pg_templates_v1';
         const TEMPLATES_URL = 'prompt-templates.json';
-        const isAdmin = new URLSearchParams(window.location.search).get('admin') === '1';
 
         let templates = {};
         let allTemplates = [];
@@ -7343,7 +7239,6 @@ SOP名稱：<<<{sop_title}>>>
         let currentCategory = 'all';
         let currentSearch = '';
         let selectedTemplateId = null;
-        let editorMode = 'edit';
         let toastTimer = null;
 
         const escapeHtml = (value) => String(value ?? '').replace(/[&<>"']/g, (char) => ({
@@ -7393,13 +7288,6 @@ SOP名稱：<<<{sop_title}>>>
 
         const loadTemplates = async () => {
             try {
-                const raw = localStorage.getItem(STORAGE_KEY);
-                if (raw) {
-                    const saved = JSON.parse(raw);
-                    if (Array.isArray(saved) && saved.length) return normalizeImported(saved);
-                }
-            } catch (e) { /* 忽略損壞的本機資料 */ }
-            try {
                 const res = await fetch(TEMPLATES_URL, { cache: 'no-store' });
                 if (res.ok) {
                     const json = await res.json();
@@ -7407,18 +7295,6 @@ SOP名稱：<<<{sop_title}>>>
                 }
             } catch (e) { /* 沒有外部 JSON 就用內建模板 */ }
             return parseInlineTemplates();
-        };
-
-        const saveTemplates = () => {
-            try {
-                const clean = allTemplates.map((t) => ({
-                    id: t.id, name: t.name, category: t.category,
-                    structure: t.structure, template: t.template
-                }));
-                localStorage.setItem(STORAGE_KEY, JSON.stringify(clean));
-            } catch (e) {
-                console.error('Save failed:', e);
-            }
         };
 
         const rebuildDerived = () => {
@@ -7781,179 +7657,6 @@ ${promptText.trim()}
             renderResults();
         };
 
-        // ====== 老師管理模式 ======
-        const refreshCategoryDatalist = () => {
-            const dl = $('#categoryOptions').empty();
-            sortedCategories.forEach((c) => dl.append(`<option value="${escapeHtml(c)}"></option>`));
-        };
-
-        const addEditorFieldRow = (field = {}) => {
-            const row = $(`
-                <div class="ed-field-row">
-                    <select class="ed-f-type form-select">
-                        <option value="text">單行</option>
-                        <option value="textarea">多行</option>
-                    </select>
-                    <input class="ed-f-id form-control" placeholder="欄位ID (英文，如 job_title)">
-                    <input class="ed-f-label form-control" placeholder="顯示名稱 (如 職位名稱)">
-                    <input class="ed-f-placeholder form-control" placeholder="提示文字 (placeholder)">
-                    <button class="ed-f-del btn-tool" type="button" title="刪除欄位"><i class="bi bi-x-lg"></i></button>
-                </div>
-            `);
-            row.find('.ed-f-type').val(field.type === 'textarea' ? 'textarea' : 'text');
-            row.find('.ed-f-id').val(field.id || '');
-            row.find('.ed-f-label').val(field.label || '');
-            row.find('.ed-f-placeholder').val(field.placeholder || '');
-            $('#ed_fields').append(row);
-        };
-
-        const openEditor = (mode) => {
-            refreshCategoryDatalist();
-            if (mode === 'new') {
-                editorMode = 'new';
-                $('#editorTitle').text('新增模板');
-                $('#ed_delete').hide();
-                $('#ed_name').val('');
-                $('#ed_category').val(currentCategory !== 'all' ? currentCategory : '');
-                $('#ed_template').val('');
-                $('#ed_fields').empty();
-                addEditorFieldRow();
-            } else {
-                const t = templates[selectedTemplateId];
-                if (!t) { showStatus('請先在清單中選一個模板。'); return; }
-                editorMode = 'edit';
-                $('#editorTitle').text('編輯模板');
-                $('#ed_delete').show();
-                $('#ed_name').val(t.name);
-                $('#ed_category').val(t.category);
-                $('#ed_template').val(t.template);
-                $('#ed_fields').empty();
-                (t.structure || []).forEach((f) => addEditorFieldRow(f));
-                if (!t.structure || !t.structure.length) addEditorFieldRow();
-            }
-            $('#editorOverlay').removeAttr('hidden');
-        };
-
-        const closeEditor = () => $('#editorOverlay').attr('hidden', 'hidden');
-
-        const collectEditorData = () => {
-            const structure = [];
-            $('#ed_fields .ed-field-row').each(function() {
-                const id = $(this).find('.ed-f-id').val().trim();
-                const label = $(this).find('.ed-f-label').val().trim();
-                const placeholder = $(this).find('.ed-f-placeholder').val().trim();
-                const type = $(this).find('.ed-f-type').val();
-                if (!id && !label) return;
-                structure.push({ type, id, label, placeholder });
-            });
-            return {
-                name: $('#ed_name').val().trim(),
-                category: $('#ed_category').val().trim() || '未分類',
-                template: $('#ed_template').val(),
-                structure
-            };
-        };
-
-        const saveEditor = () => {
-            const data = collectEditorData();
-            if (!data.name) { showStatus('請填寫模板名稱。'); $('#ed_name').focus(); return; }
-            if (!data.template.trim()) { showStatus('請填寫提示詞內容。'); $('#ed_template').focus(); return; }
-            if (editorMode === 'new') {
-                const newId = 'template_custom_' + Date.now();
-                allTemplates.push({ id: newId, ...data });
-                selectedTemplateId = newId;
-            } else {
-                const t = templates[selectedTemplateId];
-                t.name = data.name;
-                t.category = data.category;
-                t.template = data.template;
-                t.structure = data.structure;
-            }
-            rebuildDerived();
-            saveTemplates();
-            refreshAll();
-            syncActiveTemplate(selectedTemplateId);
-            closeEditor();
-            showStatus('已儲存（存在這台瀏覽器）。要讓所有學生看到，請按「匯出 JSON」後重新部署。');
-        };
-
-        const deleteCurrent = () => {
-            const t = templates[selectedTemplateId];
-            if (!t) return;
-            if (!window.confirm(`確定要刪除「${t.name}」嗎？此動作只會改這台瀏覽器的版本。`)) return;
-            allTemplates = allTemplates.filter((x) => x.id !== selectedTemplateId);
-            selectedTemplateId = allTemplates[0] ? allTemplates[0].id : null;
-            rebuildDerived();
-            saveTemplates();
-            refreshAll();
-            closeEditor();
-            showStatus('已刪除。要讓所有學生看到，請按「匯出 JSON」後重新部署。');
-        };
-
-        const exportJSON = () => {
-            const clean = allTemplates.map((t) => ({
-                id: t.id, name: t.name, category: t.category,
-                structure: t.structure, template: t.template
-            }));
-            const blob = new Blob([JSON.stringify(clean, null, 2)], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'prompt-templates.json';
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-            showStatus('已匯出 prompt-templates.json，把它放到網站同一個資料夾就會對所有人生效。');
-        };
-
-        const importJSON = (file) => {
-            const reader = new FileReader();
-            reader.onload = () => {
-                try {
-                    const json = JSON.parse(reader.result);
-                    if (!Array.isArray(json) || !json.length) throw new Error('格式不正確');
-                    allTemplates = normalizeImported(json);
-                    selectedTemplateId = allTemplates[0].id;
-                    rebuildDerived();
-                    saveTemplates();
-                    refreshAll();
-                    showStatus(`已匯入 ${allTemplates.length} 個模板。`);
-                } catch (e) {
-                    showStatus('匯入失敗：檔案不是有效的模板 JSON。');
-                }
-            };
-            reader.readAsText(file);
-        };
-
-        const resetTemplates = async () => {
-            if (!window.confirm('還原成線上版本？這會清掉這台瀏覽器上還沒匯出的修改。')) return;
-            try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
-            allTemplates = await loadTemplates();
-            selectedTemplateId = allTemplates[0] ? allTemplates[0].id : null;
-            rebuildDerived();
-            refreshAll();
-            showStatus('已還原成線上版本。');
-        };
-
-        const bindAdminEvents = () => {
-            $('#addTemplateBtn').on('click', () => openEditor('new'));
-            $('#editTemplateBtn').on('click', () => openEditor('edit'));
-            $('#exportBtn').on('click', exportJSON);
-            $('#importBtn').on('click', () => $('#importFile').trigger('click'));
-            $('#importFile').on('change', function() {
-                if (this.files && this.files[0]) importJSON(this.files[0]);
-                $(this).val('');
-            });
-            $('#resetTemplatesBtn').on('click', resetTemplates);
-            $('#ed_addField').on('click', () => addEditorFieldRow());
-            $('#ed_fields').on('click', '.ed-f-del', function() { $(this).closest('.ed-field-row').remove(); });
-            $('#ed_save').on('click', saveEditor);
-            $('#ed_delete').on('click', deleteCurrent);
-            $('#ed_cancel, #editorClose').on('click', closeEditor);
-            $('#editorOverlay').on('click', function(e) { if (e.target === this) closeEditor(); });
-        };
-
         const bindStaticEvents = () => {
             $('#templateSearch').on('input', function() {
                 currentSearch = $(this).val();
@@ -8021,12 +7724,9 @@ ${promptText.trim()}
                 const wp = document.querySelector('.work-panel');
                 if (wp) wp.scrollIntoView({ behavior: 'smooth', block: 'start' });
             });
-
-            if (isAdmin) bindAdminEvents();
         };
 
         const boot = async () => {
-            if (isAdmin) $('#adminBar').removeAttr('hidden');
             allTemplates = await loadTemplates();
             rebuildDerived();
             bindStaticEvents();
