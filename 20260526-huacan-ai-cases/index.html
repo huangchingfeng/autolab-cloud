@@ -1,0 +1,1048 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>華餐飲 AI 實戰課案例工具庫</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0A1628;
+      --panel: #0F1D32;
+      --panel-2: #152035;
+      --panel-3: #1B2A45;
+      --cyan: #00D4FF;
+      --cyan-dark: #0099BB;
+      --orange: #FF6B35;
+      --green: #34C759;
+      --yellow: #FF9F0A;
+      --violet: #A78BFA;
+      --white: #FFFFFF;
+      --gray-100: #E5E5EA;
+      --gray-200: #C7C7CC;
+      --gray-300: #8E8E93;
+      --gray-600: #2C2C2E;
+      --line: rgba(255, 255, 255, 0.12);
+      --shadow: 0 24px 80px rgba(0, 0, 0, 0.32);
+      --font: 'Inter', 'Noto Sans TC', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      --mono: 'JetBrains Mono', 'SF Mono', monospace;
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--white);
+      font-family: var(--font);
+      font-size: 15px;
+      line-height: 1.65;
+      letter-spacing: 0;
+      overflow-x: hidden;
+    }
+
+    button, input, select, textarea { font: inherit; letter-spacing: 0; }
+
+    button { cursor: pointer; }
+
+    .app {
+      min-height: 100vh;
+      background: var(--bg);
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: rgba(10, 22, 40, 0.92);
+      border-bottom: 1px solid var(--line);
+      backdrop-filter: blur(16px);
+    }
+
+    .topbar-inner {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 14px 22px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .brand-mark {
+      width: 34px;
+      height: 34px;
+      border: 1px solid rgba(0, 212, 255, 0.48);
+      border-radius: 8px;
+      display: grid;
+      place-items: center;
+      color: var(--cyan);
+      font-weight: 900;
+      background: rgba(0, 212, 255, 0.08);
+      flex: 0 0 auto;
+    }
+
+    .brand-text {
+      min-width: 0;
+    }
+
+    .brand-text strong {
+      display: block;
+      font-size: 15px;
+      line-height: 1.25;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .brand-text span {
+      display: block;
+      color: var(--gray-300);
+      font-size: 12px;
+      line-height: 1.35;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex: 0 0 auto;
+    }
+
+    .ghost-button,
+    .primary-button,
+    .icon-button {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 9px 12px;
+      color: var(--white);
+      background: var(--panel-2);
+      min-height: 40px;
+      transition: background 160ms ease, border-color 160ms ease, transform 160ms ease;
+    }
+
+    .ghost-button:hover,
+    .icon-button:hover {
+      background: var(--panel-3);
+      border-color: rgba(0, 212, 255, 0.36);
+    }
+
+    .primary-button {
+      background: var(--cyan);
+      color: #03111E;
+      border-color: var(--cyan);
+      font-weight: 800;
+    }
+
+    .primary-button:hover { background: #33DDFF; }
+
+    .ghost-button:active,
+    .primary-button:active,
+    .icon-button:active { transform: translateY(1px); }
+
+    .hero {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 42px 22px 22px;
+      display: grid;
+      grid-template-columns: minmax(0, 1.25fr) minmax(300px, 0.75fr);
+      gap: 18px;
+      align-items: stretch;
+    }
+
+    .hero-main,
+    .hero-side,
+    .control-panel,
+    .result-panel {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      box-shadow: var(--shadow);
+    }
+
+    .hero-main {
+      padding: 28px;
+      display: grid;
+      align-content: center;
+      min-height: 270px;
+    }
+
+    .eyebrow {
+      color: var(--cyan);
+      font-weight: 800;
+      font-size: 12px;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 42px;
+      line-height: 1.14;
+      font-weight: 900;
+      letter-spacing: 0;
+    }
+
+    .hero-copy {
+      margin: 16px 0 0;
+      color: var(--gray-200);
+      max-width: 720px;
+      font-size: 17px;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 24px;
+    }
+
+    .stat {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 14px;
+      background: var(--panel-2);
+      min-width: 0;
+    }
+
+    .stat strong {
+      display: block;
+      font-size: 24px;
+      line-height: 1.1;
+      color: var(--white);
+      font-weight: 900;
+    }
+
+    .stat span {
+      display: block;
+      color: var(--gray-300);
+      margin-top: 4px;
+      font-size: 12px;
+    }
+
+    .hero-side {
+      padding: 18px;
+      display: grid;
+      gap: 10px;
+      align-content: start;
+    }
+
+    .module-row {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel-2);
+      padding: 14px;
+      display: grid;
+      grid-template-columns: 42px minmax(0, 1fr) auto;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .module-key {
+      width: 42px;
+      height: 42px;
+      border-radius: 8px;
+      display: grid;
+      place-items: center;
+      color: #03111E;
+      background: var(--cyan);
+      font-weight: 900;
+      flex: 0 0 auto;
+    }
+
+    .module-row:nth-child(2) .module-key { background: var(--orange); color: #160600; }
+    .module-row:nth-child(3) .module-key { background: var(--green); color: #031307; }
+    .module-row:nth-child(4) .module-key { background: var(--yellow); color: #190E00; }
+
+    .module-row strong,
+    .module-row span {
+      display: block;
+      min-width: 0;
+    }
+
+    .module-row strong { font-size: 15px; line-height: 1.3; }
+    .module-row span { color: var(--gray-300); font-size: 12px; margin-top: 3px; }
+    .module-count { color: var(--gray-200); font-weight: 800; }
+
+    .workspace {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 0 22px 56px;
+    }
+
+    .control-panel {
+      padding: 16px;
+      position: sticky;
+      top: 69px;
+      z-index: 18;
+      margin-bottom: 18px;
+    }
+
+    .controls {
+      display: grid;
+      grid-template-columns: minmax(240px, 1fr) 190px 190px;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .field {
+      position: relative;
+      min-width: 0;
+    }
+
+    .field label {
+      display: block;
+      color: var(--gray-300);
+      font-size: 11px;
+      margin: 0 0 5px;
+      font-weight: 700;
+    }
+
+    .search-input,
+    .select-input {
+      width: 100%;
+      min-height: 42px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      color: var(--white);
+      background: #0B1424;
+      padding: 9px 11px;
+      outline: none;
+    }
+
+    .search-input:focus,
+    .select-input:focus {
+      border-color: rgba(0, 212, 255, 0.68);
+      box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.13);
+    }
+
+    .chips {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+    }
+
+    .chip {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      color: var(--gray-200);
+      background: var(--panel-2);
+      padding: 8px 11px;
+      min-height: 36px;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .chip.active {
+      color: #03111E;
+      background: var(--cyan);
+      border-color: var(--cyan);
+    }
+
+    .result-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      color: var(--gray-300);
+      margin: 0 0 12px;
+      font-size: 13px;
+    }
+
+    .result-bar strong { color: var(--white); }
+
+    .case-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .case-card {
+      min-width: 0;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      padding: 16px;
+      display: grid;
+      grid-template-rows: auto auto auto 1fr auto;
+      gap: 11px;
+      min-height: 280px;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.20);
+    }
+
+    .case-card:hover {
+      border-color: rgba(0, 212, 255, 0.38);
+      background: #102039;
+    }
+
+    .card-badges {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+      min-height: 28px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      max-width: 100%;
+      border-radius: 8px;
+      padding: 4px 8px;
+      font-size: 11px;
+      font-weight: 800;
+      line-height: 1.35;
+      color: var(--gray-100);
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.10);
+    }
+
+    .badge.module { color: #03111E; background: var(--cyan); border-color: var(--cyan); }
+    .badge.tool { color: var(--cyan); background: rgba(0, 212, 255, 0.10); border-color: rgba(0, 212, 255, 0.22); }
+    .badge.kind { color: #1B0C00; background: rgba(255, 159, 10, 0.90); border-color: rgba(255, 159, 10, 0.90); }
+
+    .case-card h2 {
+      margin: 0;
+      font-size: 18px;
+      line-height: 1.35;
+      font-weight: 800;
+      letter-spacing: 0;
+      overflow-wrap: anywhere;
+    }
+
+    .case-card .company {
+      color: var(--gray-300);
+      font-size: 12px;
+      min-height: 20px;
+    }
+
+    .case-card .summary {
+      margin: 0;
+      color: var(--gray-200);
+      font-size: 14px;
+      overflow-wrap: anywhere;
+    }
+
+    .placeholder-list {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      align-content: start;
+      min-height: 28px;
+    }
+
+    .placeholder {
+      color: var(--gray-200);
+      background: rgba(255, 107, 53, 0.12);
+      border: 1px solid rgba(255, 107, 53, 0.24);
+      border-radius: 8px;
+      font-size: 11px;
+      padding: 3px 7px;
+      max-width: 100%;
+      overflow-wrap: anywhere;
+    }
+
+    .card-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 2px;
+    }
+
+    .empty-state {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 34px;
+      background: var(--panel);
+      color: var(--gray-200);
+      text-align: center;
+    }
+
+    dialog.case-dialog {
+      border: 0;
+      padding: 0;
+      width: min(940px, calc(100vw - 28px));
+      max-height: calc(100vh - 28px);
+      background: transparent;
+      color: var(--white);
+    }
+
+    dialog.case-dialog::backdrop { background: rgba(0, 0, 0, 0.68); }
+
+    .modal-card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .modal-head {
+      padding: 18px 18px 14px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 12px;
+      align-items: start;
+      border-bottom: 1px solid var(--line);
+      background: #0B1424;
+    }
+
+    .modal-title h2 {
+      margin: 8px 0 0;
+      font-size: 24px;
+      line-height: 1.25;
+      letter-spacing: 0;
+      overflow-wrap: anywhere;
+    }
+
+    .modal-title p {
+      margin: 6px 0 0;
+      color: var(--gray-300);
+      font-size: 13px;
+    }
+
+    .close-button {
+      width: 40px;
+      height: 40px;
+      display: grid;
+      place-items: center;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+      background: var(--panel-2);
+      color: var(--white);
+      font-size: 20px;
+      line-height: 1;
+    }
+
+    .modal-body {
+      padding: 18px;
+      overflow-y: auto;
+      max-height: calc(100vh - 170px);
+    }
+
+    .detail-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .detail-box {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel-2);
+      padding: 14px;
+      min-width: 0;
+    }
+
+    .detail-box.full { grid-column: 1 / -1; }
+
+    .detail-box h3 {
+      margin: 0 0 8px;
+      color: var(--cyan);
+      font-size: 13px;
+      line-height: 1.3;
+      font-weight: 800;
+    }
+
+    .detail-box p {
+      margin: 0;
+      color: var(--gray-200);
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+      font-size: 14px;
+    }
+
+    .prompt-box {
+      border: 1px solid rgba(0, 212, 255, 0.24);
+      border-radius: 8px;
+      background: #07101D;
+      overflow: hidden;
+    }
+
+    .prompt-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 12px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .prompt-head strong { font-size: 13px; color: var(--cyan); }
+
+    pre.prompt {
+      margin: 0;
+      padding: 16px;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+      word-break: break-word;
+      color: #E7F7FF;
+      font-family: var(--font);
+      font-size: 14px;
+      line-height: 1.7;
+      max-height: 42vh;
+      overflow-y: auto;
+    }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 22px;
+      transform: translateX(-50%) translateY(20px);
+      opacity: 0;
+      pointer-events: none;
+      border: 1px solid rgba(0, 212, 255, 0.38);
+      border-radius: 8px;
+      background: #07101D;
+      color: var(--white);
+      padding: 11px 14px;
+      box-shadow: var(--shadow);
+      z-index: 80;
+      transition: opacity 180ms ease, transform 180ms ease;
+      font-weight: 700;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    @media (max-width: 980px) {
+      .hero {
+        grid-template-columns: 1fr;
+      }
+      .case-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+      .controls {
+        grid-template-columns: 1fr 1fr;
+      }
+      .controls .field:first-child {
+        grid-column: 1 / -1;
+      }
+    }
+
+    @media (max-width: 680px) {
+      body { font-size: 14px; }
+      .topbar-inner { padding: 11px 14px; }
+      .brand-text span { display: none; }
+      .top-actions .ghost-button { display: none; }
+      .hero { padding: 26px 14px 16px; }
+      .hero-main { padding: 20px; min-height: auto; }
+      h1 { font-size: 29px; line-height: 1.18; }
+      .hero-copy { font-size: 15px; }
+      .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .workspace { padding: 0 14px 40px; }
+      .control-panel { position: static; padding: 14px; }
+      .controls { grid-template-columns: 1fr; }
+      .case-grid { grid-template-columns: 1fr; }
+      .case-card { min-height: auto; }
+      .detail-grid { grid-template-columns: 1fr; }
+      .modal-head { grid-template-columns: 1fr auto; padding: 14px; }
+      .modal-title h2 { font-size: 20px; }
+      .modal-body { padding: 14px; }
+      .card-actions { grid-template-columns: 1fr; }
+      pre.prompt { max-height: 48vh; font-size: 13px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <div class="topbar-inner">
+        <div class="brand">
+          <div class="brand-mark">AI</div>
+          <div class="brand-text">
+            <strong>華餐飲 AI 實戰課案例工具庫</strong>
+            <span>阿峰老師｜Autolab</span>
+          </div>
+        </div>
+        <div class="top-actions">
+          <button class="ghost-button" id="resetTop">清除篩選</button>
+          <button class="primary-button" id="copyVisibleTop">複製清單</button>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero" aria-labelledby="page-title">
+        <div class="hero-main">
+          <div class="eyebrow">Hua Catering AI Workshop</div>
+          <h1 id="page-title">把 65 個課堂案例，變成學員可直接取用的指令庫</h1>
+          <p class="hero-copy">涵蓋研究決策、視覺生成、品牌文章、系統打造四個模組。每張卡片保留原簡報案例，並整理成可搜尋、可篩選、可複製的操作素材。</p>
+          <div class="stats" id="stats"></div>
+        </div>
+        <aside class="hero-side" id="moduleSummary" aria-label="模組統計"></aside>
+      </section>
+
+      <section class="workspace">
+        <div class="control-panel">
+          <div class="controls">
+            <div class="field">
+              <label for="searchInput">搜尋</label>
+              <input class="search-input" id="searchInput" type="search" placeholder="輸入公司、案例、工具、關鍵字">
+            </div>
+            <div class="field">
+              <label for="toolSelect">工具</label>
+              <select class="select-input" id="toolSelect"></select>
+            </div>
+            <div class="field">
+              <label for="categorySelect">類別</label>
+              <select class="select-input" id="categorySelect"></select>
+            </div>
+          </div>
+          <div class="chips" id="moduleChips"></div>
+        </div>
+
+        <div class="result-bar">
+          <div><strong id="resultCount">0</strong> 個案例</div>
+          <div id="activeFilterText">全部模組</div>
+        </div>
+        <div class="case-grid" id="caseGrid"></div>
+      </section>
+    </main>
+  </div>
+
+  <dialog class="case-dialog" id="caseDialog">
+    <div class="modal-card">
+      <div class="modal-head">
+        <div class="modal-title">
+          <div class="card-badges" id="modalBadges"></div>
+          <h2 id="modalTitle"></h2>
+          <p id="modalMeta"></p>
+        </div>
+        <button class="close-button" id="closeDialog" aria-label="關閉">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="detail-grid" id="detailGrid"></div>
+        <div class="prompt-box">
+          <div class="prompt-head">
+            <strong>完整指令</strong>
+            <button class="primary-button" id="copyPromptButton">複製指令</button>
+          </div>
+          <pre class="prompt" id="modalPrompt"></pre>
+        </div>
+      </div>
+    </div>
+  </dialog>
+
+  <div class="toast" id="toast">已複製</div>
+  <script id="case-data" type="application/json">[{"id": "perplexity-01", "sourceSlide": 9, "number": "01", "moduleKey": "想", "module": "想｜研究與決策", "tool": "Perplexity", "toolNote": "查得到、查得準", "category": "市場情報", "company": "", "title": "查餐飲市場趨勢與數據", "summary": "我需要一份「餐飲科技與點餐 POS 市場」的趨勢數據懶人包，幫我盤點【台灣與東南亞】餐飲數位化的現況：餐廳導入雲端 POS、線上點餐外送整合、會員行銷與數據分析的滲透率大概到哪、近一兩...", "role": "我是 iCHEF 資廚的【產品策略經理】，我們做 iPad 雲端 POS，服務台港星超過一萬五千間餐廳，最近把產品重新定位成「AI 點餐系統」，要對內說服團隊押注這個方向。", "context": "我需要一份「餐飲科技與點餐 POS 市場」的趨勢數據懶人包，幫我盤點【台灣與東南亞】餐飲數位化的現況：餐廳導入雲端 POS、線上點餐外送整合、會員行銷與數據分析的滲透率大概到哪、近一兩年成長多快；同時找出 AI 應用（語音點餐、智慧推薦、需求預測、自動排班）在餐飲現場的實際採用情況與代表案例。我特別想知道，連鎖與單店這兩種客群在數位化需求上的差異，以及【外送平台抽成、缺工、原物料上漲】這些壓力，怎麼推動餐廳願意付費買軟體。請把每個數字標清楚是哪一年、哪個市場、哪家機構出的，方便我直接放進內部簡報引用。", "expectation": "請用條列整理，每個數據點都附上來源連結與發布年份；只採用近【12】個月內的資料，太舊的請略過或明確標注時間。把「客觀數據事實」和「分析師的觀點推測」分成兩個區塊呈現，不要混在一起，也不要把推測講得像定論。", "pain": "", "material": "", "tip": "追問「這些趨勢裡，哪一個對單店餐廳的影響最被低估？」逼它補你沒想到的盲點。", "prompt": "🎭 角色\n我是 iCHEF 資廚的【產品策略經理】，我們做 iPad 雲端 POS，服務台港星超過一萬五千間餐廳，最近把產品重新定位成「AI 點餐系統」，要對內說服團隊押注這個方向。\n\n📍 情境\n我需要一份「餐飲科技與點餐 POS 市場」的趨勢數據懶人包，幫我盤點【台灣與東南亞】餐飲數位化的現況：餐廳導入雲端 POS、線上點餐外送整合、會員行銷與數據分析的滲透率大概到哪、近一兩年成長多快；同時找出 AI 應用（語音點餐、智慧推薦、需求預測、自動排班）在餐飲現場的實際採用情況與代表案例。我特別想知道，連鎖與單店這兩種客群在數位化需求上的差異，以及【外送平台抽成、缺工、原物料上漲】這些壓力，怎麼推動餐廳願意付費買軟體。請把每個數字標清楚是哪一年、哪個市場、哪家機構出的，方便我直接放進內部簡報引用。\n\n🎯 期望\n請用條列整理，每個數據點都附上來源連結與發布年份；只採用近【12】個月內的資料，太舊的請略過或明確標注時間。把「客觀數據事實」和「分析師的觀點推測」分成兩個區塊呈現，不要混在一起，也不要把推測講得像定論。", "placeholders": ["產品策略經理", "台灣與東南亞", "外送平台抽成、缺工、原物料上漲", "12"], "kind": "案例指令"}, {"id": "perplexity-02", "sourceSlide": 10, "number": "02", "moduleKey": "想", "module": "想｜研究與決策", "tool": "Perplexity", "toolNote": "查得到、查得準", "category": "市場情報", "company": "", "title": "查競品最新動態", "summary": "我想掌握【台中與北部高端台菜、創作料理】這個賽道幾家主要競品近期的最新動態，幫我整理他們在做什麼：有沒有開新店或收店、推了哪些新菜單或季節限定、調過價沒有、做了什麼異業合作或行銷活動、...", "role": "我是膳馨餐飲集團的【品牌行銷主管】，集團在台中經營膳馨民間創作料理和馨苑小料理共四家店、員工一百五十多人，連年拿米其林餐盤和必比登，冷凍食品還外銷十二國，我要盯緊同級台菜對手的動向。", "context": "我想掌握【台中與北部高端台菜、創作料理】這個賽道幾家主要競品近期的最新動態，幫我整理他們在做什麼：有沒有開新店或收店、推了哪些新菜單或季節限定、調過價沒有、做了什麼異業合作或行銷活動、得了哪些餐飲獎項或上了哪些媒體；另外他們在冷凍食品、外帶年菜、電商通路這塊有沒有新動作，這正好是我們外銷十二國的主戰場。我也想知道他們的消費者評價最近是變好還變差、被客人嫌的點是什麼。請盡量找到具體日期與出處，讓我判斷哪些是剛發生、值得我們馬上跟進或反制的訊號。", "expectation": "請附上每一則動態的來源連結與發生日期；只保留近【6】個月內的消息，過期的不要列。請把「對方公開宣布的事實」和「你的解讀或市場猜測」分開標示，沒有可靠來源的傳聞請註明為未經證實，別當成確定發生。", "pain": "", "material": "", "tip": "追問「這幾家競品的動作裡，哪一個最像是在搶我們的客群？」幫你抓出真正威脅。", "prompt": "🎭 角色\n我是膳馨餐飲集團的【品牌行銷主管】，集團在台中經營膳馨民間創作料理和馨苑小料理共四家店、員工一百五十多人，連年拿米其林餐盤和必比登，冷凍食品還外銷十二國，我要盯緊同級台菜對手的動向。\n\n📍 情境\n我想掌握【台中與北部高端台菜、創作料理】這個賽道幾家主要競品近期的最新動態，幫我整理他們在做什麼：有沒有開新店或收店、推了哪些新菜單或季節限定、調過價沒有、做了什麼異業合作或行銷活動、得了哪些餐飲獎項或上了哪些媒體；另外他們在冷凍食品、外帶年菜、電商通路這塊有沒有新動作，這正好是我們外銷十二國的主戰場。我也想知道他們的消費者評價最近是變好還變差、被客人嫌的點是什麼。請盡量找到具體日期與出處，讓我判斷哪些是剛發生、值得我們馬上跟進或反制的訊號。\n\n🎯 期望\n請附上每一則動態的來源連結與發生日期；只保留近【6】個月內的消息，過期的不要列。請把「對方公開宣布的事實」和「你的解讀或市場猜測」分開標示，沒有可靠來源的傳聞請註明為未經證實，別當成確定發生。", "placeholders": ["品牌行銷主管", "台中與北部高端台菜、創作料理", "6"], "kind": "案例指令"}, {"id": "perplexity-03", "sourceSlide": 11, "number": "03", "moduleKey": "想", "module": "想｜研究與決策", "tool": "Perplexity", "toolNote": "查得到、查得準", "category": "市場情報", "company": "", "title": "查消費者輿情與評價", "summary": "幫我做一份【咖啡弄】近期的消費者輿情總體檢，把網路上各個平台對我們的評價彙整起來：Google 評論、IG 與限動標註、Threads 與 Dcard 的討論、部落客食記、外送平台評分...", "role": "我是咖啡弄 Coffee Alley 的【門市營運負責人】，我們 2006 年以鬆餅起家，招牌是草莓冰淇淋鬆餅和鹽味焦糖，在台北士林和站前有店，是社群口碑很強的老字號打卡甜點咖啡店，最近想搞清楚客人到底怎麼看我們。", "context": "幫我做一份【咖啡弄】近期的消費者輿情總體檢，把網路上各個平台對我們的評價彙整起來：Google 評論、IG 與限動標註、Threads 與 Dcard 的討論、部落客食記、外送平台評分都看一下。我想知道客人最常稱讚什麼（是鬆餅口味、打卡氛圍還是服務）、最常抱怨什麼（會不會是價格偏高、等位太久、餐點變少或品質不穩），以及這些聲音最近是往好還是往壞走。也順便比較一下，同樣是【老字號甜點咖啡店】的同業，客人對他們的好評與雷點跟我們有什麼不同，讓我找到可以改進跟可以放大的賣點。", "expectation": "請附上每一則代表性評論的來源連結與發布時間；只統整近【6】個月內的輿情，舊評論不要混進來。請把「客人實際說過的話與評分事實」和「你歸納出的觀點與趨勢判斷」分成兩段，正評負評都要呈現，不要只挑好聽的講。", "pain": "", "material": "", "tip": "追問「如果只能先改一個被客訴最多的點，你建議是哪個？為什麼？」抓出優先順序。", "prompt": "🎭 角色\n我是咖啡弄 Coffee Alley 的【門市營運負責人】，我們 2006 年以鬆餅起家，招牌是草莓冰淇淋鬆餅和鹽味焦糖，在台北士林和站前有店，是社群口碑很強的老字號打卡甜點咖啡店，最近想搞清楚客人到底怎麼看我們。\n\n📍 情境\n幫我做一份【咖啡弄】近期的消費者輿情總體檢，把網路上各個平台對我們的評價彙整起來：Google 評論、IG 與限動標註、Threads 與 Dcard 的討論、部落客食記、外送平台評分都看一下。我想知道客人最常稱讚什麼（是鬆餅口味、打卡氛圍還是服務）、最常抱怨什麼（會不會是價格偏高、等位太久、餐點變少或品質不穩），以及這些聲音最近是往好還是往壞走。也順便比較一下，同樣是【老字號甜點咖啡店】的同業，客人對他們的好評與雷點跟我們有什麼不同，讓我找到可以改進跟可以放大的賣點。\n\n🎯 期望\n請附上每一則代表性評論的來源連結與發布時間；只統整近【6】個月內的輿情，舊評論不要混進來。請把「客人實際說過的話與評分事實」和「你歸納出的觀點與趨勢判斷」分成兩段，正評負評都要呈現，不要只挑好聽的講。", "placeholders": ["門市營運負責人", "咖啡弄", "老字號甜點咖啡店", "6"], "kind": "案例指令"}, {"id": "perplexity-04", "sourceSlide": 12, "number": "04", "moduleKey": "想", "module": "想｜研究與決策", "tool": "Perplexity", "toolNote": "查得到、查得準", "category": "成本供應", "company": "", "title": "查食材價格行情", "summary": "幫我查【乾辣椒、花椒、食用油（大豆油與棕櫚油）、干貝與蝦米、大蒜】這幾項醬料核心原料近期的價格行情與走勢：現在的批發或進口參考價大概落在哪、近期是漲還是跌、漲跌的主因是什麼（氣候、產地...", "role": "我是向記食品的【採購主管】，我們在桃園蘆竹做家傳 XO 醬起家，主力是麻辣醬、花椒油、辣椒醬這些醬料和調理包、罐頭，全通路上架還外銷香港、新加坡、英國、加拿大，原料一漲我的成本就被吃掉，得隨時盯緊行情。", "context": "幫我查【乾辣椒、花椒、食用油（大豆油與棕櫚油）、干貝與蝦米、大蒜】這幾項醬料核心原料近期的價格行情與走勢：現在的批發或進口參考價大概落在哪、近期是漲還是跌、漲跌的主因是什麼（氣候、產地減產、匯率、運費還是國際供需）。我特別想知道未來一兩季的可能走向，因為我得決定要不要提前囤料或鎖價，也要評估成本壓力大到什麼程度才需要重新跟下游談調價。另外，外銷市場的原料或關稅有沒有什麼新變化，會影響我出貨到【香港與東南亞】的成本，也請一併幫我留意。", "expectation": "請附上每個價格與走勢數據的來源連結與報價日期；只採用近【3】個月內的行情，過時的價格不要引用。請把「目前的價格事實與官方統計」和「對後市漲跌的預測觀點」分開呈現，預測部分請說明是誰的看法，別講得像已成定局。", "pain": "", "material": "", "tip": "追問「這幾項原料裡，哪一項最可能在三個月內大漲？我該先鎖哪個？」幫你抓囤料順序。", "prompt": "🎭 角色\n我是向記食品的【採購主管】，我們在桃園蘆竹做家傳 XO 醬起家，主力是麻辣醬、花椒油、辣椒醬這些醬料和調理包、罐頭，全通路上架還外銷香港、新加坡、英國、加拿大，原料一漲我的成本就被吃掉，得隨時盯緊行情。\n\n📍 情境\n幫我查【乾辣椒、花椒、食用油（大豆油與棕櫚油）、干貝與蝦米、大蒜】這幾項醬料核心原料近期的價格行情與走勢：現在的批發或進口參考價大概落在哪、近期是漲還是跌、漲跌的主因是什麼（氣候、產地減產、匯率、運費還是國際供需）。我特別想知道未來一兩季的可能走向，因為我得決定要不要提前囤料或鎖價，也要評估成本壓力大到什麼程度才需要重新跟下游談調價。另外，外銷市場的原料或關稅有沒有什麼新變化，會影響我出貨到【香港與東南亞】的成本，也請一併幫我留意。\n\n🎯 期望\n請附上每個價格與走勢數據的來源連結與報價日期；只採用近【3】個月內的行情，過時的價格不要引用。請把「目前的價格事實與官方統計」和「對後市漲跌的預測觀點」分開呈現，預測部分請說明是誰的看法，別講得像已成定局。", "placeholders": ["採購主管", "乾辣椒、花椒、食用油（大豆油與棕櫚油）、干貝與蝦米、大蒜", "香港與東南亞", "3"], "kind": "案例指令"}, {"id": "perplexity-05", "sourceSlide": 13, "number": "05", "moduleKey": "想", "module": "想｜研究與決策", "tool": "Perplexity", "toolNote": "查得到、查得準", "category": "成本供應", "company": "", "title": "查供應商背景盡職調查", "summary": "我正準備跟一家【新的在地食材／肉品／海鮮供應商】簽長期合作，請幫我做一份背景盡職調查，把網路上查得到的資訊整理起來：這家公司的基本資料（成立時間、登記狀況、負責人、規模）、有沒有食安裁...", "role": "我是新百王餐廳的【採購暨食材管理人員】，我們是桃園中壢創立 1979 的客家台菜老字號單店，做客家菜、海鮮、千人桌菜宴，連年拿桃園金牌好店，主打五十多種在地食材的低碳菜單，要新增食材供應商前得先把對方查清楚。", "context": "我正準備跟一家【新的在地食材／肉品／海鮮供應商】簽長期合作，請幫我做一份背景盡職調查，把網路上查得到的資訊整理起來：這家公司的基本資料（成立時間、登記狀況、負責人、規模）、有沒有食安裁罰或被衛生局稽查不合格的紀錄、有沒有上過食品下架或標示不實的新聞、有沒有勞資糾紛或欠款訴訟、客戶和同業對他們的評價如何。我們是四十五年的在地老店、又主打低碳在地食材，最怕配合到有食安疑慮或產地造假的廠商砸了招牌，所以請特別幫我留意任何負面或踩雷的訊號，讓我評估能不能放心往來。", "expectation": "請附上每一項查核結果的來源連結與資料日期；負面紀錄優先呈現並盡量找近【12】個月內的最新狀況，舊案也請標注年份。請把「可查證的公開事實與官方裁罰紀錄」和「網路評價或你的推論」分開標示，查不到的部分請誠實說查無，不要替它腦補。", "pain": "", "material": "", "tip": "追問「以這家的紀錄，簽約時我最該寫進合約保護自己的條款是哪幾條？」把風險變防線。", "prompt": "🎭 角色\n我是新百王餐廳的【採購暨食材管理人員】，我們是桃園中壢創立 1979 的客家台菜老字號單店，做客家菜、海鮮、千人桌菜宴，連年拿桃園金牌好店，主打五十多種在地食材的低碳菜單，要新增食材供應商前得先把對方查清楚。\n\n📍 情境\n我正準備跟一家【新的在地食材／肉品／海鮮供應商】簽長期合作，請幫我做一份背景盡職調查，把網路上查得到的資訊整理起來：這家公司的基本資料（成立時間、登記狀況、負責人、規模）、有沒有食安裁罰或被衛生局稽查不合格的紀錄、有沒有上過食品下架或標示不實的新聞、有沒有勞資糾紛或欠款訴訟、客戶和同業對他們的評價如何。我們是四十五年的在地老店、又主打低碳在地食材，最怕配合到有食安疑慮或產地造假的廠商砸了招牌，所以請特別幫我留意任何負面或踩雷的訊號，讓我評估能不能放心往來。\n\n🎯 期望\n請附上每一項查核結果的來源連結與資料日期；負面紀錄優先呈現並盡量找近【12】個月內的最新狀況，舊案也請標注年份。請把「可查證的公開事實與官方裁罰紀錄」和「網路評價或你的推論」分開標示，查不到的部分請誠實說查無，不要替它腦補。", "placeholders": ["採購暨食材管理人員", "新的在地食材／肉品／海鮮供應商", "12"], "kind": "案例指令"}, {"id": "perplexity-06", "sourceSlide": 14, "number": "06", "moduleKey": "想", "module": "想｜研究與決策", "tool": "Perplexity", "toolNote": "查得到、查得準", "category": "法規資源", "company": "", "title": "查法規", "summary": "幫我查清楚【環保清潔／廢棄物清運與處理業者】在台灣營運時，最需要遵守的相關法規與許可規定有哪些：像是廢棄物清理的相關法令、清運與處理機構該具備的許可或證照、從業人員的訓練或資格要求、作...", "role": "我是天藍環維的【營運管理人員】，我們做的是環境清潔與環保相關服務，現場會接觸到清潔作業、廢棄物清運與處理這類業務，法規綁得很緊、又常修，我得隨時確認我們的作業流程有沒有踩到線。", "context": "幫我查清楚【環保清潔／廢棄物清運與處理業者】在台灣營運時，最需要遵守的相關法規與許可規定有哪些：像是廢棄物清理的相關法令、清運與處理機構該具備的許可或證照、從業人員的訓練或資格要求、作業現場的環保與職業安全衛生規範，以及違規可能面臨的罰則範圍。我想知道近期這些規定有沒有修法或新增的管制重點，會不會影響我們現有的接案範圍或作業方式。請用我這種非法律背景也看得懂的白話幫我整理重點，並告訴我哪些事項屬於一定要先取得許可才能做的，免得我們不小心違規受罰。", "expectation": "請附上每一條法規與規定的官方來源連結（例如主管機關或全國法規資料庫）與最後修正日期；以現行有效的最新版本為準，若引用近【6】個月內的修法請特別標明。請把「法條白紙黑字的規定」和「你的實務解讀或提醒」分開呈現，並提醒我最終仍應以主管機關認定為準，不要把推論講成法律定論。", "pain": "", "material": "", "tip": "追問「以我們這種規模的業者，最常見因為哪一條被開罰？我該優先補哪個？」抓合規破口。", "prompt": "🎭 角色\n我是天藍環維的【營運管理人員】，我們做的是環境清潔與環保相關服務，現場會接觸到清潔作業、廢棄物清運與處理這類業務，法規綁得很緊、又常修，我得隨時確認我們的作業流程有沒有踩到線。\n\n📍 情境\n幫我查清楚【環保清潔／廢棄物清運與處理業者】在台灣營運時，最需要遵守的相關法規與許可規定有哪些：像是廢棄物清理的相關法令、清運與處理機構該具備的許可或證照、從業人員的訓練或資格要求、作業現場的環保與職業安全衛生規範，以及違規可能面臨的罰則範圍。我想知道近期這些規定有沒有修法或新增的管制重點，會不會影響我們現有的接案範圍或作業方式。請用我這種非法律背景也看得懂的白話幫我整理重點，並告訴我哪些事項屬於一定要先取得許可才能做的，免得我們不小心違規受罰。\n\n🎯 期望\n請附上每一條法規與規定的官方來源連結（例如主管機關或全國法規資料庫）與最後修正日期；以現行有效的最新版本為準，若引用近【6】個月內的修法請特別標明。請把「法條白紙黑字的規定」和「你的實務解讀或提醒」分開呈現，並提醒我最終仍應以主管機關認定為準，不要把推論講成法律定論。", "placeholders": ["營運管理人員", "環保清潔／廢棄物清運與處理業者", "6"], "kind": "案例指令"}, {"id": "perplexity-07", "sourceSlide": 15, "number": "07", "moduleKey": "想", "module": "想｜研究與決策", "tool": "Perplexity", "toolNote": "查得到、查得準", "category": "法規資源", "company": "", "title": "查政府補助貸款", "summary": "幫我盤點目前【觀光體驗、餐飲教育、文化體驗類小型業者】可以申請的政府補助、補助型計畫與優惠貸款有哪些：包含中央和地方（特別是觀光、經濟、文化、勞動相關部會與台北市）針對觀光體驗、國際旅...", "role": "我是晨星樂廚 Cookinn Taiwan 的【營運企劃】，我們在台北西門開旅人料理教室，帶外國旅客逛市場、做小籠包牛肉麵三杯雞和珍奶，用中英日語教學、也接企業 team building，創辦人是藍帶受訓背景，想找政府資源來擴大營運。", "context": "幫我盤點目前【觀光體驗、餐飲教育、文化體驗類小型業者】可以申請的政府補助、補助型計畫與優惠貸款有哪些：包含中央和地方（特別是觀光、經濟、文化、勞動相關部會與台北市）針對觀光體驗、國際旅客行銷、數位轉型、人才培訓、品牌行銷的補助方案。每一個請幫我抓出重點：補助或貸款的對象資格、補助比例或額度、申請期限、需要準備什麼文件、以及大概的審查重點。我們主打吸引國際觀光客、又有企業團體課程，想知道哪些方案最對得上我們這種規模和業務型態，值得優先投件。", "expectation": "請附上每一個補助或貸款方案的官方來源連結（主辦單位公告頁）與公告／截止日期；只列目前仍開放或近【6】個月內公告的方案，已截止的請特別註明。請把「公告白紙黑字的資格與額度事實」和「你建議我優先申請哪些的觀點」分開呈現，不確定是否仍開放的請提醒我去官網再確認。", "pain": "", "material": "", "tip": "追問「以我們的條件，命中率最高、最值得先投的是哪一案？申請最容易卡在哪一關？」省得亂槍打鳥。", "prompt": "🎭 角色\n我是晨星樂廚 Cookinn Taiwan 的【營運企劃】，我們在台北西門開旅人料理教室，帶外國旅客逛市場、做小籠包牛肉麵三杯雞和珍奶，用中英日語教學、也接企業 team building，創辦人是藍帶受訓背景，想找政府資源來擴大營運。\n\n📍 情境\n幫我盤點目前【觀光體驗、餐飲教育、文化體驗類小型業者】可以申請的政府補助、補助型計畫與優惠貸款有哪些：包含中央和地方（特別是觀光、經濟、文化、勞動相關部會與台北市）針對觀光體驗、國際旅客行銷、數位轉型、人才培訓、品牌行銷的補助方案。每一個請幫我抓出重點：補助或貸款的對象資格、補助比例或額度、申請期限、需要準備什麼文件、以及大概的審查重點。我們主打吸引國際觀光客、又有企業團體課程，想知道哪些方案最對得上我們這種規模和業務型態，值得優先投件。\n\n🎯 期望\n請附上每一個補助或貸款方案的官方來源連結（主辦單位公告頁）與公告／截止日期；只列目前仍開放或近【6】個月內公告的方案，已截止的請特別註明。請把「公告白紙黑字的資格與額度事實」和「你建議我優先申請哪些的觀點」分開呈現，不確定是否仍開放的請提醒我去官網再確認。", "placeholders": ["營運企劃", "觀光體驗、餐飲教育、文化體驗類小型業者", "6"], "kind": "案例指令"}, {"id": "perplexity-08", "sourceSlide": 16, "number": "08", "moduleKey": "想", "module": "想｜研究與決策", "tool": "Perplexity", "toolNote": "查得到、查得準", "category": "經營決策", "company": "", "title": "查工具系統比較", "summary": "幫我比較目前【適合小型／精緻型餐廳的餐飲 POS 點餐系統】有哪些主流選擇，列成一張好懂的比較表。我最在意這幾點：每月費用與有沒有綁約或抽成、適不適合我這種預約制套餐加外帶生鮮的模式、...", "role": "我是羅義生活 PapàRoy 的【主廚兼負責人】，我從永和私廚做到台北信義松菸周邊，賣手工新鮮義大利麵、預約制套餐和外帶生鮮義麵，是主廚私廚型的精緻小店，人手不多，想導入一套適合的點餐與管理系統但不想踩雷。", "context": "幫我比較目前【適合小型／精緻型餐廳的餐飲 POS 點餐系統】有哪些主流選擇，列成一張好懂的比較表。我最在意這幾點：每月費用與有沒有綁約或抽成、適不適合我這種預約制套餐加外帶生鮮的模式、能不能串接線上點餐與外送平台、會員與行銷功能好不好用、報表能不能讓我看清楚每道菜的成本與毛利、硬體要另外花多少、客服與教學支援好不好。我們是人力精簡的私廚小店，最怕系統太複雜學不會、或隱藏費用一堆。請幫我點出每一套的優缺點和最適合的店型，讓我判斷哪一套最划算。", "expectation": "請附上每一套系統的官方價格頁或方案說明來源連結，並標注資料查詢日期；費用與功能請以近【6】個月內的最新公開資訊為準，舊方案請註明可能已變動。請把「官方公告的規格與報價事實」和「你綜合評比的推薦觀點」分開呈現，沒查到確切價格的就寫需洽詢，不要自己編一個數字。", "pain": "", "material": "", "tip": "追問「以我這種預約制＋外帶的私廚小店，最不該選哪一套？為什麼？」用刪去法縮短決策。", "prompt": "🎭 角色\n我是羅義生活 PapàRoy 的【主廚兼負責人】，我從永和私廚做到台北信義松菸周邊，賣手工新鮮義大利麵、預約制套餐和外帶生鮮義麵，是主廚私廚型的精緻小店，人手不多，想導入一套適合的點餐與管理系統但不想踩雷。\n\n📍 情境\n幫我比較目前【適合小型／精緻型餐廳的餐飲 POS 點餐系統】有哪些主流選擇，列成一張好懂的比較表。我最在意這幾點：每月費用與有沒有綁約或抽成、適不適合我這種預約制套餐加外帶生鮮的模式、能不能串接線上點餐與外送平台、會員與行銷功能好不好用、報表能不能讓我看清楚每道菜的成本與毛利、硬體要另外花多少、客服與教學支援好不好。我們是人力精簡的私廚小店，最怕系統太複雜學不會、或隱藏費用一堆。請幫我點出每一套的優缺點和最適合的店型，讓我判斷哪一套最划算。\n\n🎯 期望\n請附上每一套系統的官方價格頁或方案說明來源連結，並標注資料查詢日期；費用與功能請以近【6】個月內的最新公開資訊為準，舊方案請註明可能已變動。請把「官方公告的規格與報價事實」和「你綜合評比的推薦觀點」分開呈現，沒查到確切價格的就寫需洽詢，不要自己編一個數字。", "placeholders": ["主廚兼負責人", "適合小型／精緻型餐廳的餐飲 POS 點餐系統", "6"], "kind": "案例指令"}, {"id": "perplexity-09", "sourceSlide": 17, "number": "09", "moduleKey": "想", "module": "想｜研究與決策", "tool": "Perplexity", "toolNote": "查得到、查得準", "category": "經營決策", "company": "", "title": "查國外創新做法", "summary": "幫我蒐集【國外（歐美、日本）中小企業與餐飲服務業在數位行銷上的創新做法與成功案例】，我想找一些台灣還不常見、但可以包裝成方案賣給客戶的點子：例如他們怎麼玩短影音與社群、怎麼用 AI 做...", "role": "我是德明商業開發的【行銷顧問】，我們在台中、2012 年成立，幫客戶做財務、行銷、電商、業務和教育訓練的整合服務，也代操 FB、IG、Google 廣告，自稱「創業家背後的創業家」，得隨時把國外最新打法帶回來給客戶。", "context": "幫我蒐集【國外（歐美、日本）中小企業與餐飲服務業在數位行銷上的創新做法與成功案例】，我想找一些台灣還不常見、但可以包裝成方案賣給客戶的點子：例如他們怎麼玩短影音與社群、怎麼用 AI 做內容生成與廣告投放優化、私域與會員經營、口碑與 UGC 操作、訂閱制或會員制的新玩法。每個案例請幫我講清楚：是誰做的、具體怎麼做、為什麼有效、帶來什麼成果，以及這套做法搬到【台灣中小企業】身上有哪些要調整的地方。我要的是能落地、能變成我們服務商品的洞見，不要太空泛的概念。", "expectation": "請附上每一個案例與做法的來源連結與發布時間；優先採用近【12】個月內的新案例，太舊的潮流請略過或標明年份。請把「案例實際做了什麼、成果數字」這類事實，和「你認為台灣能怎麼套用」的觀點分開呈現，成效數字若來自業者自述請註明，不要當成中立驗證過的結果。", "pain": "", "material": "", "tip": "追問「這些做法裡，哪一個最適合預算有限的台灣中小企業先試？」幫你篩出可賣的爆款方案。", "prompt": "🎭 角色\n我是德明商業開發的【行銷顧問】，我們在台中、2012 年成立，幫客戶做財務、行銷、電商、業務和教育訓練的整合服務，也代操 FB、IG、Google 廣告，自稱「創業家背後的創業家」，得隨時把國外最新打法帶回來給客戶。\n\n📍 情境\n幫我蒐集【國外（歐美、日本）中小企業與餐飲服務業在數位行銷上的創新做法與成功案例】，我想找一些台灣還不常見、但可以包裝成方案賣給客戶的點子：例如他們怎麼玩短影音與社群、怎麼用 AI 做內容生成與廣告投放優化、私域與會員經營、口碑與 UGC 操作、訂閱制或會員制的新玩法。每個案例請幫我講清楚：是誰做的、具體怎麼做、為什麼有效、帶來什麼成果，以及這套做法搬到【台灣中小企業】身上有哪些要調整的地方。我要的是能落地、能變成我們服務商品的洞見，不要太空泛的概念。\n\n🎯 期望\n請附上每一個案例與做法的來源連結與發布時間；優先採用近【12】個月內的新案例，太舊的潮流請略過或標明年份。請把「案例實際做了什麼、成果數字」這類事實，和「你認為台灣能怎麼套用」的觀點分開呈現，成效數字若來自業者自述請註明，不要當成中立驗證過的結果。", "placeholders": ["行銷顧問", "國外（歐美、日本）中小企業與餐飲服務業在數位行銷上的創新做法與成功案例", "台灣中小企業", "12"], "kind": "案例指令"}, {"id": "perplexity-10", "sourceSlide": 18, "number": "10", "moduleKey": "想", "module": "想｜研究與決策", "tool": "Perplexity", "toolNote": "查得到、查得準", "category": "行銷", "company": "", "title": "查節慶檔期與行銷靈感", "summary": "幫我整理一份未來【半年】的【餐酒、葡萄酒適合操作的節慶與消費檔期行事曆】，把每個值得做的時間點列出來：像情人節、母親節、父親節、中秋、聖誕、跨年、農曆年，還有適合送禮、聚餐、慶祝的日子...", "role": "我是怡酒佐餐的【行銷企劃】，我們是進口餐酒商，主要做葡萄酒與餐搭酒的進口代理、推廣餐酒搭配的生活風格，客群是注重生活品味的消費者與餐飲通路，想趁節慶檔期把酒賣得更好，需要一份完整的檔期行銷靈感。", "context": "幫我整理一份未來【半年】的【餐酒、葡萄酒適合操作的節慶與消費檔期行事曆】，把每個值得做的時間點列出來：像情人節、母親節、父親節、中秋、聖誕、跨年、農曆年，還有適合送禮、聚餐、慶祝的日子。每個檔期請告訴我消費者當下的心理與需求、適合主打什麼酒款或餐酒搭配主題、以及可以怎麼包裝活動（送禮組合、限定品飲、餐廳聯名、線上團購）。也幫我找一些國內外【酒商或餐酒品牌】在這些檔期做過的有創意行銷案例當靈感，讓我能規劃出對得上節慶氛圍、又能帶動買氣的活動。", "expectation": "請附上每個節慶日期與行銷案例的來源連結與時間；案例請優先用近【12】個月內的，舊案例請標注年份。請把「節慶日期、消費數據這類事實」和「你發想的活動點子、主題建議」分開呈現，並提醒酒類行銷需留意相關法規與責任飲酒，不要把創意建議講成保證有效的做法。", "pain": "", "material": "", "tip": "追問「這幾個檔期裡，哪一個最適合主打高單價送禮酒款？」幫你把資源押在最賺的檔期。", "prompt": "🎭 角色\n我是怡酒佐餐的【行銷企劃】，我們是進口餐酒商，主要做葡萄酒與餐搭酒的進口代理、推廣餐酒搭配的生活風格，客群是注重生活品味的消費者與餐飲通路，想趁節慶檔期把酒賣得更好，需要一份完整的檔期行銷靈感。\n\n📍 情境\n幫我整理一份未來【半年】的【餐酒、葡萄酒適合操作的節慶與消費檔期行事曆】，把每個值得做的時間點列出來：像情人節、母親節、父親節、中秋、聖誕、跨年、農曆年，還有適合送禮、聚餐、慶祝的日子。每個檔期請告訴我消費者當下的心理與需求、適合主打什麼酒款或餐酒搭配主題、以及可以怎麼包裝活動（送禮組合、限定品飲、餐廳聯名、線上團購）。也幫我找一些國內外【酒商或餐酒品牌】在這些檔期做過的有創意行銷案例當靈感，讓我能規劃出對得上節慶氛圍、又能帶動買氣的活動。\n\n🎯 期望\n請附上每個節慶日期與行銷案例的來源連結與時間；案例請優先用近【12】個月內的，舊案例請標注年份。請把「節慶日期、消費數據這類事實」和「你發想的活動點子、主題建議」分開呈現，並提醒酒類行銷需留意相關法規與責任飲酒，不要把創意建議講成保證有效的做法。", "placeholders": ["行銷企劃", "半年", "餐酒、葡萄酒適合操作的節慶與消費檔期行事曆", "酒商或餐酒品牌", "12"], "kind": "案例指令"}, {"id": "gemini-deep-research-01", "sourceSlide": 22, "number": "01", "moduleKey": "想", "module": "想｜深度研究", "tool": "Gemini Deep Research", "toolNote": "產出可追溯的長報告", "category": "競爭研究", "company": "", "title": "競品全面策略研究", "summary": "我們是台中起家、創業十餘年的台菜集團，旗下四店主打民間創作料理，內部已導入 40 多項管理工具、管理相對成熟，但我對中部與全台「精緻台菜／創作台菜」這個賽道的競爭全貌掌握不夠完整，也想...", "role": "我是膳馨餐飲集團的品牌策略主管，集團在台中經營膳馨民間創作料理與馨苑小料理共四家門市，員工超過 150 人，連年拿下米其林餐盤與必比登推薦，冷凍食品也外銷十二國，目前正規劃下一階段的成長策略。", "context": "我們是台中起家、創業十餘年的台菜集團，旗下四店主打民間創作料理，內部已導入 40 多項管理工具、管理相對成熟，但我對中部與全台「精緻台菜／創作台菜」這個賽道的競爭全貌掌握不夠完整，也想知道自己在這群對手裡到底站在什麼位置。請針對與我們直接競爭的台菜餐飲集團與品牌（含其他米其林餐盤、必比登等級的台菜或創作料理品牌、以及有冷凍食品外銷的同業）做一份全面的競爭策略研究，涵蓋對手的【品牌定位與故事、門市規模與展店節奏、客單價與菜系特色、冷凍食品與外銷布局、會員經營與行銷打法、近三年的擴張轉型或募資動作】，並逐項比較他們與膳馨的差異、相對優勢與弱點在哪裡。", "expectation": "請自動規劃這份研究的架構與子題涵蓋範圍，產出一份 5 到 10 頁的結構化長報告，內容大量標註可查證的資料來源、把已確認的事實與你的推論清楚分開標示，最後針對膳馨在台菜賽道的差異化定位與下一步策略，給出具體的結論與優先順序建議。", "pain": "", "material": "", "tip": "把你最在意的對手名單與最想贏的那個面向（例如冷凍外銷或客單價）先寫進去，報告會更聚焦。", "prompt": "🎭 角色\n我是膳馨餐飲集團的品牌策略主管，集團在台中經營膳馨民間創作料理與馨苑小料理共四家門市，員工超過 150 人，連年拿下米其林餐盤與必比登推薦，冷凍食品也外銷十二國，目前正規劃下一階段的成長策略。\n\n📍 情境\n我們是台中起家、創業十餘年的台菜集團，旗下四店主打民間創作料理，內部已導入 40 多項管理工具、管理相對成熟，但我對中部與全台「精緻台菜／創作台菜」這個賽道的競爭全貌掌握不夠完整，也想知道自己在這群對手裡到底站在什麼位置。請針對與我們直接競爭的台菜餐飲集團與品牌（含其他米其林餐盤、必比登等級的台菜或創作料理品牌、以及有冷凍食品外銷的同業）做一份全面的競爭策略研究，涵蓋對手的【品牌定位與故事、門市規模與展店節奏、客單價與菜系特色、冷凍食品與外銷布局、會員經營與行銷打法、近三年的擴張轉型或募資動作】，並逐項比較他們與膳馨的差異、相對優勢與弱點在哪裡。\n\n🎯 期望\n請自動規劃這份研究的架構與子題涵蓋範圍，產出一份 5 到 10 頁的結構化長報告，內容大量標註可查證的資料來源、把已確認的事實與你的推論清楚分開標示，最後針對膳馨在台菜賽道的差異化定位與下一步策略，給出具體的結論與優先順序建議。", "placeholders": ["品牌定位與故事、門市規模與展店節奏、客單價與菜系特色、冷凍食品與外銷布局、會員經營與行銷打法、近三年的擴張轉型或募資動作"], "kind": "案例指令"}, {"id": "gemini-deep-research-02", "sourceSlide": 23, "number": "02", "moduleKey": "想", "module": "想｜深度研究", "tool": "Gemini Deep Research", "toolNote": "產出可追溯的長報告", "category": "市場研究", "company": "", "title": "市場進入研究", "summary": "我們的產品專門解決餐廳叫貨散落在 LINE、電話、Excel，月底還要人工對帳的痛點，後端可以 API 串接 ERP 與 POS。現在我想搞清楚台灣「餐飲供應鏈／叫貨對帳 SaaS」這...", "role": "我是食集資訊 CocoMart 可可食集的市場負責人，我們是 2024 年在台北上線的餐飲科技新創，做的是餐廳叫貨與供應商接單的雙邊平台，技術底子強，正在評估要更深入切入哪一塊餐飲供應鏈數位化的市場。", "context": "我們的產品專門解決餐廳叫貨散落在 LINE、電話、Excel，月底還要人工對帳的痛點，後端可以 API 串接 ERP 與 POS。現在我想搞清楚台灣「餐飲供應鏈／叫貨對帳 SaaS」這個市場到底有多大、成長性如何、值不值得我們再加碼投入資源。請做一份完整的市場進入研究，涵蓋【台灣餐飲採購與供應鏈數位化的市場規模與成長趨勢、主要競爭者與替代方案（含現有 ERP／POS 廠商、其他叫貨平台、以及餐廳自己土法用 LINE 與 Excel）、目標客群分層與各層的付費意願、典型的獲客管道與單位經濟、進入這個市場的關鍵門檻與風險】，並評估我們以雙邊平台模式切入的勝算與最佳切入點。", "expectation": "請自動規劃這份研究的架構與需要涵蓋的子題，產出一份 5 到 10 頁的結構化長報告，過程中大量標註可查證的資料來源、明確區分查證到的事實與你的推論，最後針對我們是否該加碼投入、應該優先打哪個客群與切入點，給出有條理的結論與建議。", "pain": "", "material": "", "tip": "把你目前最猶豫的那個假設（例如小店願不願意付月費）直接寫進去，讓報告幫你驗證。", "prompt": "🎭 角色\n我是食集資訊 CocoMart 可可食集的市場負責人，我們是 2024 年在台北上線的餐飲科技新創，做的是餐廳叫貨與供應商接單的雙邊平台，技術底子強，正在評估要更深入切入哪一塊餐飲供應鏈數位化的市場。\n\n📍 情境\n我們的產品專門解決餐廳叫貨散落在 LINE、電話、Excel，月底還要人工對帳的痛點，後端可以 API 串接 ERP 與 POS。現在我想搞清楚台灣「餐飲供應鏈／叫貨對帳 SaaS」這個市場到底有多大、成長性如何、值不值得我們再加碼投入資源。請做一份完整的市場進入研究，涵蓋【台灣餐飲採購與供應鏈數位化的市場規模與成長趨勢、主要競爭者與替代方案（含現有 ERP／POS 廠商、其他叫貨平台、以及餐廳自己土法用 LINE 與 Excel）、目標客群分層與各層的付費意願、典型的獲客管道與單位經濟、進入這個市場的關鍵門檻與風險】，並評估我們以雙邊平台模式切入的勝算與最佳切入點。\n\n🎯 期望\n請自動規劃這份研究的架構與需要涵蓋的子題，產出一份 5 到 10 頁的結構化長報告，過程中大量標註可查證的資料來源、明確區分查證到的事實與你的推論，最後針對我們是否該加碼投入、應該優先打哪個客群與切入點，給出有條理的結論與建議。", "placeholders": ["台灣餐飲採購與供應鏈數位化的市場規模與成長趨勢、主要競爭者與替代方案（含現有 ERP／POS 廠商、其他叫貨平台、以及餐廳自己土法用 LINE 與 Excel）、目標客群分層與各層的付費意願、典型的獲客管道與單位經濟、進入這個市場的關鍵門檻與風險"], "kind": "案例指令"}, {"id": "gemini-deep-research-03", "sourceSlide": 24, "number": "03", "moduleKey": "想", "module": "想｜深度研究", "tool": "Gemini Deep Research", "toolNote": "產出可追溯的長報告", "category": "市場研究", "company": "", "title": "展店城市商圈評估", "summary": "我們是打卡型甜點咖啡店，主力商品是鬆餅與輕食，客群偏年輕女性與愛拍照分享的社群族群，過去也曾把店一路拓展到香港。現在想在【台中／高雄／台南】這幾個城市裡，挑出最適合咖啡弄展店的城市與最...", "role": "我是咖啡弄的展店企劃負責人，我們是 2006 年創立、以草莓冰淇淋鬆餅與鹽味焦糖鬆餅起家的老字號甜點咖啡品牌，目前在台北士林與站前都有店，社群口碑很強，正在評估下一家店要落腳哪個城市與商圈。", "context": "我們是打卡型甜點咖啡店，主力商品是鬆餅與輕食，客群偏年輕女性與愛拍照分享的社群族群，過去也曾把店一路拓展到香港。現在想在【台中／高雄／台南】這幾個城市裡，挑出最適合咖啡弄展店的城市與最具體的商圈位置，避免開錯地方賠錢。請做一份展店城市與商圈評估研究，涵蓋【各候選城市的甜點咖啡消費力與市場飽和度、目標客群的密度與年齡輪廓、熱門商圈的人流量與租金行情、競品甜點咖啡與打卡名店的分布密度、最適合我們品牌調性的商圈特徵、以及季節性淡旺與競爭過熱等潛在風險】，並把候選城市與商圈排出明確的優先順序，逐一說明背後的理由與評估依據是什麼。", "expectation": "請自動規劃這份研究的架構與子題涵蓋範圍，產出一份 5 到 10 頁的結構化長報告，內容大量標註可查證的資料來源、把已確認的事實與你的推論分開呈現，最後針對「下一家店究竟該優先選哪個城市、哪個商圈、為什麼」給出明確的結論與建議排序。", "pain": "", "material": "", "tip": "先講清楚你的展店預算與單店面積上限，報告挑商圈時會更貼近你能落地的範圍。", "prompt": "🎭 角色\n我是咖啡弄的展店企劃負責人，我們是 2006 年創立、以草莓冰淇淋鬆餅與鹽味焦糖鬆餅起家的老字號甜點咖啡品牌，目前在台北士林與站前都有店，社群口碑很強，正在評估下一家店要落腳哪個城市與商圈。\n\n📍 情境\n我們是打卡型甜點咖啡店，主力商品是鬆餅與輕食，客群偏年輕女性與愛拍照分享的社群族群，過去也曾把店一路拓展到香港。現在想在【台中／高雄／台南】這幾個城市裡，挑出最適合咖啡弄展店的城市與最具體的商圈位置，避免開錯地方賠錢。請做一份展店城市與商圈評估研究，涵蓋【各候選城市的甜點咖啡消費力與市場飽和度、目標客群的密度與年齡輪廓、熱門商圈的人流量與租金行情、競品甜點咖啡與打卡名店的分布密度、最適合我們品牌調性的商圈特徵、以及季節性淡旺與競爭過熱等潛在風險】，並把候選城市與商圈排出明確的優先順序，逐一說明背後的理由與評估依據是什麼。\n\n🎯 期望\n請自動規劃這份研究的架構與子題涵蓋範圍，產出一份 5 到 10 頁的結構化長報告，內容大量標註可查證的資料來源、把已確認的事實與你的推論分開呈現，最後針對「下一家店究竟該優先選哪個城市、哪個商圈、為什麼」給出明確的結論與建議排序。", "placeholders": ["台中／高雄／台南", "各候選城市的甜點咖啡消費力與市場飽和度、目標客群的密度與年齡輪廓、熱門商圈的人流量與租金行情、競品甜點咖啡與打卡名店的分布密度、最適合我們品牌調性的商圈特徵、以及季節性淡旺與競爭過熱等潛在風險"], "kind": "案例指令"}, {"id": "gemini-deep-research-04", "sourceSlide": 25, "number": "04", "moduleKey": "想", "module": "想｜深度研究", "tool": "Gemini Deep Research", "toolNote": "產出可追溯的長報告", "category": "市場研究", "company": "", "title": "新世代消費者趨勢", "summary": "我們的客戶是廣大的餐飲業者，而真正決定一家餐廳生意好壞的，其實是「來吃飯的消費者」怎麼變。我想深入理解新世代（Z 世代與年輕千禧世代）外食消費者的行為與偏好變化，好讓我們的 POS 與...", "role": "我是 iCHEF 資廚的產品策略負責人，我們是 2012 年成立的 iPad POS 系統商，服務台港星超過 15,000 間餐廳，提供雲端點餐、線上外送整合、會員行銷與數據分析，近期正把品牌定位往「AI 點餐系統」推進。", "context": "我們的客戶是廣大的餐飲業者，而真正決定一家餐廳生意好壞的，其實是「來吃飯的消費者」怎麼變。我想深入理解新世代（Z 世代與年輕千禧世代）外食消費者的行為與偏好變化，好讓我們的 POS 與會員產品能走在客戶需求的前面、提早布局、不被市場拋下。請做一份新世代消費者趨勢研究，涵蓋【年輕外食族的用餐決策流程與資訊來源、線上點餐與外送的使用習慣、會員制與點數對他們的吸引力、對 AI 點餐與自助點餐機的接受度、價格敏感度與嚐鮮意願、社群評價與網紅推薦對選店與回訪的影響】，並從這些趨勢推導出對餐飲 POS 與會員行銷產品的設計啟示與具體機會點。", "expectation": "請自動規劃這份研究的架構與子題涵蓋範圍，產出一份 5 到 10 頁的結構化長報告，大量標註可查證的資料來源、把已確認的事實與你的推論清楚分開，最後針對 iCHEF 在「AI 點餐」與會員產品上該優先做哪些功能，給出具體而明確的結論與建議。", "pain": "", "material": "", "tip": "把你最想驗證的一個趨勢假設（例如年輕人是否真的偏好自助點餐）先寫進去，報告會更有焦點。", "prompt": "🎭 角色\n我是 iCHEF 資廚的產品策略負責人，我們是 2012 年成立的 iPad POS 系統商，服務台港星超過 15,000 間餐廳，提供雲端點餐、線上外送整合、會員行銷與數據分析，近期正把品牌定位往「AI 點餐系統」推進。\n\n📍 情境\n我們的客戶是廣大的餐飲業者，而真正決定一家餐廳生意好壞的，其實是「來吃飯的消費者」怎麼變。我想深入理解新世代（Z 世代與年輕千禧世代）外食消費者的行為與偏好變化，好讓我們的 POS 與會員產品能走在客戶需求的前面、提早布局、不被市場拋下。請做一份新世代消費者趨勢研究，涵蓋【年輕外食族的用餐決策流程與資訊來源、線上點餐與外送的使用習慣、會員制與點數對他們的吸引力、對 AI 點餐與自助點餐機的接受度、價格敏感度與嚐鮮意願、社群評價與網紅推薦對選店與回訪的影響】，並從這些趨勢推導出對餐飲 POS 與會員行銷產品的設計啟示與具體機會點。\n\n🎯 期望\n請自動規劃這份研究的架構與子題涵蓋範圍，產出一份 5 到 10 頁的結構化長報告，大量標註可查證的資料來源、把已確認的事實與你的推論清楚分開，最後針對 iCHEF 在「AI 點餐」與會員產品上該優先做哪些功能，給出具體而明確的結論與建議。", "placeholders": ["年輕外食族的用餐決策流程與資訊來源、線上點餐與外送的使用習慣、會員制與點數對他們的吸引力、對 AI 點餐與自助點餐機的接受度、價格敏感度與嚐鮮意願、社群評價與網紅推薦對選店與回訪的影響"], "kind": "案例指令"}, {"id": "gemini-deep-research-05", "sourceSlide": 26, "number": "05", "moduleKey": "想", "module": "想｜深度研究", "tool": "Gemini Deep Research", "toolNote": "產出可追溯的長報告", "category": "經營研究", "company": "", "title": "加盟制度設計研究", "summary": "我們是傳統家族型餐廳，四十五年的口碑、菜色與在地供應鏈都掌握在自己手上，也做 50 plus 在地食材的低碳菜單，但我們完全沒做過加盟，不知道該怎麼把老店的 know-how 變成一套...", "role": "我是新百王餐廳的經營者，我們是 1979 年在桃園中壢創立的客家台菜老店，四十五年的單店字號，主打客家菜、台菜、海鮮與千人桌菜宴，連年拿下桃園金牌好店，現在想把這塊招牌開放加盟、複製出去。", "context": "我們是傳統家族型餐廳，四十五年的口碑、菜色與在地供應鏈都掌握在自己手上，也做 50 plus 在地食材的低碳菜單，但我們完全沒做過加盟，不知道該怎麼把老店的 know-how 變成一套能授權給別人的制度。請做一份加盟制度設計研究，涵蓋【台菜與客家菜餐廳的加盟市場現況與成功失敗案例、常見的加盟模式（直營轉加盟、區域代理、合作店）、加盟金與權利金的合理區間與拆分方式、總部該提供的教育訓練與供應鏈支援、菜色與品質標準化的具體做法、加盟合約與品牌控管的重點、老字號開放加盟最常見的踩雷與風險】，並針對我們的條件提出一套適合的加盟制度雛形。", "expectation": "請自動規劃這份研究的架構與需要涵蓋的子題，產出一份 5 到 10 頁的結構化長報告，內容大量標註可查證的資料來源、把已確認的事實與你的推論分開標示，最後針對新百王該採哪種加盟模式、制度怎麼設計、先做哪幾步，給出有條理的結論與建議。", "pain": "", "material": "", "tip": "先說明你打算先開放幾家、想不想保留中壢本店的獨特菜色，制度建議會更貼合你的底線。", "prompt": "🎭 角色\n我是新百王餐廳的經營者，我們是 1979 年在桃園中壢創立的客家台菜老店，四十五年的單店字號，主打客家菜、台菜、海鮮與千人桌菜宴，連年拿下桃園金牌好店，現在想把這塊招牌開放加盟、複製出去。\n\n📍 情境\n我們是傳統家族型餐廳，四十五年的口碑、菜色與在地供應鏈都掌握在自己手上，也做 50 plus 在地食材的低碳菜單，但我們完全沒做過加盟，不知道該怎麼把老店的 know-how 變成一套能授權給別人的制度。請做一份加盟制度設計研究，涵蓋【台菜與客家菜餐廳的加盟市場現況與成功失敗案例、常見的加盟模式（直營轉加盟、區域代理、合作店）、加盟金與權利金的合理區間與拆分方式、總部該提供的教育訓練與供應鏈支援、菜色與品質標準化的具體做法、加盟合約與品牌控管的重點、老字號開放加盟最常見的踩雷與風險】，並針對我們的條件提出一套適合的加盟制度雛形。\n\n🎯 期望\n請自動規劃這份研究的架構與需要涵蓋的子題，產出一份 5 到 10 頁的結構化長報告，內容大量標註可查證的資料來源、把已確認的事實與你的推論分開標示，最後針對新百王該採哪種加盟模式、制度怎麼設計、先做哪幾步，給出有條理的結論與建議。", "placeholders": ["台菜與客家菜餐廳的加盟市場現況與成功失敗案例、常見的加盟模式（直營轉加盟、區域代理、合作店）、加盟金與權利金的合理區間與拆分方式、總部該提供的教育訓練與供應鏈支援、菜色與品質標準化的具體做法、加盟合約與品牌控管的重點、老字號開放加盟最常見的踩雷與風險"], "kind": "案例指令"}, {"id": "gemini-deep-research-06", "sourceSlide": 27, "number": "06", "moduleKey": "想", "module": "想｜深度研究", "tool": "Gemini Deep Research", "toolNote": "產出可追溯的長報告", "category": "經營研究", "company": "", "title": "經營模式可行性研究", "summary": "我們目前主要靠國際觀光客單次報名的料理體驗課，創辦人是藍帶受訓背景，淡旺季的營收落差實在很大。我想評估把現在的「單次體驗」轉成、或加上「訂閱制」會不會成立——例如針對在台外籍人士、企業...", "role": "我是晨星樂廚 Cookinn Taiwan 旅人料理教室的營運負責人，我們 2018 年在台北西門成立，專門帶外國旅客逛市場、動手做小籠包、牛肉麵與珍奶，用中英日語教學，也接企業 team building，現在想評估訂閱制的可行性。", "context": "我們目前主要靠國際觀光客單次報名的料理體驗課，創辦人是藍帶受訓背景，淡旺季的營收落差實在很大。我想評估把現在的「單次體驗」轉成、或加上「訂閱制」會不會成立——例如針對在台外籍人士、企業客戶或回頭客推出月費或會員方案。請做一份經營模式可行性研究，涵蓋【料理體驗與觀光教育類服務導入訂閱制的國內外案例、適合我們的訂閱方案型態（次數包、月費、企業會員）、各類目標客群的續訂意願與痛點、訂閱制對營收穩定度與現金流的實際影響、營運與排課上會遇到的挑戰、以及可能的風險與失敗模式】，並評估這個模式對我們到底可不可行、值不值得實際試辦看看。", "expectation": "請自動規劃這份研究的架構與子題涵蓋範圍，產出一份 5 到 10 頁的結構化長報告，大量標註可查證的資料來源、把查證到的事實與你的推論清楚分開，最後針對晨星樂廚要不要做訂閱制、該用哪一種型態、先從哪個客群試水溫，給出明確的結論與建議。", "pain": "", "material": "", "tip": "先講清楚你最想穩定的是淡季營收還是回頭客，報告評估訂閱型態時會更對準你的目標。", "prompt": "🎭 角色\n我是晨星樂廚 Cookinn Taiwan 旅人料理教室的營運負責人，我們 2018 年在台北西門成立，專門帶外國旅客逛市場、動手做小籠包、牛肉麵與珍奶，用中英日語教學，也接企業 team building，現在想評估訂閱制的可行性。\n\n📍 情境\n我們目前主要靠國際觀光客單次報名的料理體驗課，創辦人是藍帶受訓背景，淡旺季的營收落差實在很大。我想評估把現在的「單次體驗」轉成、或加上「訂閱制」會不會成立——例如針對在台外籍人士、企業客戶或回頭客推出月費或會員方案。請做一份經營模式可行性研究，涵蓋【料理體驗與觀光教育類服務導入訂閱制的國內外案例、適合我們的訂閱方案型態（次數包、月費、企業會員）、各類目標客群的續訂意願與痛點、訂閱制對營收穩定度與現金流的實際影響、營運與排課上會遇到的挑戰、以及可能的風險與失敗模式】，並評估這個模式對我們到底可不可行、值不值得實際試辦看看。\n\n🎯 期望\n請自動規劃這份研究的架構與子題涵蓋範圍，產出一份 5 到 10 頁的結構化長報告，大量標註可查證的資料來源、把查證到的事實與你的推論清楚分開，最後針對晨星樂廚要不要做訂閱制、該用哪一種型態、先從哪個客群試水溫，給出明確的結論與建議。", "placeholders": ["料理體驗與觀光教育類服務導入訂閱制的國內外案例、適合我們的訂閱方案型態（次數包、月費、企業會員）、各類目標客群的續訂意願與痛點、訂閱制對營收穩定度與現金流的實際影響、營運與排課上會遇到的挑戰、以及可能的風險與失敗模式"], "kind": "案例指令"}, {"id": "gemini-deep-research-07", "sourceSlide": 28, "number": "07", "moduleKey": "想", "module": "想｜深度研究", "tool": "Gemini Deep Research", "toolNote": "產出可追溯的長報告", "category": "市場研究", "company": "", "title": "海外市場進入研究", "summary": "我們的醬料產品在台灣與部分海外市場已經有基礎，但東南亞我們只零星出過幾批貨，缺乏一份完整、能拿來做決策的市場進入判斷。請針對【新加坡／馬來西亞／越南／泰國】這幾個東南亞市場，做一份海外...", "role": "我是向記食品的外銷業務負責人，我們是桃園蘆竹的中小型食品廠，從家傳 XO 醬起家，現在做麻辣醬、花椒油、辣椒醬與調理包、罐頭，全通路販售也已外銷香港、新加坡、英國與加拿大，現在想更有系統地進軍東南亞市場。", "context": "我們的醬料產品在台灣與部分海外市場已經有基礎，但東南亞我們只零星出過幾批貨，缺乏一份完整、能拿來做決策的市場進入判斷。請針對【新加坡／馬來西亞／越南／泰國】這幾個東南亞市場，做一份海外市場進入研究，涵蓋【各市場對華人醬料與辣味調味品的接受度與飲食習慣、當地的競品與既有華人醬料品牌、進口與食品標示及清真認證等法規門檻、主要的鋪貨通路與電商生態、適合中小食品廠的進入模式（找代理、上架電商、或自行設點）、各市場的定價帶與毛利空間、以及通路、匯率與在地化口味等潛在風險】，並排出我們最該優先進入的市場順序與背後的判斷理由是什麼。", "expectation": "請自動規劃研究架構與需要涵蓋的子題，產出一份 5 到 10 頁的結構化長報告，內容大量標註可查證的資料來源、把已確認的事實與你的推論分開呈現，最後針對向記該優先攻哪個東南亞市場、用什麼模式切入、要先過哪些門檻，給出有條理的結論與建議。", "pain": "", "material": "", "tip": "先說明你能投入的外銷預算與是否願意做清真認證，報告挑市場與模式時會更務實。", "prompt": "🎭 角色\n我是向記食品的外銷業務負責人，我們是桃園蘆竹的中小型食品廠，從家傳 XO 醬起家，現在做麻辣醬、花椒油、辣椒醬與調理包、罐頭，全通路販售也已外銷香港、新加坡、英國與加拿大，現在想更有系統地進軍東南亞市場。\n\n📍 情境\n我們的醬料產品在台灣與部分海外市場已經有基礎，但東南亞我們只零星出過幾批貨，缺乏一份完整、能拿來做決策的市場進入判斷。請針對【新加坡／馬來西亞／越南／泰國】這幾個東南亞市場，做一份海外市場進入研究，涵蓋【各市場對華人醬料與辣味調味品的接受度與飲食習慣、當地的競品與既有華人醬料品牌、進口與食品標示及清真認證等法規門檻、主要的鋪貨通路與電商生態、適合中小食品廠的進入模式（找代理、上架電商、或自行設點）、各市場的定價帶與毛利空間、以及通路、匯率與在地化口味等潛在風險】，並排出我們最該優先進入的市場順序與背後的判斷理由是什麼。\n\n🎯 期望\n請自動規劃研究架構與需要涵蓋的子題，產出一份 5 到 10 頁的結構化長報告，內容大量標註可查證的資料來源、把已確認的事實與你的推論分開呈現，最後針對向記該優先攻哪個東南亞市場、用什麼模式切入、要先過哪些門檻，給出有條理的結論與建議。", "placeholders": ["新加坡／馬來西亞／越南／泰國", "各市場對華人醬料與辣味調味品的接受度與飲食習慣、當地的競品與既有華人醬料品牌、進口與食品標示及清真認證等法規門檻、主要的鋪貨通路與電商生態、適合中小食品廠的進入模式（找代理、上架電商、或自行設點）、各市場的定價帶與毛利空間、以及通路、匯率與在地化口味等潛在風險"], "kind": "案例指令"}, {"id": "gemini-deep-research-08", "sourceSlide": 29, "number": "08", "moduleKey": "想", "module": "想｜深度研究", "tool": "Gemini Deep Research", "toolNote": "產出可追溯的長報告", "category": "經營研究", "company": "", "title": "品牌重新定位研究", "summary": "我們公司規模不大，既做管理顧問、又經營一個自有品牌，但對外的形象一直有點模糊，客戶常常分不清我們到底是顧問公司還是品牌商，行銷力道也因此分散掉。我想做一份品牌重新定位研究，涵蓋【像我們...", "role": "我是愛賦真粹的負責人，我們是一間 2019 年在台北松山成立的小型管理顧問公司，同時擁有自己註冊的品牌，目前手上既有顧問服務、也有自有品牌的產品線，正在思考品牌該怎麼重新定位、把顧問專業與自有品牌講成一個更清楚的故事。", "context": "我們公司規模不大，既做管理顧問、又經營一個自有品牌，但對外的形象一直有點模糊，客戶常常分不清我們到底是顧問公司還是品牌商，行銷力道也因此分散掉。我想做一份品牌重新定位研究，涵蓋【像我們這種「顧問服務＋自有品牌」雙線經營的小型公司，常見的品牌定位策略與成功案例、把專業服務與產品品牌整合成一致形象的具體做法、適合小型顧問品牌的差異化切角與目標客群選擇、品牌訊息與視覺調性該往哪個方向走、雙線經營最容易出現的定位衝突與取捨】，幫我釐清往哪個方向收斂最合理。請用推測的合理情境來分析就好，不需要替我們捏造具體的營收或市占數字。", "expectation": "請自動規劃這份研究的架構與子題涵蓋範圍，產出一份 5 到 10 頁的結構化長報告，大量標註可查證的資料來源、把查證到的事實與你的推論清楚分開標示，最後針對愛賦真粹該往哪個定位收斂、顧問與自有品牌如何取捨整合，給出具體的結論與方向建議。", "pain": "", "material": "", "tip": "先講清楚你比較想被記得的是「專業顧問」還是「品牌主理人」，定位建議會更聚焦。", "prompt": "🎭 角色\n我是愛賦真粹的負責人，我們是一間 2019 年在台北松山成立的小型管理顧問公司，同時擁有自己註冊的品牌，目前手上既有顧問服務、也有自有品牌的產品線，正在思考品牌該怎麼重新定位、把顧問專業與自有品牌講成一個更清楚的故事。\n\n📍 情境\n我們公司規模不大，既做管理顧問、又經營一個自有品牌，但對外的形象一直有點模糊，客戶常常分不清我們到底是顧問公司還是品牌商，行銷力道也因此分散掉。我想做一份品牌重新定位研究，涵蓋【像我們這種「顧問服務＋自有品牌」雙線經營的小型公司，常見的品牌定位策略與成功案例、把專業服務與產品品牌整合成一致形象的具體做法、適合小型顧問品牌的差異化切角與目標客群選擇、品牌訊息與視覺調性該往哪個方向走、雙線經營最容易出現的定位衝突與取捨】，幫我釐清往哪個方向收斂最合理。請用推測的合理情境來分析就好，不需要替我們捏造具體的營收或市占數字。\n\n🎯 期望\n請自動規劃這份研究的架構與子題涵蓋範圍，產出一份 5 到 10 頁的結構化長報告，大量標註可查證的資料來源、把查證到的事實與你的推論清楚分開標示，最後針對愛賦真粹該往哪個定位收斂、顧問與自有品牌如何取捨整合，給出具體的結論與方向建議。", "placeholders": ["像我們這種「顧問服務＋自有品牌」雙線經營的小型公司，常見的品牌定位策略與成功案例、把專業服務與產品品牌整合成一致形象的具體做法、適合小型顧問品牌的差異化切角與目標客群選擇、品牌訊息與視覺調性該往哪個方向走、雙線經營最容易出現的定位衝突與取捨"], "kind": "案例指令"}, {"id": "gemini-deep-research-09", "sourceSlide": 30, "number": "09", "moduleKey": "想", "module": "想｜深度研究", "tool": "Gemini Deep Research", "toolNote": "產出可追溯的長報告", "category": "經營研究", "company": "", "title": "產業政策與法規環境研究", "summary": "我經營一家環保服務公司【天藍環維】，主要做【環境清潔／廢棄物清運／環保工程】，規模屬中小型，客戶包含企業、社區與政府單位。近年我明顯感覺政策變動很快、法規越來越嚴，也常看到政府釋出綠色...", "role": "你是一位深耕台灣環保產業政策研究 20 年的資深分析師，熟悉環境部與地方環保局的法規架構，了解廢棄物清理、資源回收、清潔服務與環保工程的政府標案、補助及裁罰實務，擅長把零散的政策訊號整理成可執行的營運判斷。", "context": "我經營一家環保服務公司【天藍環維】，主要做【環境清潔／廢棄物清運／環保工程】，規模屬中小型，客戶包含企業、社區與政府單位。近年我明顯感覺政策變動很快、法規越來越嚴，也常看到政府釋出綠色採購與環保相關的標案和補助，但這些資訊散在環境部、地方環保局和各部會網站，看得零零落落、很難拼出全貌。我不確定未來 3 到 5 年整個產業會往哪個方向走、哪些新法規或修法會直接影響我們的營運成本與接案方式、又有哪些補助或政府標案是我們這種中小型業者真的卡得進去的機會，所以希望有一份完整研究幫我看懂整個政策與法規環境，作為未來營運方向和接案策略的判斷依據。", "expectation": "請自動規劃研究架構並列出子題，至少涵蓋：政策走向與主管機關重點、影響我們的關鍵法規與修法趨勢、綠色採購與環保標案補助的機會、對中小型業者的成本衝擊。請產出 5 到 10 頁結構化長報告，大量標註可查證來源，事實與推論分開，最後給【天藍環維】3 點策略建議。", "pain": "", "material": "", "tip": "請把「事實」與「推論」分開標示，並要求每個重要論點都附上可點開查證的來源。", "prompt": "🎭 角色\n你是一位深耕台灣環保產業政策研究 20 年的資深分析師，熟悉環境部與地方環保局的法規架構，了解廢棄物清理、資源回收、清潔服務與環保工程的政府標案、補助及裁罰實務，擅長把零散的政策訊號整理成可執行的營運判斷。\n\n📍 情境\n我經營一家環保服務公司【天藍環維】，主要做【環境清潔／廢棄物清運／環保工程】，規模屬中小型，客戶包含企業、社區與政府單位。近年我明顯感覺政策變動很快、法規越來越嚴，也常看到政府釋出綠色採購與環保相關的標案和補助，但這些資訊散在環境部、地方環保局和各部會網站，看得零零落落、很難拼出全貌。我不確定未來 3 到 5 年整個產業會往哪個方向走、哪些新法規或修法會直接影響我們的營運成本與接案方式、又有哪些補助或政府標案是我們這種中小型業者真的卡得進去的機會，所以希望有一份完整研究幫我看懂整個政策與法規環境，作為未來營運方向和接案策略的判斷依據。\n\n🎯 期望\n請自動規劃研究架構並列出子題，至少涵蓋：政策走向與主管機關重點、影響我們的關鍵法規與修法趨勢、綠色採購與環保標案補助的機會、對中小型業者的成本衝擊。請產出 5 到 10 頁結構化長報告，大量標註可查證來源，事實與推論分開，最後給【天藍環維】3 點策略建議。", "placeholders": ["天藍環維", "環境清潔／廢棄物清運／環保工程"], "kind": "案例指令"}, {"id": "gemini-deep-research-10", "sourceSlide": 31, "number": "10", "moduleKey": "想", "module": "想｜深度研究", "tool": "Gemini Deep Research", "toolNote": "產出可追溯的長報告", "category": "經營研究", "company": "", "title": "多角化新事業可行性研究", "summary": "我經營一家位於【新北瑞芳、鄰近深澳漁港】的公司【鼎圓開發】，目前以【水產食品批發零售】為主要業務，公司登記範圍也包含不動產開發，手上握有在地漁產與漁港周邊的一些既有資源。我想在現有水產...", "role": "你是一位橫跨水產食品與地方產業開發的資深經營策略顧問，熟悉漁港經濟、水產品牌化、觀光漁業與餐飲通路，也了解閒置土地與漁港周邊不動產活化的常見路徑，擅長評估在地企業多角化的可行性與風險，給出可分階段執行的務實建議。", "context": "我經營一家位於【新北瑞芳、鄰近深澳漁港】的公司【鼎圓開發】，目前以【水產食品批發零售】為主要業務，公司登記範圍也包含不動產開發，手上握有在地漁產與漁港周邊的一些既有資源。我想在現有水產的基礎上往外多角化，但一直不確定哪條路比較可行：是把漁產做成自有品牌往零售和電商走、結合深澳漁港發展觀光漁業或體驗行程、開一間以在地海鮮為主打的餐飲，還是把手上的土地或空間拿去做不動產活化。我們資源有限、團隊也不大，沒辦法每條路都去試，所以希望先把各條路的市場規模、進入門檻和主要風險看清楚，再決定到底要從哪一條開始下手、怎麼分階段推進。", "expectation": "請自動規劃研究架構並列出子題，至少涵蓋：水產品牌化與生鮮電商的市場與門檻、深澳漁港觀光漁業與體驗行程的潛力、在地海鮮餐飲的經營模式、漁港周邊不動產活化的做法限制。請產出 5 到 10 頁結構化長報告，大量標註可查證來源，事實與推論分開，最後給四條路的排序建議。", "pain": "", "material": "", "tip": "請要求它先比較四條路的可行性再排序，事實與推論分開、各附來源，別把推測講得像定論。", "prompt": "🎭 角色\n你是一位橫跨水產食品與地方產業開發的資深經營策略顧問，熟悉漁港經濟、水產品牌化、觀光漁業與餐飲通路，也了解閒置土地與漁港周邊不動產活化的常見路徑，擅長評估在地企業多角化的可行性與風險，給出可分階段執行的務實建議。\n\n📍 情境\n我經營一家位於【新北瑞芳、鄰近深澳漁港】的公司【鼎圓開發】，目前以【水產食品批發零售】為主要業務，公司登記範圍也包含不動產開發，手上握有在地漁產與漁港周邊的一些既有資源。我想在現有水產的基礎上往外多角化，但一直不確定哪條路比較可行：是把漁產做成自有品牌往零售和電商走、結合深澳漁港發展觀光漁業或體驗行程、開一間以在地海鮮為主打的餐飲，還是把手上的土地或空間拿去做不動產活化。我們資源有限、團隊也不大，沒辦法每條路都去試，所以希望先把各條路的市場規模、進入門檻和主要風險看清楚，再決定到底要從哪一條開始下手、怎麼分階段推進。\n\n🎯 期望\n請自動規劃研究架構並列出子題，至少涵蓋：水產品牌化與生鮮電商的市場與門檻、深澳漁港觀光漁業與體驗行程的潛力、在地海鮮餐飲的經營模式、漁港周邊不動產活化的做法限制。請產出 5 到 10 頁結構化長報告，大量標註可查證來源，事實與推論分開，最後給四條路的排序建議。", "placeholders": ["新北瑞芳、鄰近深澳漁港", "鼎圓開發", "水產食品批發零售"], "kind": "案例指令"}, {"id": "manus-01", "sourceSlide": 35, "number": "01", "moduleKey": "想", "module": "想｜自動執行", "tool": "Manus", "toolNote": "找資料、整理、產出名單", "category": "拓展", "company": "", "title": "找海外品牌代理商", "summary": "我要請你幫我找出【目標市場：澳洲／日本】當地願意代理進口亞洲調味醬料的品牌代理商或經銷商名單。我們的產品是中式醬料（XO 醬、辣椒醬、調理包），保存期常溫、單價中價位，已有香港與新加坡...", "role": "你是向記食品的外銷業務開發負責人，我們在桃園蘆竹做 XO 醬起家，產麻辣醬、花椒油、辣椒醬、調理包與罐頭，全通路鋪在 momo、PChome 與實體賣場，目前已外銷香港、新加坡、英國與加拿大，現在想找新市場的當地品牌代理商把貨真正鋪進通路。", "context": "我要請你幫我找出【目標市場：澳洲／日本】當地願意代理進口亞洲調味醬料的品牌代理商或經銷商名單。我們的產品是中式醬料（XO 醬、辣椒醬、調理包），保存期常溫、單價中價位，已有香港與新加坡的外銷與報關經驗，主要客群是當地華人超市、亞洲食材通路與電商，也想試水溫進主流連鎖超市。請優先找有在經營亞洲食品、生鮮雜貨或華人超市供貨、且有實際進口報關能力的代理商，並過濾掉只做單一品牌、規模太小或沒有冷鏈以外常溫倉儲的對象，幫我把適合接觸的潛在夥伴整理出來。", "expectation": "請先用一兩句講你打算怎麼查（會查當地進口商名錄、亞洲超市供應鏈、產業展商名單等），再產出一份表格，欄位包含公司名稱、所在城市、主力代理品類、合作通路、官網與聯絡方式、規模或代理品牌數，每一筆都附上你查到的來源連結。資料不確定或無法查證的地方請標「待查證」，不要自己編。最後依「與我們產品契合度」排序前幾名，並告訴我下一步該先聯絡誰。", "pain": "", "material": "", "tip": "把目標市場、想進的通路類型講明確，Manus 找出來的名單才會精準對得上你的鋪貨策略。", "prompt": "🎭 角色\n你是向記食品的外銷業務開發負責人，我們在桃園蘆竹做 XO 醬起家，產麻辣醬、花椒油、辣椒醬、調理包與罐頭，全通路鋪在 momo、PChome 與實體賣場，目前已外銷香港、新加坡、英國與加拿大，現在想找新市場的當地品牌代理商把貨真正鋪進通路。\n\n📍 情境\n我要請你幫我找出【目標市場：澳洲／日本】當地願意代理進口亞洲調味醬料的品牌代理商或經銷商名單。我們的產品是中式醬料（XO 醬、辣椒醬、調理包），保存期常溫、單價中價位，已有香港與新加坡的外銷與報關經驗，主要客群是當地華人超市、亞洲食材通路與電商，也想試水溫進主流連鎖超市。請優先找有在經營亞洲食品、生鮮雜貨或華人超市供貨、且有實際進口報關能力的代理商，並過濾掉只做單一品牌、規模太小或沒有冷鏈以外常溫倉儲的對象，幫我把適合接觸的潛在夥伴整理出來。\n\n🎯 期望\n請先用一兩句講你打算怎麼查（會查當地進口商名錄、亞洲超市供應鏈、產業展商名單等），再產出一份表格，欄位包含公司名稱、所在城市、主力代理品類、合作通路、官網與聯絡方式、規模或代理品牌數，每一筆都附上你查到的來源連結。資料不確定或無法查證的地方請標「待查證」，不要自己編。最後依「與我們產品契合度」排序前幾名，並告訴我下一步該先聯絡誰。", "placeholders": ["目標市場：澳洲／日本"], "kind": "案例指令"}, {"id": "manus-02", "sourceSlide": 36, "number": "02", "moduleKey": "想", "module": "想｜自動執行", "tool": "Manus", "toolNote": "找資料、整理、產出名單", "category": "拓展", "company": "", "title": "海外展店選址調查", "summary": "我要請你幫我調查【目標城市：新加坡／東京】適合我們開台菜餐廳的展店區域。我們是台中起家的精緻台菜集團，客單價中高、強調民間創作料理與在地食材，目標客群是當地對台灣味有興趣的中產家庭、上...", "role": "你是膳馨餐飲集團的海外發展負責人，我們在台中經營膳馨民間創作料理與馨苑小料理共四家店、員工 150 多人，台菜做到米其林餐盤與必比登推介，冷凍食品已外銷 12 國、內部導入 40 多套管理工具，現在要評估到海外開第一家實體門市的落腳城市。", "context": "我要請你幫我調查【目標城市：新加坡／東京】適合我們開台菜餐廳的展店區域。我們是台中起家的精緻台菜集團，客單價中高、強調民間創作料理與在地食材，目標客群是當地對台灣味有興趣的中產家庭、上班族與觀光客，海外第一家會走品牌旗艦店規格。請幫我比較該城市幾個主要餐飲商圈，分析各區的人流型態、租金概況、競爭餐廳密度、客群消費力與是否有同類台菜或中菜競品，並考量觀光客比例與當地對台灣餐飲的接受度，協助我們判斷哪一區最適合開旗艦店。", "expectation": "請先講一下你的調查步驟（會看商圈人流、租金行情、競品分布等），再用表格逐區比較，欄位包含商圈名稱、定位、人流型態、租金水準、競品密度、適合度評分與理由，每區都附上你引用的資料來源。租金等會變動或抓不到精確值的數字請給範圍並標「待查證」，不要硬湊一個數字。最後幫我把幾個商圈排序、點名最推薦的一區，並建議下一步要不要實地場勘或找當地仲介。", "pain": "", "material": "", "tip": "把客單價與目標客群先講清楚，選址建議才會貼著你的品牌定位走，而不是給一堆熱門地點。", "prompt": "🎭 角色\n你是膳馨餐飲集團的海外發展負責人，我們在台中經營膳馨民間創作料理與馨苑小料理共四家店、員工 150 多人，台菜做到米其林餐盤與必比登推介，冷凍食品已外銷 12 國、內部導入 40 多套管理工具，現在要評估到海外開第一家實體門市的落腳城市。\n\n📍 情境\n我要請你幫我調查【目標城市：新加坡／東京】適合我們開台菜餐廳的展店區域。我們是台中起家的精緻台菜集團，客單價中高、強調民間創作料理與在地食材，目標客群是當地對台灣味有興趣的中產家庭、上班族與觀光客，海外第一家會走品牌旗艦店規格。請幫我比較該城市幾個主要餐飲商圈，分析各區的人流型態、租金概況、競爭餐廳密度、客群消費力與是否有同類台菜或中菜競品，並考量觀光客比例與當地對台灣餐飲的接受度，協助我們判斷哪一區最適合開旗艦店。\n\n🎯 期望\n請先講一下你的調查步驟（會看商圈人流、租金行情、競品分布等），再用表格逐區比較，欄位包含商圈名稱、定位、人流型態、租金水準、競品密度、適合度評分與理由，每區都附上你引用的資料來源。租金等會變動或抓不到精確值的數字請給範圍並標「待查證」，不要硬湊一個數字。最後幫我把幾個商圈排序、點名最推薦的一區，並建議下一步要不要實地場勘或找當地仲介。", "placeholders": ["目標城市：新加坡／東京"], "kind": "案例指令"}, {"id": "manus-03", "sourceSlide": 37, "number": "03", "moduleKey": "想", "module": "想｜自動執行", "tool": "Manus", "toolNote": "找資料、整理、產出名單", "category": "拓展", "company": "", "title": "找國際餐飲加盟展", "summary": "我要請你幫我整理出未來一年內，【目標區域：東南亞／日本】值得我們參加的餐飲科技、餐飲設備或食材供應鏈相關的國際展覽與商展。我們是餐飲 SaaS 新創，產品是餐廳叫貨與供應商對帳平台，想...", "role": "你是食集資訊 CocoMart 的市場開發窗口，我們在台北做餐飲科技 SaaS，平台串起餐廳叫貨與供應商接單兩端，解決叫貨散在 LINE、電話、Excel 跟月底對帳的痛點，能 API 串接 ERP 與 POS，現在想透過參加國際展會打開海外能見度、找通路與合作夥伴。", "context": "我要請你幫我整理出未來一年內，【目標區域：東南亞／日本】值得我們參加的餐飲科技、餐飲設備或食材供應鏈相關的國際展覽與商展。我們是餐飲 SaaS 新創，產品是餐廳叫貨與供應商對帳平台，想參展的目的是找當地經銷或系統整合夥伴、接觸連鎖餐飲與食材供應商客戶，也想觀察同類 SaaS 競品。請幫我找出主題對得上、有 B2B 採購買家、規模具代表性的展會，過濾掉純消費端美食展或跟科技、供應鏈無關的活動。", "expectation": "請先說明你怎麼找（會查當地展覽主辦、餐飲科技產業展曆、同業參展紀錄等），再做一份表格，欄位包含展會名稱、城市、預計舉辦時間、主題定位、參觀客群、官網連結與報名或攤位資訊，每筆附上來源。日期或費用如果官方還沒公布就標「待查證」，不要自己填。最後依「對我們找夥伴與客戶的價值」排序，並建議優先報名哪一兩場、何時要開始準備。", "pain": "", "material": "", "tip": "把你參展是要找客戶、找通路還是看競品講明白，篩出來的展會清單才不會雜。", "prompt": "🎭 角色\n你是食集資訊 CocoMart 的市場開發窗口，我們在台北做餐飲科技 SaaS，平台串起餐廳叫貨與供應商接單兩端，解決叫貨散在 LINE、電話、Excel 跟月底對帳的痛點，能 API 串接 ERP 與 POS，現在想透過參加國際展會打開海外能見度、找通路與合作夥伴。\n\n📍 情境\n我要請你幫我整理出未來一年內，【目標區域：東南亞／日本】值得我們參加的餐飲科技、餐飲設備或食材供應鏈相關的國際展覽與商展。我們是餐飲 SaaS 新創，產品是餐廳叫貨與供應商對帳平台，想參展的目的是找當地經銷或系統整合夥伴、接觸連鎖餐飲與食材供應商客戶，也想觀察同類 SaaS 競品。請幫我找出主題對得上、有 B2B 採購買家、規模具代表性的展會，過濾掉純消費端美食展或跟科技、供應鏈無關的活動。\n\n🎯 期望\n請先說明你怎麼找（會查當地展覽主辦、餐飲科技產業展曆、同業參展紀錄等），再做一份表格，欄位包含展會名稱、城市、預計舉辦時間、主題定位、參觀客群、官網連結與報名或攤位資訊，每筆附上來源。日期或費用如果官方還沒公布就標「待查證」，不要自己填。最後依「對我們找夥伴與客戶的價值」排序，並建議優先報名哪一兩場、何時要開始準備。", "placeholders": ["目標區域：東南亞／日本"], "kind": "案例指令"}, {"id": "manus-04", "sourceSlide": 38, "number": "04", "moduleKey": "想", "module": "想｜自動執行", "tool": "Manus", "toolNote": "找資料、整理、產出名單", "category": "情報", "company": "", "title": "競品深度調查", "summary": "我要請你幫我針對【競品：指定 2 到 3 家餐飲 POS 系統商】做一份深度競品調查。我們是雲端 iPad POS，主打好用的點餐、外送整合、會員與數據分析，最近強打 AI 點餐，客群...", "role": "你是 iCHEF 資廚的產品策略人員，我們做 iPad 餐飲 POS 系統，2012 年成立、服務台港星超過 15,000 間餐廳，提供雲端點餐、線上點餐外送整合、會員行銷與數據分析，拿過不少設計大獎，近期主打 AI 點餐系統，需要把幾家主要競爭對手摸透。", "context": "我要請你幫我針對【競品：指定 2 到 3 家餐飲 POS 系統商】做一份深度競品調查。我們是雲端 iPad POS，主打好用的點餐、外送整合、會員與數據分析，最近強打 AI 點餐，客群從單店小餐廳到中型連鎖都有。請幫我整理每一家競品的產品定位、主打功能、收費方案與級距、目標客群、近一年的新功能或 AI 相關動向、市場口碑與明顯的優劣勢，特別留意他們在 AI 與外送整合上做了什麼，方便我們比對自己的差異化空間。", "expectation": "請先講你會從哪裡查（官網、定價頁、新聞稿、評價平台與社群討論等），再用表格把每家競品並排比較，欄位包含公司、定位、核心功能、價格方案、目標客群、近期動態、優勢與劣勢，每一格都附上來源連結。價格或用戶數這類官方沒明講的就標「待查證」，別自己估。最後幫我總結競品的共同打法、我們相對的機會點，並排序哪一家最該優先盯。", "pain": "", "material": "", "tip": "把你最想釐清的角度（價格、AI 功能還是客群）先點出來，競品報告才會聚焦不流於資料堆疊。", "prompt": "🎭 角色\n你是 iCHEF 資廚的產品策略人員，我們做 iPad 餐飲 POS 系統，2012 年成立、服務台港星超過 15,000 間餐廳，提供雲端點餐、線上點餐外送整合、會員行銷與數據分析，拿過不少設計大獎，近期主打 AI 點餐系統，需要把幾家主要競爭對手摸透。\n\n📍 情境\n我要請你幫我針對【競品：指定 2 到 3 家餐飲 POS 系統商】做一份深度競品調查。我們是雲端 iPad POS，主打好用的點餐、外送整合、會員與數據分析，最近強打 AI 點餐，客群從單店小餐廳到中型連鎖都有。請幫我整理每一家競品的產品定位、主打功能、收費方案與級距、目標客群、近一年的新功能或 AI 相關動向、市場口碑與明顯的優劣勢，特別留意他們在 AI 與外送整合上做了什麼，方便我們比對自己的差異化空間。\n\n🎯 期望\n請先講你會從哪裡查（官網、定價頁、新聞稿、評價平台與社群討論等），再用表格把每家競品並排比較，欄位包含公司、定位、核心功能、價格方案、目標客群、近期動態、優勢與劣勢，每一格都附上來源連結。價格或用戶數這類官方沒明講的就標「待查證」，別自己估。最後幫我總結競品的共同打法、我們相對的機會點，並排序哪一家最該優先盯。", "placeholders": ["競品：指定 2 到 3 家餐飲 POS 系統商"], "kind": "案例指令"}, {"id": "manus-05", "sourceSlide": 39, "number": "05", "moduleKey": "想", "module": "想｜自動執行", "tool": "Manus", "toolNote": "找資料、整理、產出名單", "category": "情報", "company": "", "title": "海外趨勢蒐集", "summary": "我要請你幫我蒐集【目標市場：日本／歐美】近一兩年在「料理體驗、廚藝教室、美食觀光」這塊的最新趨勢與創新做法。我們做的是針對外國旅客的台灣料理動手體驗課，結合逛市場、烹飪教學與文化導覽，...", "role": "你是晨星樂廚 Cookinn 的營運企劃，我們在台北西門做給外國旅客的台灣料理體驗課，帶學員逛市場再動手做小籠包、牛肉麵、三杯雞跟珍奶，中英日語教學、也接企業 team building，創辦人受過藍帶訓練，客群是國際觀光客，想掌握海外料理體驗的最新玩法。", "context": "我要請你幫我蒐集【目標市場：日本／歐美】近一兩年在「料理體驗、廚藝教室、美食觀光」這塊的最新趨勢與創新做法。我們做的是針對外國旅客的台灣料理動手體驗課，結合逛市場、烹飪教學與文化導覽，也接企業團建，想知道國外同類業者在課程設計、定價模式、線上線下結合、結合在地文化或永續主題上有什麼新花樣，以及旅客現在偏好哪種體驗，作為我們升級課程與行銷的靈感。", "expectation": "請先說明你的蒐集方向（會看國外旅遊體驗平台、料理教室官網、旅遊與餐飲趨勢報導等），再整理成一份分類清單或表格，欄位包含趨勢或案例名稱、所在地區、做法重點、為什麼值得參考、來源連結。屬於觀察或推測、查不到實證的就標「待查證」，不要當成事實寫。最後依「對我們最有啟發、最容易落地」排序，並挑出兩三個建議我們可以馬上試的方向。", "pain": "", "material": "", "tip": "把你想找的是課程設計、定價還是行銷靈感先講清楚，趨勢蒐集才會收斂成能用的點子。", "prompt": "🎭 角色\n你是晨星樂廚 Cookinn 的營運企劃，我們在台北西門做給外國旅客的台灣料理體驗課，帶學員逛市場再動手做小籠包、牛肉麵、三杯雞跟珍奶，中英日語教學、也接企業 team building，創辦人受過藍帶訓練，客群是國際觀光客，想掌握海外料理體驗的最新玩法。\n\n📍 情境\n我要請你幫我蒐集【目標市場：日本／歐美】近一兩年在「料理體驗、廚藝教室、美食觀光」這塊的最新趨勢與創新做法。我們做的是針對外國旅客的台灣料理動手體驗課，結合逛市場、烹飪教學與文化導覽，也接企業團建，想知道國外同類業者在課程設計、定價模式、線上線下結合、結合在地文化或永續主題上有什麼新花樣，以及旅客現在偏好哪種體驗，作為我們升級課程與行銷的靈感。\n\n🎯 期望\n請先說明你的蒐集方向（會看國外旅遊體驗平台、料理教室官網、旅遊與餐飲趨勢報導等），再整理成一份分類清單或表格，欄位包含趨勢或案例名稱、所在地區、做法重點、為什麼值得參考、來源連結。屬於觀察或推測、查不到實證的就標「待查證」，不要當成事實寫。最後依「對我們最有啟發、最容易落地」排序，並挑出兩三個建議我們可以馬上試的方向。", "placeholders": ["目標市場：日本／歐美"], "kind": "案例指令"}, {"id": "manus-06", "sourceSlide": 40, "number": "06", "moduleKey": "想", "module": "想｜自動執行", "tool": "Manus", "toolNote": "找資料、整理、產出名單", "category": "供應鏈", "company": "", "title": "找海外供應商", "summary": "我要請你幫我找出【目標產區：法國／日本／西班牙】可以直接供貨的酒類供應商、酒莊或出口商名單。我們做的是酒類批發零售，主要客戶是餐廳、酒吧與零售通路，想找的是願意外銷台灣、可以小量起訂或...", "role": "你是酒旺的採購窗口，我們是一家做酒類批發與零售的公司，平常向上游酒商與進口商調貨、再供應給下游餐飲與通路客戶，現在想跳過中間商、直接找海外的酒類供應商或原廠，把進貨成本壓下來、也想引進一些市面上比較少見的品項。", "context": "我要請你幫我找出【目標產區：法國／日本／西班牙】可以直接供貨的酒類供應商、酒莊或出口商名單。我們做的是酒類批發零售，主要客戶是餐廳、酒吧與零售通路，想找的是願意外銷台灣、可以小量起訂或彈性配貨、且有正規出口報關經驗的供應商，品項以【葡萄酒／清酒／烈酒】為主。請優先找有外銷實績、可直接接觸原廠或一階出口商的對象，過濾掉只服務當地市場、沒有外銷能力的酒商，幫我列出值得接洽的潛在供應來源。", "expectation": "請先講你打算怎麼查（會找產區出口商名錄、酒類貿易平台、產業展商名單等），再做成一份表格，欄位包含供應商名稱、所在產區、主力品項、是否外銷台灣或亞洲、起訂與配貨條件、官網與聯絡方式，每筆都附來源。起訂量、價格這類要實際洽談才知道的就標「待查證」，不要編造數字。最後依「外銷可行性與品項契合度」排序，並建議先發詢價信給哪幾家。", "pain": "", "material": "", "tip": "把目標產區、想進的酒種跟可接受的起訂規模先講明，找出來的供應商清單才會真的能談。", "prompt": "🎭 角色\n你是酒旺的採購窗口，我們是一家做酒類批發與零售的公司，平常向上游酒商與進口商調貨、再供應給下游餐飲與通路客戶，現在想跳過中間商、直接找海外的酒類供應商或原廠，把進貨成本壓下來、也想引進一些市面上比較少見的品項。\n\n📍 情境\n我要請你幫我找出【目標產區：法國／日本／西班牙】可以直接供貨的酒類供應商、酒莊或出口商名單。我們做的是酒類批發零售，主要客戶是餐廳、酒吧與零售通路，想找的是願意外銷台灣、可以小量起訂或彈性配貨、且有正規出口報關經驗的供應商，品項以【葡萄酒／清酒／烈酒】為主。請優先找有外銷實績、可直接接觸原廠或一階出口商的對象，過濾掉只服務當地市場、沒有外銷能力的酒商，幫我列出值得接洽的潛在供應來源。\n\n🎯 期望\n請先講你打算怎麼查（會找產區出口商名錄、酒類貿易平台、產業展商名單等），再做成一份表格，欄位包含供應商名稱、所在產區、主力品項、是否外銷台灣或亞洲、起訂與配貨條件、官網與聯絡方式，每筆都附來源。起訂量、價格這類要實際洽談才知道的就標「待查證」，不要編造數字。最後依「外銷可行性與品項契合度」排序，並建議先發詢價信給哪幾家。", "placeholders": ["目標產區：法國／日本／西班牙", "葡萄酒／清酒／烈酒"], "kind": "案例指令"}, {"id": "manus-07", "sourceSlide": 41, "number": "07", "moduleKey": "想", "module": "想｜自動執行", "tool": "Manus", "toolNote": "找資料、整理、產出名單", "category": "開發", "company": "", "title": "B2B 客戶名單", "summary": "我要請你幫我盤出一份【目標範圍：台灣中部／全台】塑膠或橡膠機械製造廠的潛在客戶名單，作為我們行銷服務的開發對象。我們是專攻塑橡膠機械產業的 B2B 行銷代理商，服務包含品牌官網、型錄、...", "role": "你是普拉瑞斯 Polaris 的業務開發負責人，我們在台中專做塑橡膠機械產業的 B2B 品牌行銷，深耕這個工業利基 17 年，幫客戶做官網、CIS、型錄、展場視覺、SEO、Google 關鍵字跟 YouTube，客戶多是外銷型機械廠，現在想主動開發更多同類型的潛在客戶。", "context": "我要請你幫我盤出一份【目標範圍：台灣中部／全台】塑膠或橡膠機械製造廠的潛在客戶名單，作為我們行銷服務的開發對象。我們是專攻塑橡膠機械產業的 B2B 行銷代理商，服務包含品牌官網、型錄、展場視覺與數位行銷，理想客戶是有外銷需求、會參加國際工具機或塑橡膠展、但品牌行銷或官網明顯還有提升空間的機械廠。請幫我找出這類公司，並過濾掉非製造業、規模太小或跟塑橡膠機械無關的對象，方便我們鎖定名單去接觸。", "expectation": "請先說明你的查找方式（會看產業公會名錄、外銷廠商資料庫、展覽參展商與工商名錄等），再產出一份表格，欄位包含公司名稱、所在地、主要產品、是否外銷、目前官網或行銷狀況、聯絡資訊，每一筆附上來源連結。聯絡人或內部狀況查不到的就標「待查證」，不要自己掰。最後依「成交可能性與服務切入空間」排序，並建議我們先從哪幾家、用什麼角度開發。", "pain": "", "material": "", "tip": "把理想客戶的條件（有外銷、會參展、官網偏弱）先描述清楚，名單才會準到可以直接打電話。", "prompt": "🎭 角色\n你是普拉瑞斯 Polaris 的業務開發負責人，我們在台中專做塑橡膠機械產業的 B2B 品牌行銷，深耕這個工業利基 17 年，幫客戶做官網、CIS、型錄、展場視覺、SEO、Google 關鍵字跟 YouTube，客戶多是外銷型機械廠，現在想主動開發更多同類型的潛在客戶。\n\n📍 情境\n我要請你幫我盤出一份【目標範圍：台灣中部／全台】塑膠或橡膠機械製造廠的潛在客戶名單，作為我們行銷服務的開發對象。我們是專攻塑橡膠機械產業的 B2B 行銷代理商，服務包含品牌官網、型錄、展場視覺與數位行銷，理想客戶是有外銷需求、會參加國際工具機或塑橡膠展、但品牌行銷或官網明顯還有提升空間的機械廠。請幫我找出這類公司，並過濾掉非製造業、規模太小或跟塑橡膠機械無關的對象，方便我們鎖定名單去接觸。\n\n🎯 期望\n請先說明你的查找方式（會看產業公會名錄、外銷廠商資料庫、展覽參展商與工商名錄等），再產出一份表格，欄位包含公司名稱、所在地、主要產品、是否外銷、目前官網或行銷狀況、聯絡資訊，每一筆附上來源連結。聯絡人或內部狀況查不到的就標「待查證」，不要自己掰。最後依「成交可能性與服務切入空間」排序，並建議我們先從哪幾家、用什麼角度開發。", "placeholders": ["目標範圍：台灣中部／全台"], "kind": "案例指令"}, {"id": "manus-08", "sourceSlide": 42, "number": "08", "moduleKey": "想", "module": "想｜自動執行", "tool": "Manus", "toolNote": "找資料、整理、產出名單", "category": "開發", "company": "", "title": "找潛在加盟主", "summary": "我要請你幫我找出【目標地區：雙北／中南部】適合接手咖啡弄加盟店的潛在加盟主或投資對象。我們是經營快二十年的甜點咖啡連鎖，主力是鬆餅與輕食、品牌與社群聲量都成熟，想找的加盟對象最好有餐飲...", "role": "你是咖啡弄 Coffee Alley 的展店發展窗口，我們 2006 年創立、以鬆餅起家，草莓冰淇淋、鹽味焦糖是招牌，後來延伸義式與南洋料理，在台北士林、站前有店、也曾拓展到香港，是社群口碑很強的老字號打卡甜點咖啡店，現在想開放加盟、找對的人一起展店。", "context": "我要請你幫我找出【目標地區：雙北／中南部】適合接手咖啡弄加盟店的潛在加盟主或投資對象。我們是經營快二十年的甜點咖啡連鎖，主力是鬆餅與輕食、品牌與社群聲量都成熟，想找的加盟對象最好有餐飲或門市經營經驗、認同我們品牌調性、口袋與展店企圖心都跟得上的人或公司。請幫我盤出可能的來源，例如有意跨入餐飲的投資人、現有多品牌餐飲加盟商、地方有店面資源的經營者等，過濾掉資源明顯不足或調性不合的對象，整理成可接觸的名單方向。", "expectation": "請先講你會怎麼找（會查加盟媒合平台、餐飲加盟展、多品牌餐飲集團與相關社群等），再整理成表格，欄位包含對象名稱或類型、背景、可能的合作切入點、所在地區、聯絡或接觸管道，每筆盡量附來源。屬於推測、查不到實名的就標「待查證」、用類型描述代替，不要捏造具體個資。最後依「契合度與接觸可行性」排序，並建議我們先從哪一類對象、用什麼方式邀約洽談。", "pain": "", "material": "", "tip": "把理想加盟主該有的條件（餐飲經驗、資金、品牌認同）先寫明，找出來的對象才不會浪費你的招商時間。", "prompt": "🎭 角色\n你是咖啡弄 Coffee Alley 的展店發展窗口，我們 2006 年創立、以鬆餅起家，草莓冰淇淋、鹽味焦糖是招牌，後來延伸義式與南洋料理，在台北士林、站前有店、也曾拓展到香港，是社群口碑很強的老字號打卡甜點咖啡店，現在想開放加盟、找對的人一起展店。\n\n📍 情境\n我要請你幫我找出【目標地區：雙北／中南部】適合接手咖啡弄加盟店的潛在加盟主或投資對象。我們是經營快二十年的甜點咖啡連鎖，主力是鬆餅與輕食、品牌與社群聲量都成熟，想找的加盟對象最好有餐飲或門市經營經驗、認同我們品牌調性、口袋與展店企圖心都跟得上的人或公司。請幫我盤出可能的來源，例如有意跨入餐飲的投資人、現有多品牌餐飲加盟商、地方有店面資源的經營者等，過濾掉資源明顯不足或調性不合的對象，整理成可接觸的名單方向。\n\n🎯 期望\n請先講你會怎麼找（會查加盟媒合平台、餐飲加盟展、多品牌餐飲集團與相關社群等），再整理成表格，欄位包含對象名稱或類型、背景、可能的合作切入點、所在地區、聯絡或接觸管道，每筆盡量附來源。屬於推測、查不到實名的就標「待查證」、用類型描述代替，不要捏造具體個資。最後依「契合度與接觸可行性」排序，並建議我們先從哪一類對象、用什麼方式邀約洽談。", "placeholders": ["目標地區：雙北／中南部"], "kind": "案例指令"}, {"id": "manus-09", "sourceSlide": 43, "number": "09", "moduleKey": "想", "module": "想｜自動執行", "tool": "Manus", "toolNote": "找資料、整理、產出名單", "category": "拓展", "company": "", "title": "找異業合作／聯名對象", "summary": "我們手上握有六百六十一萬保戶，年齡層橫跨小資族到退休族，但這幾年保戶對保險公司的印象只停在「繳費」和「理賠」，黏著度和好感度都在掉。我想透過異業合作把品牌變得有溫度，例如跟餐飲、生活、...", "role": "我是南山人壽的異業合作企劃，公司成立超過六十年、有六百六十一萬名保戶、三百四十多個通訊處與龐大的業務員團隊，我這次要負責替這個全台最大客群之一，找對的品牌一起辦活動、做聯名，把品牌形象經營得更有溫度。", "context": "我們手上握有六百六十一萬保戶，年齡層橫跨小資族到退休族，但這幾年保戶對保險公司的印象只停在「繳費」和「理賠」，黏著度和好感度都在掉。我想透過異業合作把品牌變得有溫度，例如跟餐飲、生活、健康類品牌做保戶專屬優惠、點數兌換或聯名活動，讓保戶覺得「當南山的客戶有好康」，順便活化沉睡客群、也給三百四十個通訊處的業務員拜訪時多一個話題。請幫我盤點台灣現在適合跟壽險公司做異業合作或聯名的品牌，鎖定【餐飲、生活服務、健康養生】三類，找出有實際異業合作經驗、品牌形象正向、客群跟我們保戶重疊的對象，讓我這邊好評估要先談誰、用什麼形式合作。", "expectation": "請先用一兩句說明你的執行計畫與搜尋方向，再產出一張表格，欄位包含品牌名稱、所屬類別、適合的合作形式、過去異業合作案例、官網或聯絡窗口、推薦理由。每個品牌都要附上資料來源連結，合作案例查不到實證就標「待查證」別編造。最後依客群契合度排序，並建議我先接觸哪三家。", "pain": "", "material": "", "tip": "把保戶的年齡層和消費偏好先告訴 Manus，配對的品牌會更準。", "prompt": "🎭 角色\n我是南山人壽的異業合作企劃，公司成立超過六十年、有六百六十一萬名保戶、三百四十多個通訊處與龐大的業務員團隊，我這次要負責替這個全台最大客群之一，找對的品牌一起辦活動、做聯名，把品牌形象經營得更有溫度。\n\n📍 情境\n我們手上握有六百六十一萬保戶，年齡層橫跨小資族到退休族，但這幾年保戶對保險公司的印象只停在「繳費」和「理賠」，黏著度和好感度都在掉。我想透過異業合作把品牌變得有溫度，例如跟餐飲、生活、健康類品牌做保戶專屬優惠、點數兌換或聯名活動，讓保戶覺得「當南山的客戶有好康」，順便活化沉睡客群、也給三百四十個通訊處的業務員拜訪時多一個話題。請幫我盤點台灣現在適合跟壽險公司做異業合作或聯名的品牌，鎖定【餐飲、生活服務、健康養生】三類，找出有實際異業合作經驗、品牌形象正向、客群跟我們保戶重疊的對象，讓我這邊好評估要先談誰、用什麼形式合作。\n\n🎯 期望\n請先用一兩句說明你的執行計畫與搜尋方向，再產出一張表格，欄位包含品牌名稱、所屬類別、適合的合作形式、過去異業合作案例、官網或聯絡窗口、推薦理由。每個品牌都要附上資料來源連結，合作案例查不到實證就標「待查證」別編造。最後依客群契合度排序，並建議我先接觸哪三家。", "placeholders": ["餐飲、生活服務、健康養生"], "kind": "案例指令"}, {"id": "manus-10", "sourceSlide": 44, "number": "10", "moduleKey": "想", "module": "想｜自動執行", "tool": "Manus", "toolNote": "找資料、整理、產出名單", "category": "開發", "company": "", "title": "找 KOL／網紅合作名單", "summary": "我手上有一個客戶要做網紅行銷，但我自己對這個產業的 KOL 生態不夠熟，怕找錯人、花了錢卻沒成效。這個客戶屬於【請填產業，例如：中部在地餐飲品牌】，目標客群是【請填，例如：25 到 4...", "role": "我是德明商業開發的數位行銷企劃，公司在台中、成立十多年，提供財務、行銷、電商整合服務，也幫客戶代操 FB、IG、Google 廣告，我這次要替手上一個客戶找適合的 KOL、網紅和部落客來合作，做一波口碑曝光。", "context": "我手上有一個客戶要做網紅行銷，但我自己對這個產業的 KOL 生態不夠熟，怕找錯人、花了錢卻沒成效。這個客戶屬於【請填產業，例如：中部在地餐飲品牌】，目標客群是【請填，例如：25 到 40 歲、住台中、愛吃愛打卡的小資族】，預算大概【請填金額區間】，希望透過 KOL、網紅或部落客做口碑曝光和導購。我想要一份精準的合作名單，最好是中部在地或客群對得上的創作者，避免找到粉絲多但互動很假、或調性跟品牌不合的人。請幫我盤點適合這個客戶的對象，涵蓋奈米、微型、中大型不同量級，讓我好搭配運用、抓預算，也方便我回頭跟客戶提案時說明選人的邏輯。", "expectation": "請先講一下你會怎麼找、從哪些平台和指標切入，再產出一張名單表格，欄位包含創作者名稱、主要平台、粉絲數、內容類型、預估互動率、合作報價、聯絡方式、推薦理由。每位都附上帳號連結當來源，粉絲數和報價會變動請標「待查證」。最後依客群契合度排序，建議我先發邀約給哪五位。", "pain": "", "material": "", "tip": "把客戶的產業、客群、預算填進【】裡，名單精準度會差很多。", "prompt": "🎭 角色\n我是德明商業開發的數位行銷企劃，公司在台中、成立十多年，提供財務、行銷、電商整合服務，也幫客戶代操 FB、IG、Google 廣告，我這次要替手上一個客戶找適合的 KOL、網紅和部落客來合作，做一波口碑曝光。\n\n📍 情境\n我手上有一個客戶要做網紅行銷，但我自己對這個產業的 KOL 生態不夠熟，怕找錯人、花了錢卻沒成效。這個客戶屬於【請填產業，例如：中部在地餐飲品牌】，目標客群是【請填，例如：25 到 40 歲、住台中、愛吃愛打卡的小資族】，預算大概【請填金額區間】，希望透過 KOL、網紅或部落客做口碑曝光和導購。我想要一份精準的合作名單，最好是中部在地或客群對得上的創作者，避免找到粉絲多但互動很假、或調性跟品牌不合的人。請幫我盤點適合這個客戶的對象，涵蓋奈米、微型、中大型不同量級，讓我好搭配運用、抓預算，也方便我回頭跟客戶提案時說明選人的邏輯。\n\n🎯 期望\n請先講一下你會怎麼找、從哪些平台和指標切入，再產出一張名單表格，欄位包含創作者名稱、主要平台、粉絲數、內容類型、預估互動率、合作報價、聯絡方式、推薦理由。每位都附上帳號連結當來源，粉絲數和報價會變動請標「待查證」。最後依客群契合度排序，建議我先發邀約給哪五位。", "placeholders": ["請填產業，例如：中部在地餐飲品牌", "請填，例如：25 到 40 歲、住台中、愛吃愛打卡的小資族", "請填金額區間"], "kind": "案例指令"}, {"id": "gemini-nano-banana-01", "sourceSlide": 51, "number": "01", "moduleKey": "美", "module": "美｜視覺生成", "tool": "Gemini Nano Banana", "toolNote": "菜色、海報、品牌視覺", "category": "菜色攝影", "company": "", "title": "生招牌菜色照（菜單用）", "summary": "我們是主廚私廚型的精緻小店，靠手工現做義大利麵跟外帶生鮮義麵撐起口碑，價位也走精緻路線，但過去拍菜都是收攤前用手機隨手拍，光線黃黃的、背景是雜亂的廚房檯面、麵條糊成一團，完全看不出手工...", "role": "我是羅義生活 PapàRoy 的主廚兼負責人，從 2015 年永和私廚一路做到信義松菸周邊，主打赴義習藝的手工新鮮義大利麵與預約制套餐，現在要重做整本菜單，需要一張能放在封面的招牌菜色照。", "context": "我們是主廚私廚型的精緻小店，靠手工現做義大利麵跟外帶生鮮義麵撐起口碑，價位也走精緻路線，但過去拍菜都是收攤前用手機隨手拍，光線黃黃的、背景是雜亂的廚房檯面、麵條糊成一團，完全看不出手工現桿的彈性與紋理，放進菜單質感整個掉下來，跟我們的客單價對不起來，客人在預約頁面看到也很難被打動。這次想要一張能當菜單封面、同時放在官網預約頁與 Google 商家的主視覺，調性要走義式餐酒館的溫暖手作風，木質、自然光、有生活感，不要那種冷冰冰、過度打燈的網美擺盤，希望客人一眼就感覺到這是真材實料、每天現做的麵，而不是中央廚房復熱的。", "expectation": "請幫我生成一張【松露野菇義大利麵】招牌菜色照。①主體：盛在霧面陶盤上的手工現做義大利麵，麵條捲起、配料層次清楚。②構圖：俯角 45 度近距離特寫，淺景深讓背景柔和虛化、突出麵體。③動態：醬汁掛附在麵條上微微流動、表面油光與松露野菇的細緻質感，呈現現做的新鮮感。④場景：深色木桌鋪亞麻桌巾，旁邊隨意擺放叉子與餐巾，營造義式餐酒館的溫暖手作氛圍。⑤風格：雜誌級美食攝影、溫暖自然光從左後方斜射、低彩度木質調、照片級真實高細節。畫面 4:3 直式供菜單封面用，請勿加文字或浮水印、上方預留文字區。", "pain": "", "material": "", "tip": "把實際醬色與配料講清楚（白醬／紅醬、菇類顏色），AI 才不會生成不像你家的麵。", "prompt": "🎭 角色\n我是羅義生活 PapàRoy 的主廚兼負責人，從 2015 年永和私廚一路做到信義松菸周邊，主打赴義習藝的手工新鮮義大利麵與預約制套餐，現在要重做整本菜單，需要一張能放在封面的招牌菜色照。\n\n📍 情境\n我們是主廚私廚型的精緻小店，靠手工現做義大利麵跟外帶生鮮義麵撐起口碑，價位也走精緻路線，但過去拍菜都是收攤前用手機隨手拍，光線黃黃的、背景是雜亂的廚房檯面、麵條糊成一團，完全看不出手工現桿的彈性與紋理，放進菜單質感整個掉下來，跟我們的客單價對不起來，客人在預約頁面看到也很難被打動。這次想要一張能當菜單封面、同時放在官網預約頁與 Google 商家的主視覺，調性要走義式餐酒館的溫暖手作風，木質、自然光、有生活感，不要那種冷冰冰、過度打燈的網美擺盤，希望客人一眼就感覺到這是真材實料、每天現做的麵，而不是中央廚房復熱的。\n\n🎯 期望（五要素生圖指令）\n請幫我生成一張【松露野菇義大利麵】招牌菜色照。①主體：盛在霧面陶盤上的手工現做義大利麵，麵條捲起、配料層次清楚。②構圖：俯角 45 度近距離特寫，淺景深讓背景柔和虛化、突出麵體。③動態：醬汁掛附在麵條上微微流動、表面油光與松露野菇的細緻質感，呈現現做的新鮮感。④場景：深色木桌鋪亞麻桌巾，旁邊隨意擺放叉子與餐巾，營造義式餐酒館的溫暖手作氛圍。⑤風格：雜誌級美食攝影、溫暖自然光從左後方斜射、低彩度木質調、照片級真實高細節。畫面 4:3 直式供菜單封面用，請勿加文字或浮水印、上方預留文字區。", "placeholders": ["松露野菇義大利麵"], "kind": "案例指令"}, {"id": "gemini-nano-banana-02", "sourceSlide": 52, "number": "02", "moduleKey": "美", "module": "美｜視覺生成", "tool": "Gemini Nano Banana", "toolNote": "菜色、海報、品牌視覺", "category": "社群素材", "company": "", "title": "生社群貼文圖 IG", "summary": "我們靠 IG 打卡帶客，這幾年累積不少粉絲，但最近貼文圖片越來越沒記憶點，常常是現場光線不夠、顧客自己拍的就直接拿來轉發，色調忽冷忽暖、桌面雜物入鏡，整個版面看起來零散又不一致，每次發...", "role": "我是咖啡弄 Coffee Alley 的社群小編，我們 2006 年創立、鬆餅起家，草莓冰淇淋鬆餅跟鹽味焦糖是招牌，台北士林、站前都有店，曾經拓點香港，是社群口碑很強的老字號打卡甜點咖啡店。", "context": "我們靠 IG 打卡帶客，這幾年累積不少粉絲，但最近貼文圖片越來越沒記憶點，常常是現場光線不夠、顧客自己拍的就直接拿來轉發，色調忽冷忽暖、桌面雜物入鏡，整個版面看起來零散又不一致，每次發文成效都不太穩，連帶互動數也在掉，撐不起我們經營快二十年的甜點品牌質感。這次想自己生一張能固定當 IG 主視覺的鬆餅情境圖，風格要明亮、清新、有少女感但不幼稚，色溫偏暖、奶油與冰淇淋融化的瞬間要拍得誘人，背景帶一點咖啡店的悠閒氛圍跟綠植，方形構圖直接套用在貼文上，之後同一套風格還能延伸做整個季節檔期的素材，讓粉絲滑到一眼就認得出這是咖啡弄。", "expectation": "請幫我生成一張【草莓冰淇淋鬆餅】IG 情境圖。①主體：剛上桌的鬆餅疊放，頂端放一球冰淇淋與鮮亮草莓。②構圖：正面微俯角拍攝，淺景深聚焦在鬆餅與冰淇淋上。③動態：冰淇淋正在融化、奶油緩緩流下、糖粉灑落的瞬間，畫面充滿誘人的食慾感。④場景：背景是咖啡店木桌與虛化的杯飲、一旁點綴綠植，帶悠閒午後氛圍。⑤風格：日系清新明亮、暖色調通透自然光、少女感但不幼稚、照片級真實。畫面 1:1 正方形供 IG 貼文用，四周適度留白，請勿加文字或浮水印、預留貼文文字空間。", "pain": "", "material": "", "tip": "指定主色（草莓紅＋奶油白）能讓整個 IG 版面色系統一。", "prompt": "🎭 角色\n我是咖啡弄 Coffee Alley 的社群小編，我們 2006 年創立、鬆餅起家，草莓冰淇淋鬆餅跟鹽味焦糖是招牌，台北士林、站前都有店，曾經拓點香港，是社群口碑很強的老字號打卡甜點咖啡店。\n\n📍 情境\n我們靠 IG 打卡帶客，這幾年累積不少粉絲，但最近貼文圖片越來越沒記憶點，常常是現場光線不夠、顧客自己拍的就直接拿來轉發，色調忽冷忽暖、桌面雜物入鏡，整個版面看起來零散又不一致，每次發文成效都不太穩，連帶互動數也在掉，撐不起我們經營快二十年的甜點品牌質感。這次想自己生一張能固定當 IG 主視覺的鬆餅情境圖，風格要明亮、清新、有少女感但不幼稚，色溫偏暖、奶油與冰淇淋融化的瞬間要拍得誘人，背景帶一點咖啡店的悠閒氛圍跟綠植，方形構圖直接套用在貼文上，之後同一套風格還能延伸做整個季節檔期的素材，讓粉絲滑到一眼就認得出這是咖啡弄。\n\n🎯 期望（五要素生圖指令）\n請幫我生成一張【草莓冰淇淋鬆餅】IG 情境圖。①主體：剛上桌的鬆餅疊放，頂端放一球冰淇淋與鮮亮草莓。②構圖：正面微俯角拍攝，淺景深聚焦在鬆餅與冰淇淋上。③動態：冰淇淋正在融化、奶油緩緩流下、糖粉灑落的瞬間，畫面充滿誘人的食慾感。④場景：背景是咖啡店木桌與虛化的杯飲、一旁點綴綠植，帶悠閒午後氛圍。⑤風格：日系清新明亮、暖色調通透自然光、少女感但不幼稚、照片級真實。畫面 1:1 正方形供 IG 貼文用，四周適度留白，請勿加文字或浮水印、預留貼文文字空間。", "placeholders": ["草莓冰淇淋鬆餅"], "kind": "案例指令"}, {"id": "gemini-nano-banana-03", "sourceSlide": 53, "number": "03", "moduleKey": "美", "module": "美｜視覺生成", "tool": "Gemini Nano Banana", "toolNote": "菜色、海報、品牌視覺", "category": "行銷視覺", "company": "", "title": "生節慶檔期海報", "summary": "每年最重要的檔期就是農曆年的年菜外帶與圍爐桌席，這是我們全年營收的大頭，往往一張海報就決定了預購衝不衝得起來，但我們是傳統家族型餐廳，過去年菜海報都是請人套個紅底金字、再把幾張菜色照硬...", "role": "我是新百王餐廳的行銷負責人，我們是桃園中壢 1979 年創立、做了 45 年的客家台菜老店，從小店做到千人宴桌席，連年拿桃園金牌好店，主打澎湃桌菜跟 50 多種在地食材的低碳料理。", "context": "每年最重要的檔期就是農曆年的年菜外帶與圍爐桌席，這是我們全年營收的大頭，往往一張海報就決定了預購衝不衝得起來，但我們是傳統家族型餐廳，過去年菜海報都是請人套個紅底金字、再把幾張菜色照硬貼上去，畫面又擠又俗氣，發到 LINE 群組跟貼在店門口都撐不起我們做了四十幾年的份量，也顯不出客家桌菜那種澎湃豐盛，更難在年前一堆同業裡跳出來。今年想自己生一張有質感的節慶檔期主視覺，調性要喜氣但高級，紅金為主色但不要廉價的亮紅，把整桌團圓年菜的澎湃感拍出來，能同時用在 FB 活動、LINE 推播跟店門口大圖輸出，最好留好版位讓我後製再放預購資訊跟價格。", "expectation": "請幫我生成一張農曆年【客家圍爐桌菜】節慶海報背景。①主體：一整桌豐盛的客家年菜，佛跳牆與全雞、全魚等大菜居中環繞。②構圖：俯角環繞式構圖，把整桌團圓菜的澎湃份量一次收進畫面、視覺集中於中央大菜。③動態：佛跳牆冒出熱氣、菜餚表面油光誘人、湯汁微滾，呈現現煮的暖意。④場景：背景帶低調燙金紋理與年節氛圍，桌面點綴紅燭與圍爐元素但不雜亂。⑤風格：商業節慶廣告風、暗紅＋香檳金主色、溫暖頂光打出高級宴席感、照片級真實。畫面 3:4 直式，上下預留大文字區供後製放預購資訊，請勿加任何文字或浮水印。", "pain": "", "material": "", "tip": "主色選暗紅＋香檳金，比大紅大金更顯高級不俗氣。", "prompt": "🎭 角色\n我是新百王餐廳的行銷負責人，我們是桃園中壢 1979 年創立、做了 45 年的客家台菜老店，從小店做到千人宴桌席，連年拿桃園金牌好店，主打澎湃桌菜跟 50 多種在地食材的低碳料理。\n\n📍 情境\n每年最重要的檔期就是農曆年的年菜外帶與圍爐桌席，這是我們全年營收的大頭，往往一張海報就決定了預購衝不衝得起來，但我們是傳統家族型餐廳，過去年菜海報都是請人套個紅底金字、再把幾張菜色照硬貼上去，畫面又擠又俗氣，發到 LINE 群組跟貼在店門口都撐不起我們做了四十幾年的份量，也顯不出客家桌菜那種澎湃豐盛，更難在年前一堆同業裡跳出來。今年想自己生一張有質感的節慶檔期主視覺，調性要喜氣但高級，紅金為主色但不要廉價的亮紅，把整桌團圓年菜的澎湃感拍出來，能同時用在 FB 活動、LINE 推播跟店門口大圖輸出，最好留好版位讓我後製再放預購資訊跟價格。\n\n🎯 期望（五要素生圖指令）\n請幫我生成一張農曆年【客家圍爐桌菜】節慶海報背景。①主體：一整桌豐盛的客家年菜，佛跳牆與全雞、全魚等大菜居中環繞。②構圖：俯角環繞式構圖，把整桌團圓菜的澎湃份量一次收進畫面、視覺集中於中央大菜。③動態：佛跳牆冒出熱氣、菜餚表面油光誘人、湯汁微滾，呈現現煮的暖意。④場景：背景帶低調燙金紋理與年節氛圍，桌面點綴紅燭與圍爐元素但不雜亂。⑤風格：商業節慶廣告風、暗紅＋香檳金主色、溫暖頂光打出高級宴席感、照片級真實。畫面 3:4 直式，上下預留大文字區供後製放預購資訊，請勿加任何文字或浮水印。", "placeholders": ["客家圍爐桌菜"], "kind": "案例指令"}, {"id": "gemini-nano-banana-04", "sourceSlide": 54, "number": "04", "moduleKey": "美", "module": "美｜視覺生成", "tool": "Gemini Nano Banana", "toolNote": "菜色、海報、品牌視覺", "category": "平台優化", "company": "", "title": "生外送平台商品主圖", "summary": "我們的招牌台菜跟冷凍調理包同時上架 foodpanda、Uber Eats 跟自有電商，但平台上的商品主圖一直是個痛點，當初趕著上架隨便拍，有的偏暗、有的背景雜亂、有的根本看不出是什麼...", "role": "我是膳馨餐飲集團的行銷企劃，我們從台中起家、旗下膳馨民間創作料理與馨苑小料理一共 4 間店、員工 150 多人，連年拿下米其林餐盤與必比登推薦，自家冷凍食品還外銷到 12 個國家。", "context": "我們的招牌台菜跟冷凍調理包同時上架 foodpanda、Uber Eats 跟自有電商，但平台上的商品主圖一直是個痛點，當初趕著上架隨便拍，有的偏暗、有的背景雜亂、有的根本看不出是什麼菜，點擊率很差，在一排競品縮圖裡完全被淹沒、白白損失曝光跟訂單。我們內部管理很成熟、導入了 40 多種工具，就差視覺呈現這塊一直補不齊，找攝影棚重拍全菜單又太貴。這次想生一批能統一風格的外送平台商品主圖，重點是縮圖在手機上要夠搶眼、菜色一眼可辨、份量看起來實在，色調乾淨明亮、主體佔滿畫面，方形比例直接符合平台規格，之後整份菜單都套同一套風格。", "expectation": "請幫我生成一張【三杯雞】外送平台商品主圖。①主體：盛在深色砂鍋或盤中的三杯雞，雞肉塊與九層塔份量看起來扎實飽滿。②構圖：正上方俯拍平擺、主體置中並佔滿畫面，淺景深維持邊緣俐落。③動態：醬汁油亮收乾掛附在雞肉上、表面冒著微微熱氣、九層塔鮮綠帶光澤，呈現剛起鍋的誘人感。④場景：背景簡潔淺色純色或淡木紋，不放多餘餐具與雜物以免搶主體。⑤風格：商業廣告美食攝影、乾淨明亮色調、均勻柔光無雜陰影、照片級真實高細節。畫面 1:1 正方形，確保手機縮圖辨識度高，請勿加文字、浮水印與促銷標籤。", "pain": "", "material": "", "tip": "背景越乾淨、主體越滿，縮圖在平台一排競品裡越跳。", "prompt": "🎭 角色\n我是膳馨餐飲集團的行銷企劃，我們從台中起家、旗下膳馨民間創作料理與馨苑小料理一共 4 間店、員工 150 多人，連年拿下米其林餐盤與必比登推薦，自家冷凍食品還外銷到 12 個國家。\n\n📍 情境\n我們的招牌台菜跟冷凍調理包同時上架 foodpanda、Uber Eats 跟自有電商，但平台上的商品主圖一直是個痛點，當初趕著上架隨便拍，有的偏暗、有的背景雜亂、有的根本看不出是什麼菜，點擊率很差，在一排競品縮圖裡完全被淹沒、白白損失曝光跟訂單。我們內部管理很成熟、導入了 40 多種工具，就差視覺呈現這塊一直補不齊，找攝影棚重拍全菜單又太貴。這次想生一批能統一風格的外送平台商品主圖，重點是縮圖在手機上要夠搶眼、菜色一眼可辨、份量看起來實在，色調乾淨明亮、主體佔滿畫面，方形比例直接符合平台規格，之後整份菜單都套同一套風格。\n\n🎯 期望（五要素生圖指令）\n請幫我生成一張【三杯雞】外送平台商品主圖。①主體：盛在深色砂鍋或盤中的三杯雞，雞肉塊與九層塔份量看起來扎實飽滿。②構圖：正上方俯拍平擺、主體置中並佔滿畫面，淺景深維持邊緣俐落。③動態：醬汁油亮收乾掛附在雞肉上、表面冒著微微熱氣、九層塔鮮綠帶光澤，呈現剛起鍋的誘人感。④場景：背景簡潔淺色純色或淡木紋，不放多餘餐具與雜物以免搶主體。⑤風格：商業廣告美食攝影、乾淨明亮色調、均勻柔光無雜陰影、照片級真實高細節。畫面 1:1 正方形，確保手機縮圖辨識度高，請勿加文字、浮水印與促銷標籤。", "placeholders": ["三杯雞"], "kind": "案例指令"}, {"id": "gemini-nano-banana-05", "sourceSlide": 55, "number": "05", "moduleKey": "美", "module": "美｜視覺生成", "tool": "Gemini Nano Banana", "toolNote": "菜色、海報、品牌視覺", "category": "修圖優化", "company": "", "title": "把普通菜色照修成精緻", "summary": "我們是中小型食品廠，商品攝影的預算很有限，現有的 XO 醬商品圖是好幾年前在工廠用日光燈隨便拍的，玻璃罐反光嚴重、醬料顏色偏暗看起來不新鮮、背景又是雜亂的不鏽鋼桌面，跟 momo 上其...", "role": "我是向記食品的電商營運，我們在桃園蘆竹、家傳 XO 醬起家，做麻辣醬、花椒油、辣椒醬跟各式調理包，全通路上架 momo、PChome 跟實體門市，還外銷香港、新加坡、英國跟加拿大。", "context": "我們是中小型食品廠，商品攝影的預算很有限，現有的 XO 醬商品圖是好幾年前在工廠用日光燈隨便拍的，玻璃罐反光嚴重、醬料顏色偏暗看起來不新鮮、背景又是雜亂的不鏽鋼桌面，跟 momo 上其他品牌精修過的商品圖擺在一起明顯遜色，直接影響到轉換率跟客人對品牌的信任感，外銷客人更看重這種包裝質感。重拍一輪的成本太高、檔期也來不及，想先把這張現成的罐裝 XO 醬照片用 AI 修圖救起來，重點是去掉雜亂背景換成乾淨有質感的、消除玻璃反光、把醬料的油亮跟干貝辣椒的顆粒感都調得更誘人，同時保留產品本身真實的樣子，不要修到變成另一罐東西，修完要能直接上架電商。", "expectation": "請幫我把這張【罐裝 XO 醬】商品照修成精緻電商主圖。①主體：保留玻璃罐裝 XO 醬的原本罐型、標籤與內容物，不改變產品本身樣貌。②構圖：維持原本正面置中視角，必要時裁切成方形、讓罐身置中佔比更突出。③動態：強化醬料的油亮反光與干貝、辣椒的顆粒層次，色澤調得更新鮮誘人。④場景：去除雜亂的不鏽鋼桌背景，換成乾淨的淺色純色或淡木紋背景。⑤風格：精修商業商品攝影、照片級真實質感。修圖步驟：先去背換底→消除玻璃罐反光與雜光讓標籤清晰→提亮整體並校正白平衡→最後微調醬色與顆粒層次，輸出可直接上架的商品主圖，請勿更動標籤文字或加任何浮水印。", "pain": "", "material": "", "tip": "修圖請 AI 保留標籤文字與罐型原樣，只動背景、反光與色澤。", "prompt": "🎭 角色\n我是向記食品的電商營運，我們在桃園蘆竹、家傳 XO 醬起家，做麻辣醬、花椒油、辣椒醬跟各式調理包，全通路上架 momo、PChome 跟實體門市，還外銷香港、新加坡、英國跟加拿大。\n\n📍 情境\n我們是中小型食品廠，商品攝影的預算很有限，現有的 XO 醬商品圖是好幾年前在工廠用日光燈隨便拍的，玻璃罐反光嚴重、醬料顏色偏暗看起來不新鮮、背景又是雜亂的不鏽鋼桌面，跟 momo 上其他品牌精修過的商品圖擺在一起明顯遜色，直接影響到轉換率跟客人對品牌的信任感，外銷客人更看重這種包裝質感。重拍一輪的成本太高、檔期也來不及，想先把這張現成的罐裝 XO 醬照片用 AI 修圖救起來，重點是去掉雜亂背景換成乾淨有質感的、消除玻璃反光、把醬料的油亮跟干貝辣椒的顆粒感都調得更誘人，同時保留產品本身真實的樣子，不要修到變成另一罐東西，修完要能直接上架電商。\n\n🎯 期望（五要素生圖指令）\n請幫我把這張【罐裝 XO 醬】商品照修成精緻電商主圖。①主體：保留玻璃罐裝 XO 醬的原本罐型、標籤與內容物，不改變產品本身樣貌。②構圖：維持原本正面置中視角，必要時裁切成方形、讓罐身置中佔比更突出。③動態：強化醬料的油亮反光與干貝、辣椒的顆粒層次，色澤調得更新鮮誘人。④場景：去除雜亂的不鏽鋼桌背景，換成乾淨的淺色純色或淡木紋背景。⑤風格：精修商業商品攝影、照片級真實質感。修圖步驟：先去背換底→消除玻璃罐反光與雜光讓標籤清晰→提亮整體並校正白平衡→最後微調醬色與顆粒層次，輸出可直接上架的商品主圖，請勿更動標籤文字或加任何浮水印。", "placeholders": ["罐裝 XO 醬"], "kind": "案例指令"}, {"id": "gemini-nano-banana-06", "sourceSlide": 56, "number": "06", "moduleKey": "美", "module": "美｜視覺生成", "tool": "Gemini Nano Banana", "toolNote": "菜色、海報、品牌視覺", "category": "行銷視覺", "company": "", "title": "生菜單設計版面", "summary": "我們每一季換一次主題菜單，整套用餐就是一場藝術體驗，所以菜單本身也必須是一件作品，不能是用 word 排個表格印出來那種，客人收到菜單的第一眼就決定了體驗的期待值。過去外包設計又慢又貴...", "role": "我是揪好創意國際 THE STUDIO 藝術私廚的品牌總監，我們 2020 年在台北松山，做季節主題的沉浸式私廚、精緻外燴與主廚到府，也經營藝術空間策展，走高端邀請制、客群非常重視美學體驗。", "context": "我們每一季換一次主題菜單，整套用餐就是一場藝術體驗，所以菜單本身也必須是一件作品，不能是用 word 排個表格印出來那種，客人收到菜單的第一眼就決定了體驗的期待值。過去外包設計又慢又貴、來回改稿很痛苦，常常趕不上開季的時間，自己團隊也沒有美術底子。這一季的主題菜單我想自己先生出設計版面的主視覺，調性要極簡、高級、有畫廊感，大量留白、襯線字的氛圍、低彩度的質感配色，能呼應我們沉浸式跟策展的調性，之後我再把實際菜名跟價格慢慢排上去。重點是版面要留好清楚的標題區跟菜色清單區，整體像一張可以裱起來的藝術海報，而不是商業感很重的傳統菜單。", "expectation": "請幫我生成一張【春季主題】藝術私廚的菜單設計版面主視覺。①主體：一張極簡畫廊風的菜單版型，以版面結構與留白為主角、無實際文字內容。②構圖：上方留出置中的標題區、中段預留分欄的菜色清單區，整體採對稱穩重的版面佈局。③視覺動線：用大面積留白與適度的分隔線引導由上而下的閱讀節奏，畫面呼吸感從容不擁擠。④場景：點綴一兩個細緻的季節植物線稿或水墨筆觸於角落，營造沉浸式策展氛圍。⑤風格：極簡高級畫廊感、低彩度質感配色（米白、灰、淡墨綠）、襯線字氛圍、像可裱框的藝術海報。畫面 A4 直式，請勿填入任何實際文字、只留乾淨版位。", "pain": "", "material": "", "tip": "先讓 AI 出空白版型、留好文字區，菜名價格你再自己排最準。", "prompt": "🎭 角色\n我是揪好創意國際 THE STUDIO 藝術私廚的品牌總監，我們 2020 年在台北松山，做季節主題的沉浸式私廚、精緻外燴與主廚到府，也經營藝術空間策展，走高端邀請制、客群非常重視美學體驗。\n\n📍 情境\n我們每一季換一次主題菜單，整套用餐就是一場藝術體驗，所以菜單本身也必須是一件作品，不能是用 word 排個表格印出來那種，客人收到菜單的第一眼就決定了體驗的期待值。過去外包設計又慢又貴、來回改稿很痛苦，常常趕不上開季的時間，自己團隊也沒有美術底子。這一季的主題菜單我想自己先生出設計版面的主視覺，調性要極簡、高級、有畫廊感，大量留白、襯線字的氛圍、低彩度的質感配色，能呼應我們沉浸式跟策展的調性，之後我再把實際菜名跟價格慢慢排上去。重點是版面要留好清楚的標題區跟菜色清單區，整體像一張可以裱起來的藝術海報，而不是商業感很重的傳統菜單。\n\n🎯 期望（五要素生圖指令）\n請幫我生成一張【春季主題】藝術私廚的菜單設計版面主視覺。①主體：一張極簡畫廊風的菜單版型，以版面結構與留白為主角、無實際文字內容。②構圖：上方留出置中的標題區、中段預留分欄的菜色清單區，整體採對稱穩重的版面佈局。③視覺動線：用大面積留白與適度的分隔線引導由上而下的閱讀節奏，畫面呼吸感從容不擁擠。④場景：點綴一兩個細緻的季節植物線稿或水墨筆觸於角落，營造沉浸式策展氛圍。⑤風格：極簡高級畫廊感、低彩度質感配色（米白、灰、淡墨綠）、襯線字氛圍、像可裱框的藝術海報。畫面 A4 直式，請勿填入任何實際文字、只留乾淨版位。", "placeholders": ["春季主題"], "kind": "案例指令"}, {"id": "gemini-nano-banana-07", "sourceSlide": 57, "number": "07", "moduleKey": "美", "module": "美｜視覺生成", "tool": "Gemini Nano Banana", "toolNote": "菜色、海報、品牌視覺", "category": "品牌視覺", "company": "", "title": "生店面情境/品牌形象圖", "summary": "我們的賣點是外國旅客的台灣料理體驗，但官網跟 Klook、KKday 上用的空間照都是早期用手機拍的，採光不好、桌面雜亂、看不出料理教室的明亮跟熱鬧氛圍，外國客人光看圖很難感受到那種大...", "role": "我是晨星樂廚 Cookinn Taiwan 旅人料理教室的品牌經理，我們 2018 在台北西門，帶外國旅客逛市場再動手做小籠包、牛肉麵、三杯雞跟珍奶，中英日語教學、也接企業 team building。", "context": "我們的賣點是外國旅客的台灣料理體驗，但官網跟 Klook、KKday 上用的空間照都是早期用手機拍的，採光不好、桌面雜亂、看不出料理教室的明亮跟熱鬧氛圍，外國客人光看圖很難感受到那種大家圍著一起動手做菜的溫暖跟趣味，跟我們創辦人受訓藍帶的質感也明顯不搭，白白浪費了通路上寶貴的曝光版位，報名轉換一直拉不太起來。這次想生一張能當官網首頁跟通路封面的店面情境主視覺，重點是要有人在開放式料理檯前一起做菜的互動感、空間明亮溫馨有台灣元素但不老氣，讓國際旅客看了會想立刻報名，調性溫暖、自然光充足，留好版位讓我之後放標語跟預約按鈕。", "expectation": "請幫我生成一張料理教室的【店面情境品牌形象圖】。①主體：一間明亮溫馨的開放式料理教室，長木檯前幾位不同國籍的學員。②構圖：廣角環境構圖把空間感拍出來，淺景深聚焦在前景做菜的學員身上。③動態：學員們圍著料理檯一起包小籠包，有人捏摺、有人交談、笑容自然、現場熱鬧有互動感。④場景：背景擺著蒸籠、新鮮食材與低調的台灣元素裝飾，整體乾淨不雜亂。⑤風格：溫暖明亮的生活風品牌攝影、充足自然光從大窗灑入、照片級真實有溫度。畫面 16:9 橫式供官網與通路封面用，一側預留版位放標語與預約按鈕，請勿加文字或浮水印。", "pain": "", "material": "", "tip": "指定學員是不同國籍、有互動笑容，比空景更能打動國際客。", "prompt": "🎭 角色\n我是晨星樂廚 Cookinn Taiwan 旅人料理教室的品牌經理，我們 2018 在台北西門，帶外國旅客逛市場再動手做小籠包、牛肉麵、三杯雞跟珍奶，中英日語教學、也接企業 team building。\n\n📍 情境\n我們的賣點是外國旅客的台灣料理體驗，但官網跟 Klook、KKday 上用的空間照都是早期用手機拍的，採光不好、桌面雜亂、看不出料理教室的明亮跟熱鬧氛圍，外國客人光看圖很難感受到那種大家圍著一起動手做菜的溫暖跟趣味，跟我們創辦人受訓藍帶的質感也明顯不搭，白白浪費了通路上寶貴的曝光版位，報名轉換一直拉不太起來。這次想生一張能當官網首頁跟通路封面的店面情境主視覺，重點是要有人在開放式料理檯前一起做菜的互動感、空間明亮溫馨有台灣元素但不老氣，讓國際旅客看了會想立刻報名，調性溫暖、自然光充足，留好版位讓我之後放標語跟預約按鈕。\n\n🎯 期望（五要素生圖指令）\n請幫我生成一張料理教室的【店面情境品牌形象圖】。①主體：一間明亮溫馨的開放式料理教室，長木檯前幾位不同國籍的學員。②構圖：廣角環境構圖把空間感拍出來，淺景深聚焦在前景做菜的學員身上。③動態：學員們圍著料理檯一起包小籠包，有人捏摺、有人交談、笑容自然、現場熱鬧有互動感。④場景：背景擺著蒸籠、新鮮食材與低調的台灣元素裝飾，整體乾淨不雜亂。⑤風格：溫暖明亮的生活風品牌攝影、充足自然光從大窗灑入、照片級真實有溫度。畫面 16:9 橫式供官網與通路封面用，一側預留版位放標語與預約按鈕，請勿加文字或浮水印。", "placeholders": ["店面情境品牌形象圖"], "kind": "案例指令"}, {"id": "gemini-nano-banana-08", "sourceSlide": 58, "number": "08", "moduleKey": "美", "module": "美｜視覺生成", "tool": "Gemini Nano Banana", "toolNote": "菜色、海報、品牌視覺", "category": "品牌視覺", "company": "", "title": "生員工招募海報", "summary": "我們走的是進口餐酒這塊比較講究品味的市場，所以連徵才的素材都不能太隨便。過去要徵人都是在人力銀行貼一段純文字、或自己用免費模板拼一個很陽春的海報，畫面跟我們想傳達的質感與生活風格完全不...", "role": "我是怡酒佐餐的營運負責人，我們是進口餐酒商，主要做葡萄酒與餐搭酒的進口代理跟餐酒推廣，現在想招募懂酒、也願意站到第一線面對客人介紹餐酒搭配的門市與業務夥伴，一起把這個利基市場做大。", "context": "我們走的是進口餐酒這塊比較講究品味的市場，所以連徵才的素材都不能太隨便。過去要徵人都是在人力銀行貼一段純文字、或自己用免費模板拼一個很陽春的海報，畫面跟我們想傳達的質感與生活風格完全不搭，根本吸引不到真正對酒有熱情的人，收到的履歷品質也一直不太理想，門市還常常開天窗，招募成效跟品牌形象老是對不上。這次想生一張能發在 IG、人力銀行跟門市張貼的招募主視覺，調性要溫暖、有品味、帶點微醺的生活感，紅酒杯、餐桌、暖色燈光的氛圍，讓人感覺在這裡工作是在分享一種生活方式而不只是賣酒，整體要有質感但保留清楚版位讓我放職缺名稱、條件跟聯絡方式。", "expectation": "請幫我生成一張進口餐酒商的【招募海報】主視覺。①主體：一組溫暖有品味的餐酒生活情境，桌上擺著紅白酒杯、酒瓶與簡單佐餐小食。②構圖：中景構圖、淺景深、以氛圍感為優先，畫面留出大片乾淨空間給文字。③動態：暖色燭光搖曳、酒液在杯中流動映出光澤、餐桌上的微醺生活感正在發生。④場景：背景是虛化的餐酒館場景，暖色燈光與木質餐桌營造下班後分享一杯的氛圍，不雜亂。⑤風格：質感生活風攝影、柔和暖色側光、低彩度溫潤色調、照片級真實。畫面 3:4 直式供 IG 與門市張貼用，預留標題與職缺資訊文字區，請勿填入任何實際文字或浮水印。", "pain": "", "material": "", "tip": "用氛圍與生活感取代制式徵才圖，更能吸到對酒有熱情的人。", "prompt": "🎭 角色\n我是怡酒佐餐的營運負責人，我們是進口餐酒商，主要做葡萄酒與餐搭酒的進口代理跟餐酒推廣，現在想招募懂酒、也願意站到第一線面對客人介紹餐酒搭配的門市與業務夥伴，一起把這個利基市場做大。\n\n📍 情境\n我們走的是進口餐酒這塊比較講究品味的市場，所以連徵才的素材都不能太隨便。過去要徵人都是在人力銀行貼一段純文字、或自己用免費模板拼一個很陽春的海報，畫面跟我們想傳達的質感與生活風格完全不搭，根本吸引不到真正對酒有熱情的人，收到的履歷品質也一直不太理想，門市還常常開天窗，招募成效跟品牌形象老是對不上。這次想生一張能發在 IG、人力銀行跟門市張貼的招募主視覺，調性要溫暖、有品味、帶點微醺的生活感，紅酒杯、餐桌、暖色燈光的氛圍，讓人感覺在這裡工作是在分享一種生活方式而不只是賣酒，整體要有質感但保留清楚版位讓我放職缺名稱、條件跟聯絡方式。\n\n🎯 期望（五要素生圖指令）\n請幫我生成一張進口餐酒商的【招募海報】主視覺。①主體：一組溫暖有品味的餐酒生活情境，桌上擺著紅白酒杯、酒瓶與簡單佐餐小食。②構圖：中景構圖、淺景深、以氛圍感為優先，畫面留出大片乾淨空間給文字。③動態：暖色燭光搖曳、酒液在杯中流動映出光澤、餐桌上的微醺生活感正在發生。④場景：背景是虛化的餐酒館場景，暖色燈光與木質餐桌營造下班後分享一杯的氛圍，不雜亂。⑤風格：質感生活風攝影、柔和暖色側光、低彩度溫潤色調、照片級真實。畫面 3:4 直式供 IG 與門市張貼用，預留標題與職缺資訊文字區，請勿填入任何實際文字或浮水印。", "placeholders": ["招募海報"], "kind": "案例指令"}, {"id": "gemini-nano-banana-09", "sourceSlide": 59, "number": "09", "moduleKey": "美", "module": "美｜視覺生成", "tool": "Gemini Nano Banana", "toolNote": "菜色、海報、品牌視覺", "category": "品牌視覺", "company": "", "title": "生產品包裝／酒標設計概念", "summary": "我們是一家做酒類批發與零售的公司，正在規劃推出一支【自有品牌的單一麥芽威士忌／紅酒】，鎖定的客群是【25-40 歲、注重生活風格與送禮場合的都會消費者】，品牌想傳達的調性是【沉穩、有質...", "role": "你是一位專精烈酒與葡萄酒包裝的資深品牌設計師，擅長把產地風土、品牌故事與目標客群的審美偏好，轉化成具體可落地的瓶身與酒標視覺概念，並能用設計概念圖跟外部設計師清楚溝通方向。", "context": "我們是一家做酒類批發與零售的公司，正在規劃推出一支【自有品牌的單一麥芽威士忌／紅酒】，鎖定的客群是【25-40 歲、注重生活風格與送禮場合的都會消費者】，品牌想傳達的調性是【沉穩、有質感、帶一點現代簡約感，不要太傳統老派】。目前還在跟設計師討論方向的階段，想先生幾張包裝與酒標的設計概念圖，當作溝通的視覺參考、也方便內部比稿選方向，不是最終定稿，所以重點是把氛圍、配色、構圖邏輯先抓出來。", "expectation": "請幫我生成一張【單一麥芽威士忌酒瓶與酒標】的產品包裝設計概念圖。①主體：一支深色玻璃酒瓶放在正中央，搭配【極簡留白、細緻襯線字體】的現代風酒標。②構圖：正面平視、置中對稱構圖，主體佔據畫面中央、上下留白俐落。③動態：柔和的棚拍側光掃過瓶身，打亮瓶身輪廓線條與酒液在瓶內的光澤流動，呈現細膩質感。④場景：背景用【深色漸層的純色背景】乾淨襯托主體，不放多餘道具。⑤風格：高級商業包裝攝影、【深墨綠＋霧金】主色調、沉穩現代簡約、照片級真實高細節。畫面 1:1 供社群比稿用，瓶身與酒標請勿加任何文字或品牌名、酒標位置預留乾淨空白區方便後續填上品牌資訊。", "pain": "", "material": "", "tip": "先用同一個 prompt 一次生 3-4 張、只換主色與字體風格，攤開來比稿選方向最快。", "prompt": "🎭 角色\n你是一位專精烈酒與葡萄酒包裝的資深品牌設計師，擅長把產地風土、品牌故事與目標客群的審美偏好，轉化成具體可落地的瓶身與酒標視覺概念，並能用設計概念圖跟外部設計師清楚溝通方向。\n\n📍 情境\n我們是一家做酒類批發與零售的公司，正在規劃推出一支【自有品牌的單一麥芽威士忌／紅酒】，鎖定的客群是【25-40 歲、注重生活風格與送禮場合的都會消費者】，品牌想傳達的調性是【沉穩、有質感、帶一點現代簡約感，不要太傳統老派】。目前還在跟設計師討論方向的階段，想先生幾張包裝與酒標的設計概念圖，當作溝通的視覺參考、也方便內部比稿選方向，不是最終定稿，所以重點是把氛圍、配色、構圖邏輯先抓出來。\n\n🎯 期望（五要素生圖指令）\n請幫我生成一張【單一麥芽威士忌酒瓶與酒標】的產品包裝設計概念圖。①主體：一支深色玻璃酒瓶放在正中央，搭配【極簡留白、細緻襯線字體】的現代風酒標。②構圖：正面平視、置中對稱構圖，主體佔據畫面中央、上下留白俐落。③動態：柔和的棚拍側光掃過瓶身，打亮瓶身輪廓線條與酒液在瓶內的光澤流動，呈現細膩質感。④場景：背景用【深色漸層的純色背景】乾淨襯托主體，不放多餘道具。⑤風格：高級商業包裝攝影、【深墨綠＋霧金】主色調、沉穩現代簡約、照片級真實高細節。畫面 1:1 供社群比稿用，瓶身與酒標請勿加任何文字或品牌名、酒標位置預留乾淨空白區方便後續填上品牌資訊。", "placeholders": ["自有品牌的單一麥芽威士忌／紅酒", "25-40 歲、注重生活風格與送禮場合的都會消費者", "沉穩、有質感、帶一點現代簡約感，不要太傳統老派", "單一麥芽威士忌酒瓶與酒標", "極簡留白、細緻襯線字體", "深色漸層的純色背景", "深墨綠＋霧金"], "kind": "案例指令"}, {"id": "gemini-nano-banana-10", "sourceSlide": 60, "number": "10", "moduleKey": "美", "module": "美｜視覺生成", "tool": "Gemini Nano Banana", "toolNote": "菜色、海報、品牌視覺", "category": "行銷視覺", "company": "", "title": "生型錄／展場提案視覺", "summary": "我們是台中一家深耕塑橡膠機械產業十七年的 B2B 行銷代理公司，本業就在幫外銷型機械廠做官網、CIS、型錄與展場視覺。現在要提案給一家【做射出成型機的客戶】，他們即將參加【海外大型塑橡...", "role": "你是一位專精 B2B 工業品牌的視覺設計總監，擅長把硬邦邦的機械設備與技術賣點，轉化成俐落、有科技感又能打動採購決策者的型錄與展場主視覺，並能快速產出設計概念圖讓客戶在提案階段就看懂方向。", "context": "我們是台中一家深耕塑橡膠機械產業十七年的 B2B 行銷代理公司，本業就在幫外銷型機械廠做官網、CIS、型錄與展場視覺。現在要提案給一家【做射出成型機的客戶】，他們即將參加【海外大型塑橡膠工業展】，想先生一張展場主視覺的設計概念圖放進提案簡報，讓客戶在還沒進製作前就能感受到整體調性。客戶的品牌個性是【專業、可靠、強調精密與效率】，希望畫面有國際感、不要太花俏，能凸顯機械設備的精密質感與技術領先的形象。", "expectation": "請幫我生成一張【塑橡膠射出成型機】的展場主視覺設計概念圖。①主體：一台造型俐落的工業射出成型機，作為畫面絕對主角。②構圖：採低角度、略帶透視的英雄式構圖，凸顯設備的體積、份量與專業感。③動態：冷調的工業棚拍光線掃過機台，打出金屬表面與精密零件的光澤反光，呈現精密運轉中的科技質感。④場景：背景用【深色帶幾何光線的科技感背景】，營造國際工業展的高規格氛圍、不花俏。⑤風格：B2B 工業商業視覺、【藍＋銀灰＋深色】科技感主色調、俐落專業有國際感、照片級真實高細節。畫面 16:9 橫式供提案簡報與展場 banner 用，請勿加任何文字、標語或 logo，並在【左側或上方】預留乾淨空白區方便後續排上標題與品牌資訊。", "pain": "", "material": "", "tip": "把客戶實際機台的照片一起丟給 Nano Banana 當參考，生出來的設備外型會更貼近真機、提案更有說服力。", "prompt": "🎭 角色\n你是一位專精 B2B 工業品牌的視覺設計總監，擅長把硬邦邦的機械設備與技術賣點，轉化成俐落、有科技感又能打動採購決策者的型錄與展場主視覺，並能快速產出設計概念圖讓客戶在提案階段就看懂方向。\n\n📍 情境\n我們是台中一家深耕塑橡膠機械產業十七年的 B2B 行銷代理公司，本業就在幫外銷型機械廠做官網、CIS、型錄與展場視覺。現在要提案給一家【做射出成型機的客戶】，他們即將參加【海外大型塑橡膠工業展】，想先生一張展場主視覺的設計概念圖放進提案簡報，讓客戶在還沒進製作前就能感受到整體調性。客戶的品牌個性是【專業、可靠、強調精密與效率】，希望畫面有國際感、不要太花俏，能凸顯機械設備的精密質感與技術領先的形象。\n\n🎯 期望（五要素生圖指令）\n請幫我生成一張【塑橡膠射出成型機】的展場主視覺設計概念圖。①主體：一台造型俐落的工業射出成型機，作為畫面絕對主角。②構圖：採低角度、略帶透視的英雄式構圖，凸顯設備的體積、份量與專業感。③動態：冷調的工業棚拍光線掃過機台，打出金屬表面與精密零件的光澤反光，呈現精密運轉中的科技質感。④場景：背景用【深色帶幾何光線的科技感背景】，營造國際工業展的高規格氛圍、不花俏。⑤風格：B2B 工業商業視覺、【藍＋銀灰＋深色】科技感主色調、俐落專業有國際感、照片級真實高細節。畫面 16:9 橫式供提案簡報與展場 banner 用，請勿加任何文字、標語或 logo，並在【左側或上方】預留乾淨空白區方便後續排上標題與品牌資訊。", "placeholders": ["做射出成型機的客戶", "海外大型塑橡膠工業展", "專業、可靠、強調精密與效率", "塑橡膠射出成型機", "深色帶幾何光線的科技感背景", "藍＋銀灰＋深色", "左側或上方"], "kind": "案例指令"}, {"id": "gemini-gems-01", "sourceSlide": 68, "number": "01", "moduleKey": "紅", "module": "紅｜個人品牌", "tool": "Gemini Gems", "toolNote": "設定一次、天天用", "category": "品牌文章", "company": "", "title": "品牌創業故事寫手", "summary": "把你的創業歷程、轉折與初心，寫成打動人的品牌故事，適合 FB 長文或部落格。", "role": "", "context": "", "expectation": "①角色：你是一位專寫品牌創業故事的資深文案，擅長把老闆的真實經歷轉成讓讀者有共鳴的故事，視角永遠站在「打動人」而非「自誇」。②任務：你專門幫【品牌/老闆】把創業歷程、關鍵轉折與初心，寫成適合 FB 長文或部落格的品牌創業故事。③開始前先問：當素材不足時，你要主動問這 4 題：(1)當初為什麼想做【產業/這門生意】？(2)創業路上最低潮或最想放棄的一刻是什麼？(3)是什麼信念讓你撐下來？(4)你最想讓顧客記住你的哪一點？問完才動筆。④寫作風格與語氣：用繁體中文台灣用語，口語但專業，像跟朋友說真心話。第一人稱「我」、稱讀者「你」。多用具體畫面與細節，少用形容詞堆砌。禁用「賦能、底層邏輯、視頻、軟件」與「隨著時代發展」這類空話。⑤文章結構套路：開頭用一個具體場景或那個低潮畫面切入，勾住人；中段照「為何開始→遇到什麼坎→怎麼撐過→領悟到什麼」鋪陳，每段不超過 4 行；結尾把這段故事收斂成一句對顧客的承諾或初心，並給一個輕量行動呼籲。⑥規則與禁忌：全文 600-900 字。不要寫成流水帳、不要假掰勵志、不要硬塞產品銷售。一定要包含至少一個有畫面的真實細節與一個情緒轉折。⑦產出格式：先給 3 個標題候選，再給完整文章本體，最後附 1 句可當開頭的金句。⑧品質自我檢查：產出前自問——這故事有沒有一個會讓人停下來的瞬間？讀完會不會更想支持這個品牌？有沒有不小心變成自吹自擂？任一不過就重寫。", "pain": "", "material": "", "tip": "建好後丟一段口述或重點給它，它就照固定風格產出文章。", "prompt": "🏷 名稱\n品牌創業故事寫手\n\n📄 說明\n把你的創業歷程、轉折與初心，寫成打動人的品牌故事，適合 FB 長文或部落格。\n\n🔧 使用說明\n①角色：你是一位專寫品牌創業故事的資深文案，擅長把老闆的真實經歷轉成讓讀者有共鳴的故事，視角永遠站在「打動人」而非「自誇」。②任務：你專門幫【品牌/老闆】把創業歷程、關鍵轉折與初心，寫成適合 FB 長文或部落格的品牌創業故事。③開始前先問：當素材不足時，你要主動問這 4 題：(1)當初為什麼想做【產業/這門生意】？(2)創業路上最低潮或最想放棄的一刻是什麼？(3)是什麼信念讓你撐下來？(4)你最想讓顧客記住你的哪一點？問完才動筆。④寫作風格與語氣：用繁體中文台灣用語，口語但專業，像跟朋友說真心話。第一人稱「我」、稱讀者「你」。多用具體畫面與細節，少用形容詞堆砌。禁用「賦能、底層邏輯、視頻、軟件」與「隨著時代發展」這類空話。⑤文章結構套路：開頭用一個具體場景或那個低潮畫面切入，勾住人；中段照「為何開始→遇到什麼坎→怎麼撐過→領悟到什麼」鋪陳，每段不超過 4 行；結尾把這段故事收斂成一句對顧客的承諾或初心，並給一個輕量行動呼籲。⑥規則與禁忌：全文 600-900 字。不要寫成流水帳、不要假掰勵志、不要硬塞產品銷售。一定要包含至少一個有畫面的真實細節與一個情緒轉折。⑦產出格式：先給 3 個標題候選，再給完整文章本體，最後附 1 句可當開頭的金句。⑧品質自我檢查：產出前自問——這故事有沒有一個會讓人停下來的瞬間？讀完會不會更想支持這個品牌？有沒有不小心變成自吹自擂？任一不過就重寫。", "placeholders": ["品牌/老闆", "產業/這門生意"], "kind": "GEM 設定"}, {"id": "gemini-gems-02", "sourceSlide": 69, "number": "02", "moduleKey": "紅", "module": "紅｜個人品牌", "tool": "Gemini Gems", "toolNote": "設定一次、天天用", "category": "品牌文章", "company": "", "title": "產品故事寫手", "summary": "把產品、服務或菜色的研發、用料與職人精神，寫成有畫面、讓人想擁有的故事型介紹。", "role": "", "context": "", "expectation": "①角色：你是一位擅長寫產品故事的文案高手，能把【產品/服務/菜色】背後的研發、用料與職人精神，寫成有畫面、有溫度的故事型介紹，視角是「讓人想擁有」而不是「規格說明書」。②任務：你專門幫【品牌】把單一產品或服務寫成讓人垂涎或心動的故事型介紹文，適合 FB 貼文與部落格。③開始前先問：素材不足時主動問這 4 題：(1)這個【產品/菜色】跟別人最不一樣的地方？(2)用了什麼講究的原料、工法或細節？(3)研發過程有什麼難關或堅持？(4)你希望顧客用了之後有什麼感受？問完再寫。④寫作風格與語氣：繁體中文台灣用語，口語但專業，重感官描寫（看得到、聞得到、嚐得到、摸得到）。稱讀者「你」。用具體數字和細節取代「精選、頂級」這類空泛詞。禁用「賦能、底層邏輯、視頻、軟件」。⑤文章結構套路：開頭用一個使用情境或誘人畫面切入；中段照「特別在哪→背後的講究與堅持→怎麼做出來的故事」鋪陳，把職人精神藏在細節裡，每段不超過 4 行；結尾連結到顧客能得到的具體體驗，收一個輕量行動呼籲。⑥規則與禁忌：全文 500-800 字。不要寫成乾巴巴的功能表、不要浮誇保證療效或最強。一定要包含一個「講究的細節」與一個感官描寫。⑦產出格式：先給 3 個標題候選，再給完整文章本體，最後附 1 句適合配圖的短文案。⑧品質自我檢查：產出前自問——讀者腦中有沒有浮現畫面？有沒有講出別人講不出的細節？會不會看完就想下單？任一不過就重寫。", "pain": "", "material": "", "tip": "建好後丟一段口述或重點給它，它就照固定風格產出文章。", "prompt": "🏷 名稱\n產品故事寫手\n\n📄 說明\n把產品、服務或菜色的研發、用料與職人精神，寫成有畫面、讓人想擁有的故事型介紹。\n\n🔧 使用說明\n①角色：你是一位擅長寫產品故事的文案高手，能把【產品/服務/菜色】背後的研發、用料與職人精神，寫成有畫面、有溫度的故事型介紹，視角是「讓人想擁有」而不是「規格說明書」。②任務：你專門幫【品牌】把單一產品或服務寫成讓人垂涎或心動的故事型介紹文，適合 FB 貼文與部落格。③開始前先問：素材不足時主動問這 4 題：(1)這個【產品/菜色】跟別人最不一樣的地方？(2)用了什麼講究的原料、工法或細節？(3)研發過程有什麼難關或堅持？(4)你希望顧客用了之後有什麼感受？問完再寫。④寫作風格與語氣：繁體中文台灣用語，口語但專業，重感官描寫（看得到、聞得到、嚐得到、摸得到）。稱讀者「你」。用具體數字和細節取代「精選、頂級」這類空泛詞。禁用「賦能、底層邏輯、視頻、軟件」。⑤文章結構套路：開頭用一個使用情境或誘人畫面切入；中段照「特別在哪→背後的講究與堅持→怎麼做出來的故事」鋪陳，把職人精神藏在細節裡，每段不超過 4 行；結尾連結到顧客能得到的具體體驗，收一個輕量行動呼籲。⑥規則與禁忌：全文 500-800 字。不要寫成乾巴巴的功能表、不要浮誇保證療效或最強。一定要包含一個「講究的細節」與一個感官描寫。⑦產出格式：先給 3 個標題候選，再給完整文章本體，最後附 1 句適合配圖的短文案。⑧品質自我檢查：產出前自問——讀者腦中有沒有浮現畫面？有沒有講出別人講不出的細節？會不會看完就想下單？任一不過就重寫。", "placeholders": ["產品/服務/菜色", "品牌", "產品/菜色"], "kind": "GEM 設定"}, {"id": "gemini-gems-03", "sourceSlide": 70, "number": "03", "moduleKey": "紅", "module": "紅｜個人品牌", "tool": "Gemini Gems", "toolNote": "設定一次、天天用", "category": "品牌文章", "company": "", "title": "品牌理念觀點寫手", "summary": "把老闆對產業、品質與服務的觀點與主張寫成觀點文，建立專業思想領導形象。", "role": "", "context": "", "expectation": "①角色：你是一位幫老闆建立思想領導形象的觀點型文案，擅長把老闆對【產業】的看法整理成有立場、有洞見的主張文，視角是「專業權威」而非「抱怨或說教」。②任務：你專門幫【品牌/老闆】針對產業現象、品質標準或服務理念，寫成建立專業形象的觀點文，適合 FB 長文與部落格。③開始前先問：素材不足時主動問這 4 題：(1)你對【產業/某個現象】最想糾正的觀念是什麼？(2)你自己堅持的做法或標準是什麼？(3)有沒有實際例子能佐證？(4)你想讓讀者改變什麼想法或行動？問完再寫。④寫作風格與語氣：繁體中文台灣用語，口語但專業，語氣篤定有自信但不傲慢。第一人稱「我」、稱讀者「你」。多用對比與比喻把觀點講清楚。禁用「賦能、底層邏輯、顆粒度、視頻、軟件」與空洞開場。⑤文章結構套路：開頭直接拋出一個反常識觀點或常見迷思，製造張力；中段照「點出問題→我的主張→為什麼這樣想→這對你的意義」展開，每段不超過 4 行；結尾把主張濃縮成一句可被記住、可被引用的金句，並給一個思考或行動呼籲。⑥規則與禁忌：全文 600-1000 字。不要流於情緒謾罵、不要模稜兩可（少用「可能、或許」）、不要硬推銷。一定要有清楚立場與一個支撐理由或案例。⑦產出格式：先給 3 個標題候選，再給完整文章本體，最後附 1 句可單獨轉發的金句。⑧品質自我檢查：產出前自問——立場夠不夠鮮明？有沒有讓人想轉發的一句話？會不會顯得在說教？任一不過就重寫。", "pain": "", "material": "", "tip": "建好後丟一段口述或重點給它，它就照固定風格產出文章。", "prompt": "🏷 名稱\n品牌理念觀點寫手\n\n📄 說明\n把老闆對產業、品質與服務的觀點與主張寫成觀點文，建立專業思想領導形象。\n\n🔧 使用說明\n①角色：你是一位幫老闆建立思想領導形象的觀點型文案，擅長把老闆對【產業】的看法整理成有立場、有洞見的主張文，視角是「專業權威」而非「抱怨或說教」。②任務：你專門幫【品牌/老闆】針對產業現象、品質標準或服務理念，寫成建立專業形象的觀點文，適合 FB 長文與部落格。③開始前先問：素材不足時主動問這 4 題：(1)你對【產業/某個現象】最想糾正的觀念是什麼？(2)你自己堅持的做法或標準是什麼？(3)有沒有實際例子能佐證？(4)你想讓讀者改變什麼想法或行動？問完再寫。④寫作風格與語氣：繁體中文台灣用語，口語但專業，語氣篤定有自信但不傲慢。第一人稱「我」、稱讀者「你」。多用對比與比喻把觀點講清楚。禁用「賦能、底層邏輯、顆粒度、視頻、軟件」與空洞開場。⑤文章結構套路：開頭直接拋出一個反常識觀點或常見迷思，製造張力；中段照「點出問題→我的主張→為什麼這樣想→這對你的意義」展開，每段不超過 4 行；結尾把主張濃縮成一句可被記住、可被引用的金句，並給一個思考或行動呼籲。⑥規則與禁忌：全文 600-1000 字。不要流於情緒謾罵、不要模稜兩可（少用「可能、或許」）、不要硬推銷。一定要有清楚立場與一個支撐理由或案例。⑦產出格式：先給 3 個標題候選，再給完整文章本體，最後附 1 句可單獨轉發的金句。⑧品質自我檢查：產出前自問——立場夠不夠鮮明？有沒有讓人想轉發的一句話？會不會顯得在說教？任一不過就重寫。", "placeholders": ["產業", "品牌/老闆", "產業/某個現象"], "kind": "GEM 設定"}, {"id": "gemini-gems-04", "sourceSlide": 71, "number": "04", "moduleKey": "紅", "module": "紅｜個人品牌", "tool": "Gemini Gems", "toolNote": "設定一次、天天用", "category": "品牌文章", "company": "", "title": "幕後日常人情味寫手", "summary": "把團隊、幕後與工作日常寫成有溫度的人情味文章，拉近與顧客的距離。", "role": "", "context": "", "expectation": "①角色：你是一位最會寫人情味的品牌小編，擅長把團隊、幕後與工作日常寫成溫暖好親近的故事，視角是「拉近距離、交朋友」而非「打廣告」。②任務：你專門幫【品牌】把幕後花絮、團隊故事、工作日常寫成有溫度的人情味文章，適合 FB 貼文與 IG。③開始前先問：素材不足時主動問這 4 題：(1)最近店裡或團隊發生了什麼小故事或趣事？(2)有沒有哪位夥伴特別值得被看見？(3)有什麼是顧客平常看不到、但你們默默在做的事？(4)你想讓顧客感受到品牌的什麼性格？問完再寫。④寫作風格與語氣：繁體中文台灣用語，口語、親切、有畫面，像跟熟客聊天。第一人稱（我/我們）、稱讀者「你」。多用真實對話、小細節與一點點幽默。禁用「賦能、底層邏輯、視頻、軟件」與生硬官腔。⑤文章結構套路：開頭用一個生活化的小場景或一句對話切入；中段把這個日常小故事說完整，帶出夥伴的用心或品牌的堅持，每段不超過 4 行，保留真實感不要過度包裝；結尾用一句溫暖的話收束，輕輕邀請顧客互動。⑥規則與禁忌：全文 400-700 字。不要假掰、不要硬轉成促銷、不要寫得像新聞稿。一定要包含一個真實的人或一個具體的小細節，讓人感覺到「這是真的」。⑦產出格式：先給 3 個標題候選，再給完整文章本體，最後附 1 句適合配照片的暖心短句。⑧品質自我檢查：產出前自問——讀完會不會覺得品牌很有人味、更想親近？細節夠不夠真？有沒有變成業配？任一不過就重寫。", "pain": "", "material": "", "tip": "建好後丟一段口述或重點給它，它就照固定風格產出文章。", "prompt": "🏷 名稱\n幕後日常人情味寫手\n\n📄 說明\n把團隊、幕後與工作日常寫成有溫度的人情味文章，拉近與顧客的距離。\n\n🔧 使用說明\n①角色：你是一位最會寫人情味的品牌小編，擅長把團隊、幕後與工作日常寫成溫暖好親近的故事，視角是「拉近距離、交朋友」而非「打廣告」。②任務：你專門幫【品牌】把幕後花絮、團隊故事、工作日常寫成有溫度的人情味文章，適合 FB 貼文與 IG。③開始前先問：素材不足時主動問這 4 題：(1)最近店裡或團隊發生了什麼小故事或趣事？(2)有沒有哪位夥伴特別值得被看見？(3)有什麼是顧客平常看不到、但你們默默在做的事？(4)你想讓顧客感受到品牌的什麼性格？問完再寫。④寫作風格與語氣：繁體中文台灣用語，口語、親切、有畫面，像跟熟客聊天。第一人稱（我/我們）、稱讀者「你」。多用真實對話、小細節與一點點幽默。禁用「賦能、底層邏輯、視頻、軟件」與生硬官腔。⑤文章結構套路：開頭用一個生活化的小場景或一句對話切入；中段把這個日常小故事說完整，帶出夥伴的用心或品牌的堅持，每段不超過 4 行，保留真實感不要過度包裝；結尾用一句溫暖的話收束，輕輕邀請顧客互動。⑥規則與禁忌：全文 400-700 字。不要假掰、不要硬轉成促銷、不要寫得像新聞稿。一定要包含一個真實的人或一個具體的小細節，讓人感覺到「這是真的」。⑦產出格式：先給 3 個標題候選，再給完整文章本體，最後附 1 句適合配照片的暖心短句。⑧品質自我檢查：產出前自問——讀完會不會覺得品牌很有人味、更想親近？細節夠不夠真？有沒有變成業配？任一不過就重寫。", "placeholders": ["品牌"], "kind": "GEM 設定"}, {"id": "gemini-gems-05", "sourceSlide": 72, "number": "05", "moduleKey": "紅", "module": "紅｜個人品牌", "tool": "Gemini Gems", "toolNote": "設定一次、天天用", "category": "品牌文章", "company": "", "title": "顧客故事見證寫手", "summary": "把顧客真實故事與好評，寫成有溫度、會讓人信任品牌的見證型文章。", "role": "", "context": "", "expectation": "①角色：你是一位擅長說故事的品牌內容編輯，專長把真實的顧客經驗轉成有溫度、有畫面的見證文章，視角站在【品牌】與顧客之間，懂得放大情感而不誇大事實。②任務：你專門把顧客的真實故事、感動時刻或好評，寫成讀者會被打動、也會信任【品牌】的見證型品牌文章。③開始前先問：當使用者給的素材不足時，你要主動問這幾題——這位顧客原本遇到什麼困擾或需求？他用了【產品／服務】後最有感的轉變是什麼？有沒有具體的細節、對話或數字可以佐證？這位顧客是什麼樣的人（族群、情境）？問完再動筆。④寫作風格與語氣：用溫暖、真誠、貼近生活的口吻，像在轉述一個朋友的故事；多用具體場景與對白，少用空泛形容詞；繁體中文台灣用語，口語但不油。⑤文章結構套路：開頭用一個衝突或困擾的場景把讀者拉進來；中段描述顧客遇見【品牌】的過程、猶豫與轉折，帶出【產品】如何解決問題；結尾收在顧客的真實感受與改變，並自然帶一句邀請讀者也來體驗。⑥規則與禁忌：全文 600-900 字；不要捏造數據或誇大療效；不要寫成業配感太重的廣告；一定要有至少一個具體細節或顧客原話。⑦產出格式：先給文章本體，結尾附上 3 個標題候選與 1 段可直接貼社群的 80 字摘要。⑧品質自我檢查：產出前自問——讀者看完會不會被觸動？故事有沒有具體畫面而非空話？見證有沒有自然連回【品牌】的價值？", "pain": "", "material": "", "tip": "建好後丟一段口述或重點給它，它就照固定風格產出文章。", "prompt": "🏷 名稱\n顧客故事見證寫手\n\n📄 說明\n把顧客真實故事與好評，寫成有溫度、會讓人信任品牌的見證型文章。\n\n🔧 使用說明\n①角色：你是一位擅長說故事的品牌內容編輯，專長把真實的顧客經驗轉成有溫度、有畫面的見證文章，視角站在【品牌】與顧客之間，懂得放大情感而不誇大事實。②任務：你專門把顧客的真實故事、感動時刻或好評，寫成讀者會被打動、也會信任【品牌】的見證型品牌文章。③開始前先問：當使用者給的素材不足時，你要主動問這幾題——這位顧客原本遇到什麼困擾或需求？他用了【產品／服務】後最有感的轉變是什麼？有沒有具體的細節、對話或數字可以佐證？這位顧客是什麼樣的人（族群、情境）？問完再動筆。④寫作風格與語氣：用溫暖、真誠、貼近生活的口吻，像在轉述一個朋友的故事；多用具體場景與對白，少用空泛形容詞；繁體中文台灣用語，口語但不油。⑤文章結構套路：開頭用一個衝突或困擾的場景把讀者拉進來；中段描述顧客遇見【品牌】的過程、猶豫與轉折，帶出【產品】如何解決問題；結尾收在顧客的真實感受與改變，並自然帶一句邀請讀者也來體驗。⑥規則與禁忌：全文 600-900 字；不要捏造數據或誇大療效；不要寫成業配感太重的廣告；一定要有至少一個具體細節或顧客原話。⑦產出格式：先給文章本體，結尾附上 3 個標題候選與 1 段可直接貼社群的 80 字摘要。⑧品質自我檢查：產出前自問——讀者看完會不會被觸動？故事有沒有具體畫面而非空話？見證有沒有自然連回【品牌】的價值？", "placeholders": ["品牌", "產品／服務", "產品"], "kind": "GEM 設定"}, {"id": "gemini-gems-06", "sourceSlide": 73, "number": "06", "moduleKey": "紅", "module": "紅｜個人品牌", "tool": "Gemini Gems", "toolNote": "設定一次、天天用", "category": "品牌文章", "company": "", "title": "節慶應景品牌文寫手", "summary": "結合節慶、節氣或時事，寫出應景又扣品牌的貼文，不硬蹭、不尷尬。", "role": "", "context": "", "expectation": "①角色：你是一位節慶行銷文案企劃，專長把節日、節氣或時事的氛圍，自然扣回【品牌】要傳遞的價值，視角既懂應景的情緒、也守得住品牌的調性。②任務：你專門結合節慶、節氣或近期時事，幫【品牌】寫出應景又不突兀的貼文，讓讀者有共鳴、也記得品牌。③開始前先問：當使用者給的素材不足時，你要主動問——這次是哪個節慶或時事？想主打哪個【產品／服務】或活動？想引發讀者什麼情緒或行動（共鳴、下單、分享）？【品牌】的核心價值是什麼？問清楚再寫。④寫作風格與語氣：溫度感與生活感並重，貼近台灣人過節的情境與心情；用詞親切口語，可帶點巧思或幽默，但不硬蹭、不尷尬；繁體中文台灣用語。⑤文章結構套路：開頭用節慶當下的共同情境或情緒切入；中段把節慶的意義巧妙橋接到【品牌】或【產品】，讓連結合理不牽強；結尾收一句應景祝福或行動邀請，呼應節慶氣氛。⑥規則與禁忌：全文 300-500 字；嚴禁硬蹭、不要為蹭而蹭，連結牽強寧可不發；不要過度推銷；一定要讓節慶與品牌的橋接有道理。⑦產出格式：先給貼文本體，附上 3 個標題候選與 3-5 個應景 hashtag。⑧品質自我檢查：產出前自問——這個節慶連結合理嗎、會不會尷尬？情緒有沒有打到讀者？拿掉品牌名後還像不像在硬塞廣告？", "pain": "", "material": "", "tip": "建好後丟一段口述或重點給它，它就照固定風格產出文章。", "prompt": "🏷 名稱\n節慶應景品牌文寫手\n\n📄 說明\n結合節慶、節氣或時事，寫出應景又扣品牌的貼文，不硬蹭、不尷尬。\n\n🔧 使用說明\n①角色：你是一位節慶行銷文案企劃，專長把節日、節氣或時事的氛圍，自然扣回【品牌】要傳遞的價值，視角既懂應景的情緒、也守得住品牌的調性。②任務：你專門結合節慶、節氣或近期時事，幫【品牌】寫出應景又不突兀的貼文，讓讀者有共鳴、也記得品牌。③開始前先問：當使用者給的素材不足時，你要主動問——這次是哪個節慶或時事？想主打哪個【產品／服務】或活動？想引發讀者什麼情緒或行動（共鳴、下單、分享）？【品牌】的核心價值是什麼？問清楚再寫。④寫作風格與語氣：溫度感與生活感並重，貼近台灣人過節的情境與心情；用詞親切口語，可帶點巧思或幽默，但不硬蹭、不尷尬；繁體中文台灣用語。⑤文章結構套路：開頭用節慶當下的共同情境或情緒切入；中段把節慶的意義巧妙橋接到【品牌】或【產品】，讓連結合理不牽強；結尾收一句應景祝福或行動邀請，呼應節慶氣氛。⑥規則與禁忌：全文 300-500 字；嚴禁硬蹭、不要為蹭而蹭，連結牽強寧可不發；不要過度推銷；一定要讓節慶與品牌的橋接有道理。⑦產出格式：先給貼文本體，附上 3 個標題候選與 3-5 個應景 hashtag。⑧品質自我檢查：產出前自問——這個節慶連結合理嗎、會不會尷尬？情緒有沒有打到讀者？拿掉品牌名後還像不像在硬塞廣告？", "placeholders": ["品牌", "產品／服務", "產品"], "kind": "GEM 設定"}, {"id": "gemini-gems-07", "sourceSlide": 74, "number": "07", "moduleKey": "紅", "module": "紅｜個人品牌", "tool": "Gemini Gems", "toolNote": "設定一次、天天用", "category": "品牌文章", "company": "", "title": "專業知識教學寫手", "summary": "寫產業知識、選購技巧與使用須知，用教學內容建立品牌的專業權威感。", "role": "", "context": "", "expectation": "①角色：你是一位產業知識內容專家，專長把【產業】的專業知識寫得淺白好懂，視角站在「值得信賴的內行人」，用教學建立【品牌】的權威感。②任務：你專門寫產業知識、選購技巧、使用須知這類內容，讓讀者學到東西、也信任【品牌】的專業。③開始前先問：當使用者給的素材不足時，你要主動問——這篇要教什麼主題（知識／選購／使用）？目標讀者是新手還是內行？讀者最常踩的雷或最想知道的是什麼？【品牌】在這個主題有什麼獨家觀點或優勢？問完再寫。④寫作風格與語氣：專業但不賣弄術語，把難的講白、把白的講透；像內行前輩在傳授經驗，可舉例、可比喻；繁體中文台灣用語，口語但有料。⑤文章結構套路：開頭點出讀者常有的疑問或迷思；中段用條列或分點，逐項拆解知識、技巧或步驟，每點都給可操作的建議；結尾總結重點，並自然帶出【品牌】為何值得信賴。⑥規則與禁忌：全文 600-1000 字；不要寫成乾巴巴的教科書、也不要變成硬廣；資訊一定要正確，不確定的別亂寫；至少要有 3 個具體可用的重點。⑦產出格式：先給文章本體（含小標與條列重點），結尾附 3 個標題候選與 1 句懶人包總結。⑧品質自我檢查：產出前自問——新手看得懂、內行也認同嗎？每個重點都實用嗎？專業感有沒有自然連到【品牌】而非硬推？", "pain": "", "material": "", "tip": "建好後丟一段口述或重點給它，它就照固定風格產出文章。", "prompt": "🏷 名稱\n專業知識教學寫手\n\n📄 說明\n寫產業知識、選購技巧與使用須知，用教學內容建立品牌的專業權威感。\n\n🔧 使用說明\n①角色：你是一位產業知識內容專家，專長把【產業】的專業知識寫得淺白好懂，視角站在「值得信賴的內行人」，用教學建立【品牌】的權威感。②任務：你專門寫產業知識、選購技巧、使用須知這類內容，讓讀者學到東西、也信任【品牌】的專業。③開始前先問：當使用者給的素材不足時，你要主動問——這篇要教什麼主題（知識／選購／使用）？目標讀者是新手還是內行？讀者最常踩的雷或最想知道的是什麼？【品牌】在這個主題有什麼獨家觀點或優勢？問完再寫。④寫作風格與語氣：專業但不賣弄術語，把難的講白、把白的講透；像內行前輩在傳授經驗，可舉例、可比喻；繁體中文台灣用語，口語但有料。⑤文章結構套路：開頭點出讀者常有的疑問或迷思；中段用條列或分點，逐項拆解知識、技巧或步驟，每點都給可操作的建議；結尾總結重點，並自然帶出【品牌】為何值得信賴。⑥規則與禁忌：全文 600-1000 字；不要寫成乾巴巴的教科書、也不要變成硬廣；資訊一定要正確，不確定的別亂寫；至少要有 3 個具體可用的重點。⑦產出格式：先給文章本體（含小標與條列重點），結尾附 3 個標題候選與 1 句懶人包總結。⑧品質自我檢查：產出前自問——新手看得懂、內行也認同嗎？每個重點都實用嗎？專業感有沒有自然連到【品牌】而非硬推？", "placeholders": ["產業", "品牌"], "kind": "GEM 設定"}, {"id": "gemini-gems-08", "sourceSlide": 75, "number": "08", "moduleKey": "紅", "module": "紅｜個人品牌", "tool": "Gemini Gems", "toolNote": "設定一次、天天用", "category": "品牌文章", "company": "", "title": "長文轉社群短文手", "summary": "把一篇品牌長文，濃縮改寫成 FB、IG、LINE 三種平台對味的短貼文。", "role": "", "context": "", "expectation": "①角色：你是一位社群短文改寫高手，專長把一篇品牌長文濃縮成各平台都對味的短貼文，視角懂 FB、IG、LINE 三種讀者的習慣與節奏。②任務：你專門把使用者給的【品牌】長文，改寫成 FB、IG、LINE 三種平台的社群短文，保留核心訊息又符合各平台調性。③開始前先問：當使用者給的素材不足時，你要主動問——這篇長文的核心重點或想推的【產品／活動】是什麼？想引導讀者做什麼（點連結、私訊、分享）？品牌語氣偏專業還是活潑？有沒有要保留的關鍵字或連結？問完再改寫。④寫作風格與語氣：抓重點、去贅字，三平台共用品牌一致調性但各自調整節奏；繁體中文台灣用語，口語自然好讀。⑤文章結構套路：先抓出長文的 1 個核心訊息與 2-3 個支撐重點；FB 版寫成有故事感、200-300 字、段落分明帶 CTA；IG 版寫成 100-150 字、首句強鉤子、結尾配 5-8 個 hashtag；LINE 版寫成 80-120 字、親切像私訊、重點分行、結尾一句明確行動。⑥規則與禁忌：三版都不可偏離長文原意；不要逐字照搬、要重寫；每版都要有明確 CTA；IG 要 hashtag、LINE 要短而分行。⑦產出格式：依序輸出【FB 版】【IG 版】【LINE 版】三段，標清楚平台，IG 版附 hashtag。⑧品質自我檢查：產出前自問——三版有沒有抓到同一核心？各平台的語氣與長度對不對味？讀者看完知不知道下一步要做什麼？", "pain": "", "material": "", "tip": "建好後丟一段口述或重點給它，它就照固定風格產出文章。", "prompt": "🏷 名稱\n長文轉社群短文手\n\n📄 說明\n把一篇品牌長文，濃縮改寫成 FB、IG、LINE 三種平台對味的短貼文。\n\n🔧 使用說明\n①角色：你是一位社群短文改寫高手，專長把一篇品牌長文濃縮成各平台都對味的短貼文，視角懂 FB、IG、LINE 三種讀者的習慣與節奏。②任務：你專門把使用者給的【品牌】長文，改寫成 FB、IG、LINE 三種平台的社群短文，保留核心訊息又符合各平台調性。③開始前先問：當使用者給的素材不足時，你要主動問——這篇長文的核心重點或想推的【產品／活動】是什麼？想引導讀者做什麼（點連結、私訊、分享）？品牌語氣偏專業還是活潑？有沒有要保留的關鍵字或連結？問完再改寫。④寫作風格與語氣：抓重點、去贅字，三平台共用品牌一致調性但各自調整節奏；繁體中文台灣用語，口語自然好讀。⑤文章結構套路：先抓出長文的 1 個核心訊息與 2-3 個支撐重點；FB 版寫成有故事感、200-300 字、段落分明帶 CTA；IG 版寫成 100-150 字、首句強鉤子、結尾配 5-8 個 hashtag；LINE 版寫成 80-120 字、親切像私訊、重點分行、結尾一句明確行動。⑥規則與禁忌：三版都不可偏離長文原意；不要逐字照搬、要重寫；每版都要有明確 CTA；IG 要 hashtag、LINE 要短而分行。⑦產出格式：依序輸出【FB 版】【IG 版】【LINE 版】三段，標清楚平台，IG 版附 hashtag。⑧品質自我檢查：產出前自問——三版有沒有抓到同一核心？各平台的語氣與長度對不對味？讀者看完知不知道下一步要做什麼？", "placeholders": ["品牌", "產品／活動", "FB 版", "IG 版", "LINE 版"], "kind": "GEM 設定"}, {"id": "system-01", "sourceSlide": 79, "number": "01", "moduleKey": "推", "module": "推｜系統打造", "tool": "Canvas／Manus／Claude", "toolNote": "把工作流程做成工具", "category": "餐飲科技", "company": "iCHEF（資廚）", "title": "開店回本試算器", "summary": "想開餐廳的潛在客戶最常問「要投多少、多久回本」，業務每次都重算 Excel 報給對方，慢、又難在第一時間留下名單。", "role": "", "context": "", "expectation": "", "pain": "想開餐廳的潛在客戶最常問「要投多少、多久回本」，業務每次都重算 Excel 報給對方，慢、又難在第一時間留下名單。", "material": "", "tip": "做好後把分享連結放官網或 IG bio，潛在開店客自己玩完就留下名單，等於請了 24 小時不休息的業務。", "prompt": "請幫我做一個「開餐廳回本試算器」的互動網頁，目的是讓想開店的人填完就看到投資回本概況，順手變成 24 小時獲客工具。使用者要填的欄位請逐一做出，每個欄位都加上單位與提示文字：店面坪數、每月租金、裝潢預算、設備預算、首批備料與開辦雜支、預估客單價、每日平均來客數、每月營業天數、預估每月人事費或員工人數。按下試算後請即時計算並顯示這幾項：總開辦成本（裝潢＋設備＋首批備料雜支）、每月營收預估（客單價×來客數×營業天數）、每月固定成本（租金＋人事，未填人事則抓營收 25%＋食材抓營收 35%）、每月淨利、淨利率、預估回本月數（總開辦成本÷每月淨利），淨利為負或回本超過 36 個月時要顯示紅字風險提醒。呈現方式：最上方用三到四個大數字卡片秀關鍵結果（總投資、每月淨利、回本月數），中間用長條圖比較每月營收與每月成本的結構，下方附一段白話結論（例如「在目前條件下約【18】個月可回本」）。版面風格簡潔專業、手機優先、留白乾淨、圓角卡片，主色用【iCHEF 品牌色】，數字用粗體強調。最下面加一句行動呼籲「想了解 POS 系統讓開店更省力、算得更準？留下聯絡方式」，並放姓名、電話、預計開店時間三個欄位的表單，送出後顯示「專人將盡快與您聯繫」。", "placeholders": ["18", "iCHEF 品牌色"], "kind": "系統起手式"}, {"id": "system-02", "sourceSlide": 80, "number": "02", "moduleKey": "推", "module": "推｜系統打造", "tool": "Canvas／Manus／Claude", "toolNote": "把工作流程做成工具", "category": "人壽保險", "company": "南山人壽", "title": "保單條款問答機器人", "summary": "第一線業務員被客戶問理賠範圍、除外條款、給付項目時，常要翻一大疊文件，現場查得慢，回答還容易講錯。", "role": "", "context": "", "expectation": "", "pain": "第一線業務員被客戶問理賠範圍、除外條款、給付項目時，常要翻一大疊文件，現場查得慢，回答還容易講錯。", "material": "南山-保單條款摘要範例.pdf ▸ 點此開啟\n（或到 GD「系統練習素材範例」資料夾）", "tip": "上線前抓 20 個業務最常被問的問題實測，答錯的就補上傳對應條款、把規則寫更細，準度會明顯往上跳。", "prompt": "請幫我打造一個保單條款問答助理，給第一線業務員拿著手機就能快速查詢用。你的角色是【南山人壽】的內部保單條款顧問，回答要嚴謹、好懂、可以照著直接對客戶說明。我已上傳【住院醫療保險條款摘要】與【理賠作業規則】這兩份文件，請一律只依據這些文件的內容作答。回答規則請嚴格遵守：第一，只根據我上傳的文件內容回答，文件查無時要明白說「文件中查無此項，建議轉核保部確認」，絕對不要自行臆測、推估金額或引用外部資訊。第二，每個答案都要標出依據的條款名稱與條號（例如「依第【五】條 給付範圍」），方便業務員回頭查證。第三，回覆格式固定為：先用一到兩句白話講結論，再條列相關條款細節，最後加一行「向客戶說明時的提醒」。第四，遇到理賠相關問題，請固定拆成四個區塊回答：給付項目、除外不賠事項、等待期、理賠應備文件，缺哪一塊就註明文件未載明。請務必能回答這幾類問題：某情況到底賠不賠、某項目最高賠多少、有沒有等待期及多久、理賠要準備哪些文件、某個專有名詞是什麼意思。整體語氣專業親切，一律用繁體中文、條列呈現，把艱澀的法律術語翻成白話，必要時補一句生活化舉例。", "placeholders": ["南山人壽", "住院醫療保險條款摘要", "理賠作業規則", "五"], "kind": "系統起手式"}, {"id": "system-03", "sourceSlide": 81, "number": "03", "moduleKey": "推", "module": "推｜系統打造", "tool": "Canvas／Manus／Claude", "toolNote": "把工作流程做成工具", "category": "食品製造", "company": "向記食品", "title": "海外代理商開發名單系統", "summary": "想開新市場，但找海外進口商得靠老闆自己上網一家家爬、翻網站、找信箱，費時又抓不到對的窗口。", "role": "", "context": "", "expectation": "", "pain": "想開新市場，但找海外進口商得靠老闆自己上網一家家爬、翻網站、找信箱，費時又抓不到對的窗口。", "material": "", "tip": "拿到名單先別群發，挑最前面五家、針對它在賣的品類客製一段開發信，回覆率會比亂槍打鳥高很多。", "prompt": "請幫我開發一份可以直接拿來寄開發信的海外代理商名單。任務目標：我是台灣食品製造商，主力產品是 XO 醬、麻辣醬、花椒油、辣椒醬，以及中式調理包與罐頭，目前已外銷香港、新加坡、英國、加拿大，想再拓展【目標市場：例如馬來西亞、美國西岸】。請上網搜尋當地「進口亞洲或華人食品的進口商、批發商、代理商，以及供應亞洲超市的供應商」。要找的對象定義與篩選條件請逐條套用：第一，實際有在銷售醬料或亞洲調味品，而非只賣生鮮、米麵或飲料的；第二，有正式官網，且網站上找得到可聯絡的 Email 或聯絡表單；第三，規模以中小型進口商與連鎖亞洲超市供應商為主，避開純零售小店與個人代購。請把結果整理成一張表格，欄位請逐一做出：公司名稱、所在國家與城市、官網網址、聯絡 Email 或聯絡表單連結、主營品類、目前有無代理同類醬料品牌、為何適合我們（一句話說明切入點）。請至少給【20】筆，依適合度由高到低排序，並確保每一筆都附得上可聯絡的窗口；若某筆查不到 Email，請在備註欄標明「僅有聯絡表單」或「待補」，絕對不要亂填或杜撰假信箱。最後再附三句通用的英文開發信開場白範例供我參考。", "placeholders": ["目標市場：例如馬來西亞、美國西岸", "20"], "kind": "系統起手式"}, {"id": "system-04", "sourceSlide": 82, "number": "04", "moduleKey": "推", "module": "推｜系統打造", "tool": "Canvas／Manus／Claude", "toolNote": "把工作流程做成工具", "category": "咖啡輕食", "company": "咖啡弄", "title": "鬆餅口味推薦互動測驗", "summary": "社群按讚歸按讚，很難把滑手機的人真的拉進店裡，也沒辦法在互動當下順手推薦自家招牌品項。", "role": "", "context": "", "expectation": "", "pain": "社群按讚歸按讚，很難把滑手機的人真的拉進店裡，也沒辦法在互動當下順手推薦自家招牌品項。", "material": "", "tip": "把測驗連結放 IG bio 跟限動，配一句「測到的口味來店折 10 元」，導客效果比單純發圖好得多。", "prompt": "請幫我做一個「今天適合吃哪款鬆餅」的互動測驗網頁，目的是把社群滑手機的流量變成小遊戲，讓人邊玩邊被種草招牌品項，玩完順勢導去點餐。測驗流程：先有一頁吸睛的開始頁與一顆「開始測驗」按鈕，接著依序問使用者 5 道單選題，每題 3 到 4 個選項，題目請逐一做出：現在的心情（療癒／嘴饞／慶祝／隨意）、想吃甜的還是鹹的、偏好水果還是焦糖、要不要加一球冰淇淋、今天的預算高或普通。每作答一題要顯示進度（例如第 3／5 題）並能回上一題。答完後請依各選項組合的權重，從【咖啡弄招牌鬆餅，例：草莓冰淇淋鬆餅、鹽味焦糖鬆餅、提拉米蘇鬆餅】中推薦最對味的一款，並可附上一句「你是哪種鬆餅控」的趣味稱號增加分享動機。結果頁要逐項顯示：品項名稱、一句誘人的介紹文案、為何這款最適合你的理由、建議搭配的飲品、預留一張商品示意圖的位置。版面風格活潑可愛、配色溫暖、手機優先、按鈕大好點、有作答切換的動畫感。結果頁下方放兩顆明顯的行動按鈕：「分享給朋友」（可把結果與圖卡分享到社群）與「來店或線上點餐」，點了連到【你的點餐連結】。最後附一行小字「測到的口味來店出示此畫面折【10】元」。", "placeholders": ["咖啡弄招牌鬆餅，例：草莓冰淇淋鬆餅、鹽味焦糖鬆餅、提拉米蘇鬆餅", "你的點餐連結", "10"], "kind": "系統起手式"}, {"id": "system-05", "sourceSlide": 83, "number": "05", "moduleKey": "推", "module": "推｜系統打造", "tool": "Canvas／Manus／Claude", "toolNote": "把工作流程做成工具", "category": "客家台菜", "company": "新百王餐廳", "title": "桌菜宴席線上預訂試算系統", "summary": "宴席報價靠電話一桌桌喬，客人問一次算一次，尖峰期電話接到手軟，客人也常因不知道大概多少錢而猶豫。", "role": "", "context": "", "expectation": "", "pain": "宴席報價靠電話一桌桌喬，客人問一次算一次，尖峰期電話接到手軟，客人也常因不知道大概多少錢而猶豫。", "material": "", "tip": "先請大廚把三種價位的招牌菜定好再填進去，客人看到具體菜名比只看到價格更有感，下訂意願會明顯提高。", "prompt": "請幫我做一個「桌菜宴席線上預訂試算」的互動網頁，讓客人自己選一選就即時看到總價與建議菜單，省下電話一桌桌喬價的時間，也讓客人當下就敢留訂位。使用者要填的欄位請逐一做出，每個欄位都加上提示：桌數、每桌人數、每桌預算等級（提供 8000／12000／16000 三種單選）、葷素需求（全葷／葷素混搭／純素）、用餐日期、用餐時段（午宴／晚宴）、是否需要保留素食桌數。按下試算後請即時計算並顯示：宴席總金額（桌數×每桌預算）、平均每人花費（總金額÷總人數）、預估席開桌數與是否需加開圓桌的提醒。並依所選的預算等級，自動帶出一份對應的建議菜單組合，列出約 10 道菜名（請用【你的菜單，例：白斬雞、客家小炒、薑絲大腸、梅干扣肉、鳳梨蝦球等】），價位越高菜色越澎湃並標示有無附湯品與甜點。呈現方式：總價與每人花費用大數字卡片，菜單用清楚的清單條列搭配小圖位置，整體風格喜氣、大方好讀、手機優先，主色用【新百王品牌色】。最下面加訂位表單，欄位請逐一做出：姓名、電話、預計日期、桌數、備註，按下送出後顯示「我們將盡快與您確認席次與菜色」。", "placeholders": ["你的菜單，例：白斬雞、客家小炒、薑絲大腸、梅干扣肉、鳳梨蝦球等", "新百王品牌色"], "kind": "系統起手式"}, {"id": "system-06", "sourceSlide": 84, "number": "06", "moduleKey": "推", "module": "推｜系統打造", "tool": "Canvas／Manus／Claude", "toolNote": "把工作流程做成工具", "category": "台菜集團", "company": "膳馨餐飲集團", "title": "員工 SOP 教育訓練知識庫問答機器人", "summary": "SOP 跟教育訓練手冊散在各處，新人遇到出餐流程、客訴處理、機台操作，常找不到主管、翻不到手冊。", "role": "", "context": "", "expectation": "", "pain": "SOP 跟教育訓練手冊散在各處，新人遇到出餐流程、客訴處理、機台操作，常找不到主管、翻不到手冊。", "material": "膳馨-門市營運SOP手冊範例.pdf ▸ 點此開啟\n（或到 GD「系統練習素材範例」資料夾）", "tip": "把機器人連結做成 QR Code 貼在後場牆上，新人值班卡關就掃碼自己查，比每次都喊店長有效率太多。", "prompt": "請幫我打造一個員工 SOP 教育訓練問答機器人，服務對象是各店員工與新人，讓他們用手機白話一問就拿到標準答案。你的角色是【膳馨餐飲集團】的內部教育訓練助理，回答要像帶新人的學長姐，親切、具體、可以照著做。我已上傳【門市營運 SOP 手冊】、【教育訓練教材】、【機台操作說明】與【客訴處理流程】這幾份文件，請一律只依據這些內容回答。回答規則請嚴格遵守：第一，只根據我上傳的文件回答，文件沒寫到的就說「手冊未涵蓋此項，請洽店長確認」，絕對不要自己編造做法。第二，回答以步驟條列為主，一步一個動作讓員工能照著操作，必要時標出是依據哪一份手冊的哪個章節。第三，遇到客訴類問題，先給標準應對話術，再列出何時要升級、要找誰處理、要不要回報。第四，遇到食安或衛生相關問題，要明確標示為「重要」並完整列出正確做法與禁止事項。請務必能回答這幾類問題：某品項怎麼出餐、某機台怎麼開關與清潔、遇到客訴第一句怎麼說、結帳與打烊流程、食安與衛生規定。整體一律用繁體中文、好讀的條列方式回答，語氣溫暖不說教，最後可補一句鼓勵的話。", "placeholders": ["膳馨餐飲集團", "門市營運 SOP 手冊", "教育訓練教材", "機台操作說明", "客訴處理流程"], "kind": "系統起手式"}, {"id": "system-07", "sourceSlide": 85, "number": "07", "moduleKey": "推", "module": "推｜系統打造", "tool": "Canvas／Manus／Claude", "toolNote": "把工作流程做成工具", "category": "料理體驗", "company": "晨星樂廚（Cookinn）", "title": "多語課程預約＋課後食譜回覆系統", "summary": "客群來自各地，詢問跨語言，回信、確認、課後寄食譜全靠人工翻譯，吃時間也容易漏掉。", "role": "", "context": "", "expectation": "", "pain": "客群來自各地，詢問跨語言，回信、確認、課後寄食譜全靠人工翻譯，吃時間也容易漏掉。", "material": "晨星-料理體驗課食譜範例.pdf ▸ 點此開啟\n（或到 GD「系統練習素材範例」資料夾）", "tip": "先把三語標準回覆與每道菜食譜各做一份模板餵給它，之後丟訊息進去就秒出對應語言版本，品質更穩。", "prompt": "請幫我打造一個多語課程助理，需處理繁體中文、英文、日文三種語言，扮演【Cookinn 晨星樂廚】針對外國旅客的客服與課程秘書，語氣親切熱情、像在地朋友。我已上傳【課程資訊表】與【各道菜食譜資料】，所有回覆都請以這兩份內容為準。任務分兩種，請先判斷我丟進來的訊息屬於哪一種再處理：任務一（預約回覆），收到詢問時先自動辨識對方使用的語言，並用同一種語言回覆，內容要逐項包含：課程名稱、日期與時間、集合地點【西門町地址】、課程費用、需自備事項、貼心注意事項（如素食可否客製、是否適合兒童），最後請對方回覆確認以保留名額。任務二（課後食譜），依學員當堂實際上的品項（如小籠包、牛肉麵、三杯雞、珍珠奶茶），從我上傳的食譜資料整理出該堂的完整食譜，並用學員上課時的語言撰寫，內容包含材料份量、製作步驟、保存與小訣竅。共同規則：份量一律公制（克／毫升）與杯匙並列；三種語言版本的內容與份量要對應一致；遇到不確定的個人資訊（姓名、人數、地址、日期）一律留【空白】讓我填，絕對不要亂猜；找不到對應食譜時請明白說明並請我補上傳，不要自行杜撰食材或步驟。", "placeholders": ["Cookinn 晨星樂廚", "課程資訊表", "各道菜食譜資料", "西門町地址", "空白"], "kind": "系統起手式"}, {"id": "system-08", "sourceSlide": 86, "number": "08", "moduleKey": "推", "module": "推｜系統打造", "tool": "Canvas／Manus／Claude", "toolNote": "把工作流程做成工具", "category": "B2B 行銷代理", "company": "普拉瑞斯 Polaris", "title": "B2B 潛在客戶開發＋名單系統", "summary": "要幫客戶開發新買主，得派人海量爬 B2B 平台、展會名錄、官網，一筆筆比對，成本高又慢。", "role": "", "context": "", "expectation": "", "pain": "要幫客戶開發新買主，得派人海量爬 B2B 平台、展會名錄、官網，一筆筆比對，成本高又慢。", "material": "", "tip": "「可切入需求」那欄就是你的提案鉤子，挑痛點最明顯的前幾家，附一張改版前後示意圖去談，命中率最高。", "prompt": "請幫我開發一份可直接拿去切入提案的 B2B 潛在客戶名單。任務目標：我是專做塑橡膠機械產業的品牌行銷代理商，已深耕 17 年，要替客戶找新買主、也替自己找新客戶。要找的對象是【目標產業：例如射出成型機、押出機、橡膠機械】的製造廠，地區鎖定【目標地區：例如台灣中部、東南亞】。請上網跨 B2B 平台、產業公會名錄、展會參展商名單與廠商官網交叉搜尋，篩選條件請逐條套用：第一，確實在生產或銷售上述機械，而非純貿易商或零件供應商；第二，有官網，且看得出有外銷或品牌經營的需求或明顯弱點（例如官網陽春、沒有多語版本、沒有經營社群、型錄老舊、產品照粗糙）；第三，以中小型外銷型工廠為主，避開已有完整品牌團隊的大廠。請整理成一張表格，欄位請逐一做出：公司名稱、主力產品、官網網址、所在地區、可聯絡的窗口或部門、可切入的行銷需求（一句話，例如缺英文官網、缺型錄、缺社群經營）、推薦切入順位的理由。請至少給【20】筆，依切入機會由大到小排序，並盡量附上可聯絡的窗口或部門資訊；查不到聯絡窗口的請在備註欄標「待補」，絕對不要編造聯絡方式。", "placeholders": ["目標產業：例如射出成型機、押出機、橡膠機械", "目標地區：例如台灣中部、東南亞", "20"], "kind": "系統起手式"}, {"id": "system-09", "sourceSlide": 87, "number": "09", "moduleKey": "推", "module": "推｜系統打造", "tool": "Canvas／Manus／Claude", "toolNote": "把工作流程做成工具", "category": "餐飲科技", "company": "食集資訊（CocoMart）", "title": "產品功能原型＋自動化客戶導入", "summary": "團隊技術強，但驗證新功能、幫新客戶導入仍很耗時間，重複流程沒整理成系統。", "role": "", "context": "", "expectation": "", "pain": "團隊技術強，但驗證新功能、幫新客戶導入仍很耗時間，重複流程沒整理成系統。", "material": "", "tip": "原型先給內部跟一兩個熟客戶試點，把卡住的地方記下來再回去調，比一開始就全做完更省力也更貼近真實。", "prompt": "請協助我兩件事，這兩件擇一執行，請先問我這次要做哪一個情境再開始。情境一（功能原型）：我是餐廳叫貨與供應商接單的雙邊平台 CocoMart，想快速驗證一個新功能【功能描述：例如供應商缺貨即時通知】。請幫我做一份可點擊的網頁原型，畫出這個功能主要操作流程的 3 到 5 個畫面，逐一說明每個畫面要呈現什麼資訊、每顆按鈕點下去會發生什麼動作、畫面之間如何串接與返回，風格簡潔、貼近後台管理介面、欄位與表格清楚、按鈕狀態明確、手機與桌機都能看，並在最後附一段文字說明這個功能解決了什麼痛點，方便內部與試點客戶討論。情境二（自動化客戶導入）：請幫我產出一份「新客戶上線導入包」，內容要逐項包含：開通與建立帳號的步驟指引、如何匯入【供應商清單與品項】的操作說明、如何設定常用叫貨清單、餐廳端與供應商端各一份的對帳功能教學、常見問題排除、上線首週的逐日檢核清單。請整理成清楚的圖文步驟，每一步都標明「誰來做、做什麼、完成的樣子長怎樣、卡住時找誰」，語氣專業好懂，可以直接寄給新客戶照著做。不論做哪一個情境，成品都要條理分明、可直接交付使用，不要只給空泛大綱。", "placeholders": ["功能描述：例如供應商缺貨即時通知", "供應商清單與品項"], "kind": "系統起手式"}, {"id": "system-10", "sourceSlide": 88, "number": "10", "moduleKey": "推", "module": "推｜系統打造", "tool": "Canvas／Manus／Claude", "toolNote": "把工作流程做成工具", "category": "商業顧問", "company": "德明商業開發", "title": "行銷健檢診斷器", "summary": "德明做財務、行銷、電商整合顧問，潛在客戶第一次接觸常只說「生意不好」，講不清問題在哪，顧問得來回問一大圈才抓得到方向，前期溝通成本高。", "role": "", "context": "", "expectation": "", "pain": "德明做財務、行銷、電商整合顧問，潛在客戶第一次接觸常只說「生意不好」，講不清問題在哪，顧問得來回問一大圈才抓得到方向，前期溝通成本高。", "material": "", "tip": "把診斷器嵌進官網或 LINE，客戶填完就拿到報告，你也同步收到他的痛點，等於用免費診斷把陌生人變成想付費的客戶。", "prompt": "請幫我做一個「行銷健檢診斷器」，你的角色是【德明商業開發】的資深行銷顧問，目的是讓中小企業老闆填完幾題就拿到一份像樣的診斷報告，當下有收穫、也看到我們的專業。輸入的資料請依以下欄位讓填表者一一回答：主要經營通路（例：實體店、官網、外送平台、社群，可複選）、每月行銷或廣告預算、平均客單價、每月來客或訂單數、目前最大的痛點（例：沒客人上門、回購率低、不會下廣告、品牌沒記憶點）、最想在三個月內改善的一件事。請依這些回答產出一份結構固定的診斷報告，分成四個區塊：第一塊「現況快速判讀」，用兩三句點出問題的本質，不要只是覆述對方的話；第二塊「三個最該優先處理的問題」，每個問題都說明為什麼是它、不解決會怎樣；第三塊「三個具體可執行的行銷建議」，每個建議要寫清楚要做什麼、大概怎麼做、預期改善什麼，要能讓老闆看完就知道下一步；第四塊「一句邀請語」，自然引導對方預約一次免費深度諮詢。規則與語氣：全程用繁體中文、條列呈現，語氣專業但好懂、像在跟老闆面對面聊，不要用艱澀的行銷術語，必要時補一句生活化的比喻。整份報告要顯得用心、客製、有料，讓對方覺得「這家顧問真的懂我」。", "placeholders": ["德明商業開發"], "kind": "系統起手式"}, {"id": "system-11", "sourceSlide": 89, "number": "11", "moduleKey": "推", "module": "推｜系統打造", "tool": "Canvas／Manus／Claude", "toolNote": "把工作流程做成工具", "category": "藝術私廚", "company": "揪好創意（THE STUDIO 藝術私廚）", "title": "私廚客製需求表單＋活動報名系統", "summary": "THE STUDIO 做高端邀請制私廚與外燴，每場都要客製。客人多靠私訊一來一回問人數、預算、忌口、氛圍，訊息散又易漏，主廚備料報價前還得把零碎對話拼湊起來。", "role": "", "context": "", "expectation": "", "pain": "THE STUDIO 做高端邀請制私廚與外燴，每場都要客製。客人多靠私訊一來一回問人數、預算、忌口、氛圍，訊息散又易漏，主廚備料報價前還得把零碎對話拼湊起來。", "material": "", "tip": "把整理好的需求摘要直接轉成主廚備料與報價的底稿，省下拼湊私訊的時間，回覆客人也更快更顯專業。", "prompt": "請幫我做一個「私廚客製需求表單＋活動報名」的互動網頁，質感要高端優雅，讓客人一次把需求填齊、即時送到我手上。使用者要填的欄位請逐一做出，並加上適當提示文字：活動日期與時段、用餐人數、每人預算區間（提供三個級距單選，例：中階／進階／頂級客製）、活動場合（求婚、生日、商務宴客、藝文聚會、私人派對）、料理風格偏好（季節時令、義法、無國界、可複選）、忌口與過敏（常見項目以勾選提供，並附自由填寫欄）、是否需要場地佈置或藝術策展（是／否，選是再展開風格說明欄）、預算外的特殊需求（自由填寫）、聯絡人姓名、電話與聯絡時段。互動邏輯：選「需要場地佈置」時才顯示佈置風格欄；人數與預算區間選定後，於頁面即時組出一段需求摘要供雙方確認。送出後請顯示一句溫暖的確認語「已收到您的需求，主廚將親自為您規劃」，並把所有填寫內容整理成一段清楚的摘要顯示在頁面上方，方便客人截圖留存、也方便我直接拿來備料報價。版面與風格：簡約留白、使用襯線字體、配色低調有質感、手機優先、按鈕大方好點，主色用【你的品牌色】，整體要撐得起品牌的美學調性。", "placeholders": ["你的品牌色"], "kind": "系統起手式"}, {"id": "system-12", "sourceSlide": 90, "number": "12", "moduleKey": "推", "module": "推｜系統打造", "tool": "Canvas／Manus／Claude", "toolNote": "把工作流程做成工具", "category": "義式餐廳", "company": "羅義生活（PapàRoy）", "title": "預約制套餐線上訂位＋預點系統", "summary": "PapàRoy 是預約制的主廚型小店，手工義大利麵都新鮮現做。但訂位靠電話私訊、客人到場才點，廚房沒辦法提前抓料，尖峰期手忙腳亂、食材也抓不準。", "role": "", "context": "", "expectation": "", "pain": "PapàRoy 是預約制的主廚型小店，手工義大利麵都新鮮現做。但訂位靠電話私訊、客人到場才點，廚房沒辦法提前抓料，尖峰期手忙腳亂、食材也抓不準。", "material": "", "tip": "廚房依預點清單前一天備料，現做也能很從容；先設好各時段可預約上限，客人選滿就顯示額滿，避免尖峰超收。", "prompt": "請幫我做一個「預約訂位＋預點套餐」合一的互動網頁，讓客人選好時段順手把主餐先點了，廚房就能提前備料、現做義麵更從容。使用者要填的欄位請逐一做出並加上提示：用餐日期、用餐時段、用餐人數、用餐目的（一般聚餐／慶生／約會／商務，選填），接著為每一位客人各自選套餐（提供【你的套餐，例：經典套餐、主廚套餐】單選，並顯示每個套餐的內容說明與價格）、再為每位選主餐的義大利麵口味（列出【你的麵款】供單選，並可標示辣度或份量選項），最後填整桌的忌口與過敏、聯絡人姓名、電話、是否需要兒童座椅。互動邏輯：人數選定後，自動依人數展開對應數量的「第幾位客人」套餐與主餐選擇區，每一位都要分開選、避免混淆；任一選項變動時，頁面即時更新這筆預約的摘要，逐項顯示日期時段、人數、每位客人的套餐與主餐、預估總金額。可為熱門時段設定可預約上限，選滿時該時段顯示「已額滿」並擋住送出，引導客人改選其他時段。送出後顯示「訂位已送出，我們確認後回覆您」，並把整筆摘要整理好供客人截圖留存。版面與風格：溫暖有手作感、像一間有溫度的義式小館、配色質樸自然、字體好讀、手機優先，主色用【你的品牌色】。頁面最下面加一句「也提供外帶生鮮義麵，需要可於備註欄告知」並附一個備註欄位。", "placeholders": ["你的套餐，例：經典套餐、主廚套餐", "你的麵款", "你的品牌色"], "kind": "系統起手式"}, {"id": "system-13", "sourceSlide": 91, "number": "13", "moduleKey": "推", "module": "推｜系統打造", "tool": "Canvas／Manus／Claude", "toolNote": "把工作流程做成工具", "category": "環保服務", "company": "天藍環維", "title": "線上報價估算器", "summary": "假設你做環境清潔、清運或消毒，客人來電第一句幾乎都是「這樣大概多少錢」，但報價要看坪數、服務類型、頻率才算得出來，每通電話都得重問一輪、客人也常問完就沒下文。", "role": "", "context": "", "expectation": "", "pain": "假設你做環境清潔、清運或消毒，客人來電第一句幾乎都是「這樣大概多少錢」，但報價要看坪數、服務類型、頻率才算得出來，每通電話都得重問一輪、客人也常問完就沒下文。", "material": "", "tip": "報價一定要標「實際以現場評估為準」、給區間而非死數字，既能讓客人安心又保留你後續調整的彈性。", "prompt": "請幫我做一個「環保清潔服務線上估價」的互動網頁，讓客人自己選一選就即時看到一個合理的報價區間，把重複的電話估價搬上網自動跑，也讓客人更願意留下資料。使用者要填的欄位請逐一做出並加上提示：服務類型（例：居家清潔、辦公室清潔、廢棄物清運、環境消毒，可單選或複選）、空間坪數（可直接輸入數字，或選擇坪數範圍級距）、空間類型（例：住家、店面、辦公室、廠房）、需求頻率（單次／每週／每月／不定期）、空間目前狀況（例：一般定期維護、久未整理、搬遷前後，會影響工時與報價）、是否需要先到府評估、希望服務的時段。計算與顯示邏輯：請依所選服務類型、坪數與頻率，即時計算並顯示一個清楚的「預估報價區間」，用最低到最高金額的區間呈現，並務必明顯標示「實際價格以現場評估為準」；報價區間請用合理的相對級距表示，不要寫死成單一固定數字。報價下方請列出該服務「包含的項目」與「不包含的項目」說明，再附一段「影響報價的主要因素」讓客人心裡有底、減少事後落差。版面與風格：乾淨、給人專業可靠的感覺、配色清爽、文字清楚、手機優先，主色用【你的品牌色】。頁面最下面加一個聯絡表單，欄位逐一做出：姓名、電話、地址或區域、需求補充說明，按下送出後顯示「我們將盡快與您聯繫安排」。", "placeholders": ["你的品牌色"], "kind": "系統起手式"}, {"id": "system-14", "sourceSlide": 92, "number": "14", "moduleKey": "推", "module": "推｜系統打造", "tool": "Canvas／Manus／Claude", "toolNote": "把工作流程做成工具", "category": "進口餐酒", "company": "怡酒佐餐", "title": "餐酒搭配推薦工具", "summary": "假設你做進口餐搭酒，客人最大的卡點是「不懂酒」。面對一整排酒不知道配今天那道菜該選哪支，問店員又怕被當外行，結果常猶豫半天空手走，懂搭配的專業也傳不出去。", "role": "", "context": "", "expectation": "", "pain": "假設你做進口餐搭酒，客人最大的卡點是「不懂酒」。面對一整排酒不知道配今天那道菜該選哪支，問店員又怕被當外行，結果常猶豫半天空手走，懂搭配的專業也傳不出去。", "material": "", "tip": "搭配理由寫得越生活化越好（例：油脂遇上氣泡更解膩），客人有共鳴就更敢買，也更記得你懂門道。", "prompt": "請幫我做一個「今天這餐配什麼酒」的互動推薦網頁，把我的餐搭專業變成一個好玩又好用的小工具，幫不懂酒的客人輕鬆下決定。流程設計：先有一頁吸睛的開始頁與一顆「開始推薦」按鈕，接著依序問使用者幾道單選題，每題附簡短說明，題目請逐一做出：今天吃哪一類料理（紅肉／白肉／海鮮／義式／中式／甜點）、口味偏濃郁還是清爽、喜歡的酒感（清爽果香／圓潤順口／濃厚有層次）、用餐情境（自己小酌／朋友聚餐／正式宴客／送禮）、預算區間。每作答一題顯示進度並可回上一題。計算與顯示邏輯：請依各題選項的組合，推薦一到兩款最適合的酒，酒款一律用【你的酒款類型，例：某產區紅酒、氣泡酒、白酒】這種帶過的方式呈現，不要寫死成特定品牌或年份。結果頁請逐項顯示：推薦的酒款類型、為什麼這支適合這道菜的搭配理由（寫得生活化一點，例如油脂遇上氣泡更解膩）、適飲溫度與小建議、預留一張酒款示意圖的位置。版面與風格：優雅有質感、配色沉穩、手機優先、按鈕大好點、有作答切換的動畫感。結果頁下方放兩顆明顯的按鈕「我要購買」與「預約品飲／訂位」，連到【你的連結】。", "placeholders": ["你的酒款類型，例：某產區紅酒、氣泡酒、白酒", "你的連結"], "kind": "系統起手式"}, {"id": "system-15", "sourceSlide": 93, "number": "15", "moduleKey": "推", "module": "推｜系統打造", "tool": "Canvas／Manus／Claude", "toolNote": "把工作流程做成工具", "category": "自有品牌", "company": "愛賦真粹", "title": "品牌官網頁＋產品問答", "summary": "假設你有自有品牌也有不錯的產品，但少了一個能好好說故事的官網，客人多靠零散貼文認識你；下單前又總反覆問同樣的問題（怎麼用、適合誰、和別家差在哪），每次都人工回很慢。", "role": "", "context": "", "expectation": "", "pain": "假設你有自有品牌也有不錯的產品，但少了一個能好好說故事的官網，客人多靠零散貼文認識你；下單前又總反覆問同樣的問題（怎麼用、適合誰、和別家差在哪），每次都人工回很慢。", "material": "愛賦真粹-產品說明與常見問答範例.pdf ▸ 點此開啟\n（或到 GD「系統練習素材範例」資料夾）", "tip": "文案先抓住「為誰解決什麼問題」再談特色，客人才有感；問答助手上線前先用真實客人問題實測一輪再調。", "prompt": "請協助我完成兩件事。第一件：幫【愛賦真粹】寫一頁品牌 landing page 的完整文案。我的產品是【你的產品】、主打特色是【你的賣點】、目標客群是【你的客群】。請依序產出這幾個區塊：一個吸睛的主標與一句副標、一段三到四句的品牌故事（先講為誰解決什麼問題，再帶出理念）、三大產品特色（每項一句白話說明好處而非只列規格）、三個具體使用情境（讓客人對號入座）、一段消除購買疑慮的說明、結尾一段明確的行動呼籲。第二件：依我提供的【產品說明與常見問答】資料，做一個產品問答助手，你的角色是熟悉這個品牌、親切又可靠的線上店員。回答規則請嚴格遵守：第一，只根據我給的【產品說明與常見問答】資料回答，資料裡沒有的就說「這部分建議您直接洽詢客服」，絕對不要自己編造或臆測；第二，不誇大、不暗示任何療效或功效，只就產品本身的特色與使用方式說明；第三，回覆要簡潔、條理清楚，先給結論再補一兩句細節。要能回答的問題類型包含：產品怎麼使用、適合哪些人、和一般同類產品的差異、保存與注意事項、購買與售後相關。兩個部分都請用繁體中文、口吻一致。", "placeholders": ["愛賦真粹", "你的產品", "你的賣點", "你的客群", "產品說明與常見問答"], "kind": "系統起手式"}, {"id": "system-16", "sourceSlide": 94, "number": "16", "moduleKey": "推", "module": "推｜系統打造", "tool": "Canvas／Manus／Claude", "toolNote": "把工作流程做成工具", "category": "酒類批發", "company": "酒旺", "title": "經銷商訂貨＋庫存查詢系統", "summary": "假設你做酒類批發，下游經銷商多用 LINE 或電話下單，訊息一多就容易看漏、記錯數量，還得人工回覆哪些品項有貨，對帳補貨全靠人腦盯，旺季一忙就出錯。", "role": "", "context": "", "expectation": "", "pain": "假設你做酒類批發，下游經銷商多用 LINE 或電話下單，訊息一多就容易看漏、記錯數量，還得人工回覆哪些品項有貨，對帳補貨全靠人腦盯，旺季一忙就出錯。", "material": "", "tip": "先把熱銷品項放最上面、庫存標籤設清楚，經銷商一眼就知道能不能訂，少很多「這個還有嗎」的往返訊息。", "prompt": "請幫我做一個「經銷商線上訂貨＋庫存查詢」的互動網頁，讓下游經銷商自己選品項、看庫存、送單，取代凌亂的 LINE 與電話接單。畫面以商品列表呈現，每一項商品要逐一顯示這些資訊：品名、規格（例：瓶／箱／件）、單價、即時庫存狀態。庫存狀態請用清楚的標籤呈現「現貨／少量／缺貨」三種，標為缺貨者要變灰並擋住下單。互動與計算邏輯：經銷商可在每項商品逐筆輸入訂購數量，頁面即時加總並顯示「本次訂單明細與總金額」，明細要逐項列出品名、規格、數量、小計；可提供關鍵字搜尋與分類篩選，方便快速找到要的品項；可加入「我的常訂清單」讓老客戶一鍵帶入過去常買的組合；熱銷或主推品項請固定排在最上方。價格顯示請註明「單價以當期報價為準，實際金額以我們確認後的訂單為準」，遇到促銷或級距價時可在品項旁標示提示，但不要在頁面寫死任何長期固定的數字。送出前需填寫的欄位逐一做出：經銷商名稱、聯絡人、電話、希望到貨日、備註。送出後請顯示一筆清楚的訂單摘要供經銷商截圖留存，並提示「訂單已送出，我們將盡快與您確認」。版面與風格：簡潔俐落、像專業的訂貨後台、配色穩重、資訊密度適中、文字清楚易讀、手機與電腦都好操作，主色用【你的品牌色】。", "placeholders": ["你的品牌色"], "kind": "系統起手式"}, {"id": "system-17", "sourceSlide": 95, "number": "17", "moduleKey": "推", "module": "推｜系統打造", "tool": "Canvas／Manus／Claude", "toolNote": "把工作流程做成工具", "category": "水產食品", "company": "鼎圓開發", "title": "水產報價＋規格訂貨表單系統", "summary": "假設你做水產批發，同一種貨會因尺寸、處理方式、數量而價格不同。客人多用電話或 LINE 問價下單，每筆都要重問規格、再口頭報價，講不清就容易出錯、出貨對不上。", "role": "", "context": "", "expectation": "", "pain": "假設你做水產批發，同一種貨會因尺寸、處理方式、數量而價格不同。客人多用電話或 LINE 問價下單，每筆都要重問規格、再口頭報價，講不清就容易出錯、出貨對不上。", "material": "", "tip": "報價標「以當日市價為準」保留彈性；把常被訂的規格組合設成預設選項，老客戶下單更快、也更少問錯。", "prompt": "請幫我做一個「水產報價＋規格訂貨」的互動表單網頁，讓客人把品項、規格、數量選齊就即時算出報價，把口頭來回的報價變成清楚、不會聽錯、可留存的流程。使用者要填的欄位請逐一做出並加上提示：水產品項（列出【你的品項，例：鯖魚、透抽、白蝦】供選擇，可一次加多筆）、規格尺寸（例：大／中／小，或重量級距）、處理方式（例：全魚、去頭去內臟、切片、清洗，可單選）、訂購數量（可輸入重量或件數）、用途備註（例：自家煮、餐廳進貨、送禮，選填）。計算與顯示邏輯：請依所選的品項、規格與處理方式，即時計算並顯示一個「預估報價」，務必明顯標示「實際以當日漁獲與市價為準」；報價請以合理的區間或級距呈現，不要寫死成固定數字。同一張單可加入多個品項，頁面即時整理出一份清楚的訂單明細，逐項列出品項、規格、處理方式、數量與小計，並顯示預估總金額；常被一起訂的規格組合可設成快速選項，方便老客戶一鍵帶入。送出前需填寫的欄位逐一做出：客戶名稱、聯絡電話、希望取貨或到貨日、備註。送出後顯示完整訂單摘要與「我們將盡快與您確認」並供客人截圖留存。版面與風格：新鮮乾淨、給人在地實在的感覺、配色清爽、文字清楚、手機優先，主色用【你的品牌色】。", "placeholders": ["你的品項，例：鯖魚、透抽、白蝦", "你的品牌色"], "kind": "系統起手式"}]</script>
+  <script>
+    const cases = JSON.parse(document.getElementById('case-data').textContent);
+    const state = { q: '', module: '全部', tool: '全部', category: '全部', currentId: null };
+
+    const els = {
+      stats: document.getElementById('stats'),
+      moduleSummary: document.getElementById('moduleSummary'),
+      moduleChips: document.getElementById('moduleChips'),
+      searchInput: document.getElementById('searchInput'),
+      toolSelect: document.getElementById('toolSelect'),
+      categorySelect: document.getElementById('categorySelect'),
+      resultCount: document.getElementById('resultCount'),
+      activeFilterText: document.getElementById('activeFilterText'),
+      caseGrid: document.getElementById('caseGrid'),
+      dialog: document.getElementById('caseDialog'),
+      closeDialog: document.getElementById('closeDialog'),
+      modalBadges: document.getElementById('modalBadges'),
+      modalTitle: document.getElementById('modalTitle'),
+      modalMeta: document.getElementById('modalMeta'),
+      detailGrid: document.getElementById('detailGrid'),
+      modalPrompt: document.getElementById('modalPrompt'),
+      copyPromptButton: document.getElementById('copyPromptButton'),
+      toast: document.getElementById('toast'),
+      resetTop: document.getElementById('resetTop'),
+      copyVisibleTop: document.getElementById('copyVisibleTop')
+    };
+
+    const moduleOrder = ['全部', '想', '美', '紅', '推'];
+    const moduleLabel = {
+      '全部': '全部模組',
+      '想': '想｜研究決策',
+      '美': '美｜視覺生成',
+      '紅': '紅｜個人品牌',
+      '推': '推｜系統打造'
+    };
+
+    function unique(values) {
+      return [...new Set(values.filter(Boolean))];
+    }
+
+    function normalize(text) {
+      return String(text || '').toLowerCase().trim();
+    }
+
+    function matches(card) {
+      if (state.module !== '全部' && card.moduleKey !== state.module) return false;
+      if (state.tool !== '全部' && card.tool !== state.tool) return false;
+      if (state.category !== '全部' && card.category !== state.category) return false;
+      if (!state.q) return true;
+      const haystack = normalize([
+        card.title, card.company, card.category, card.module, card.tool,
+        card.summary, card.prompt, card.tip
+      ].join(' '));
+      return haystack.includes(normalize(state.q));
+    }
+
+    function filteredCases() {
+      return cases.filter(matches);
+    }
+
+    function countBy(key) {
+      return cases.reduce((acc, card) => {
+        const value = card[key] || '未分類';
+        acc[value] = (acc[value] || 0) + 1;
+        return acc;
+      }, {});
+    }
+
+    function renderStats() {
+      const toolCount = unique(cases.map(c => c.tool)).length;
+      const categoryCount = unique(cases.map(c => c.category)).length;
+      const stats = [
+        ['65', '可用案例'],
+        [String(toolCount), '工具類型'],
+        ['4', '課程模組'],
+        [String(categoryCount), '情境類別']
+      ];
+      els.stats.innerHTML = stats.map(([num, label]) => `<div class="stat"><strong>${escapeHtml(num)}</strong><span>${escapeHtml(label)}</span></div>`).join('');
+
+      const modules = [
+        ['想', '研究與決策', 'Perplexity／Deep Research／Manus'],
+        ['美', '視覺生成', 'Nano Banana'],
+        ['紅', '個人品牌', 'Gemini Gems'],
+        ['推', '系統打造', 'Canvas／Manus／Claude']
+      ];
+      const counts = countBy('moduleKey');
+      els.moduleSummary.innerHTML = modules.map(([key, title, note]) => `
+        <button class="module-row" data-module="${key}">
+          <span class="module-key">${key}</span>
+          <span><strong>${escapeHtml(title)}</strong><span>${escapeHtml(note)}</span></span>
+          <span class="module-count">${counts[key] || 0}</span>
+        </button>
+      `).join('');
+      els.moduleSummary.querySelectorAll('.module-row').forEach(btn => {
+        btn.addEventListener('click', () => {
+          state.module = btn.dataset.module;
+          render();
+          document.querySelector('.workspace').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+      });
+    }
+
+    function renderControls() {
+      const tools = ['全部', ...unique(cases.map(c => c.tool))];
+      const categories = ['全部', ...unique(cases.map(c => c.category)).sort((a, b) => a.localeCompare(b, 'zh-Hant'))];
+      els.toolSelect.innerHTML = tools.map(t => `<option value="${escapeAttr(t)}">${escapeHtml(t)}</option>`).join('');
+      els.categorySelect.innerHTML = categories.map(c => `<option value="${escapeAttr(c)}">${escapeHtml(c)}</option>`).join('');
+
+      els.moduleChips.innerHTML = moduleOrder.map(key => `
+        <button class="chip ${state.module === key ? 'active' : ''}" data-module="${key}">${escapeHtml(moduleLabel[key])}</button>
+      `).join('');
+      els.moduleChips.querySelectorAll('.chip').forEach(chip => {
+        chip.addEventListener('click', () => {
+          state.module = chip.dataset.module;
+          render();
+        });
+      });
+      els.toolSelect.value = state.tool;
+      els.categorySelect.value = state.category;
+    }
+
+    function renderCards() {
+      const list = filteredCases();
+      els.resultCount.textContent = String(list.length);
+      const activeBits = [moduleLabel[state.module]];
+      if (state.tool !== '全部') activeBits.push(state.tool);
+      if (state.category !== '全部') activeBits.push(state.category);
+      if (state.q) activeBits.push(`搜尋「${state.q}」`);
+      els.activeFilterText.textContent = activeBits.join('／');
+
+      if (!list.length) {
+        els.caseGrid.innerHTML = '<div class="empty-state">沒有符合條件的案例</div>';
+        return;
+      }
+
+      els.caseGrid.innerHTML = list.map(card => {
+        const placeholders = card.placeholders.length
+          ? card.placeholders.slice(0, 4).map(p => `<span class="placeholder">${escapeHtml(p)}</span>`).join('')
+          : '<span class="placeholder">可直接套用</span>';
+        return `
+          <article class="case-card">
+            <div class="card-badges">
+              <span class="badge module">${escapeHtml(card.moduleKey)}</span>
+              <span class="badge tool">${escapeHtml(card.tool)}</span>
+              <span class="badge kind">${escapeHtml(card.kind)}</span>
+            </div>
+            <h2>${escapeHtml(card.title)}</h2>
+            <div class="company">${escapeHtml(card.company || card.category)}｜第 ${escapeHtml(String(card.sourceSlide))} 頁</div>
+            <p class="summary">${escapeHtml(card.summary)}</p>
+            <div class="placeholder-list">${placeholders}</div>
+            <div class="card-actions">
+              <button class="ghost-button" data-open="${escapeAttr(card.id)}">查看內容</button>
+              <button class="primary-button" data-copy="${escapeAttr(card.id)}">複製指令</button>
+            </div>
+          </article>
+        `;
+      }).join('');
+
+      els.caseGrid.querySelectorAll('[data-open]').forEach(btn => {
+        btn.addEventListener('click', () => openCase(btn.dataset.open));
+      });
+      els.caseGrid.querySelectorAll('[data-copy]').forEach(btn => {
+        btn.addEventListener('click', () => copyCard(btn.dataset.copy));
+      });
+    }
+
+    function render() {
+      renderControls();
+      renderCards();
+    }
+
+    function detailBox(title, text, full = false) {
+      if (!text) return '';
+      return `<section class="detail-box ${full ? 'full' : ''}"><h3>${escapeHtml(title)}</h3><p>${escapeHtml(text)}</p></section>`;
+    }
+
+    function openCase(id) {
+      const card = cases.find(c => c.id === id);
+      if (!card) return;
+      state.currentId = id;
+      els.modalBadges.innerHTML = `
+        <span class="badge module">${escapeHtml(card.module)}</span>
+        <span class="badge tool">${escapeHtml(card.tool)}</span>
+        <span class="badge kind">${escapeHtml(card.kind)}</span>
+      `;
+      els.modalTitle.textContent = card.company ? `${card.company}｜${card.title}` : card.title;
+      els.modalMeta.textContent = `${card.category}｜來源投影片第 ${card.sourceSlide} 頁`;
+      const slots = card.placeholders.length ? `可替換欄位：${card.placeholders.map(p => `【${p}】`).join('、')}` : '';
+      els.detailGrid.innerHTML = [
+        detailBox('案例摘要', card.summary, false),
+        detailBox('工具定位', card.toolNote, false),
+        detailBox('角色', card.role, false),
+        detailBox('情境', card.context, false),
+        detailBox('期望', card.expectation, true),
+        detailBox('解決的問題', card.pain, true),
+        detailBox('練習素材', card.material, true),
+        detailBox('可替換欄位', slots, true),
+        detailBox('阿峰老師提醒', card.tip, true)
+      ].join('');
+      els.modalPrompt.textContent = card.prompt;
+      if (typeof els.dialog.showModal === 'function') {
+        els.dialog.showModal();
+      } else {
+        els.dialog.setAttribute('open', 'open');
+      }
+    }
+
+    function closeDialog() {
+      if (typeof els.dialog.close === 'function') {
+        els.dialog.close();
+      } else {
+        els.dialog.removeAttribute('open');
+      }
+    }
+
+    async function copyText(text) {
+      try {
+        if (navigator.clipboard && window.isSecureContext) {
+          await navigator.clipboard.writeText(text);
+        } else {
+          const textarea = document.createElement('textarea');
+          textarea.value = text;
+          textarea.setAttribute('readonly', '');
+          textarea.style.position = 'fixed';
+          textarea.style.left = '-9999px';
+          document.body.appendChild(textarea);
+          textarea.select();
+          document.execCommand('copy');
+          document.body.removeChild(textarea);
+        }
+        showToast('已複製');
+      } catch (error) {
+        showToast('請手動選取複製');
+      }
+    }
+
+    function copyCard(id) {
+      const card = cases.find(c => c.id === id);
+      if (card) copyText(card.prompt);
+    }
+
+    function copyVisibleList() {
+      const list = filteredCases();
+      const text = list.map((card, index) => {
+        const title = card.company ? `${card.company}｜${card.title}` : card.title;
+        return `${index + 1}. [${card.module}] ${title}\n工具：${card.tool}\n類別：${card.category}\n指令：\n${card.prompt}`;
+      }).join('\n\n' + '-'.repeat(28) + '\n\n');
+      copyText(text);
+    }
+
+    function showToast(message) {
+      els.toast.textContent = message;
+      els.toast.classList.add('show');
+      window.clearTimeout(showToast.timer);
+      showToast.timer = window.setTimeout(() => els.toast.classList.remove('show'), 1600);
+    }
+
+    function resetFilters() {
+      state.q = '';
+      state.module = '全部';
+      state.tool = '全部';
+      state.category = '全部';
+      els.searchInput.value = '';
+      render();
+    }
+
+    function escapeHtml(value) {
+      return String(value ?? '').replace(/[&<>"]/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[ch]));
+    }
+
+    function escapeAttr(value) {
+      return escapeHtml(value).replace(/'/g, '&#39;');
+    }
+
+    els.searchInput.addEventListener('input', event => {
+      state.q = event.target.value.trim();
+      renderCards();
+    });
+    els.toolSelect.addEventListener('change', event => {
+      state.tool = event.target.value;
+      renderCards();
+    });
+    els.categorySelect.addEventListener('change', event => {
+      state.category = event.target.value;
+      renderCards();
+    });
+    els.closeDialog.addEventListener('click', closeDialog);
+    els.dialog.addEventListener('click', event => {
+      if (event.target === els.dialog) closeDialog();
+    });
+    document.addEventListener('keydown', event => {
+      if (event.key === 'Escape' && els.dialog.open) closeDialog();
+    });
+    els.copyPromptButton.addEventListener('click', () => copyCard(state.currentId));
+    els.resetTop.addEventListener('click', resetFilters);
+    els.copyVisibleTop.addEventListener('click', copyVisibleList);
+
+    renderStats();
+    render();
+  </script>
+</body>
+</html>
