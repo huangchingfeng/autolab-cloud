@@ -25,8 +25,6 @@
     { "src": "/20260513-jijia-tainan-epa/(.*)", "dest": "/20260513-jijia-tainan-epa/$1" },
     { "src": "/prompt-generator/?", "dest": "/prompt-generator/index.html" },
     { "src": "/prompt-generator/(.*)", "dest": "/prompt-generator/$1" },
-    { "src": "/20260628-xinyang-ai/?", "dest": "/20260628-xinyang-ai/index.html" },
-    { "src": "/20260628-xinyang-ai/(.*)", "dest": "/20260628-xinyang-ai/$1" },
     { "src": "/api/test", "dest": "/api/test" },
     { "src": "/api/recommend", "dest": "/api/recommend" },
     { "src": "/api/(.*)", "dest": "/api" },
