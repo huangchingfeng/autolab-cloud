@@ -305,6 +305,35 @@
             gap: 8px;
             margin: 0 0 14px;
         }
+        .axis-toggle {
+            display: flex;
+            gap: 4px;
+            background: #eef2f7;
+            padding: 4px;
+            border-radius: 999px;
+            margin-bottom: 14px;
+        }
+        .axis-btn {
+            flex: 1;
+            border: none;
+            background: transparent;
+            border-radius: 999px;
+            padding: 9px 8px;
+            font-weight: 800;
+            font-size: 0.92rem;
+            color: var(--muted);
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            transition: background 0.15s, color 0.15s;
+        }
+        .axis-btn.active {
+            background: #fff;
+            color: var(--primary-blue);
+            box-shadow: 0 1px 3px rgba(16, 24, 40, 0.14);
+        }
         .filter-btn {
             border: 1px solid var(--line);
             background: #fff;
@@ -577,31 +606,6 @@
             padding: 14px;
             text-align: center;
         }
-        .reco-item-reason {
-            display: block;
-            margin-top: 4px;
-            color: var(--primary-blue);
-            font-size: .82rem;
-            font-weight: 700;
-        }
-        .reco-loading {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            color: var(--muted);
-            font-weight: 800;
-            padding: 12px 2px;
-        }
-        .reco-spinner {
-            width: 16px;
-            height: 16px;
-            border: 2px solid var(--line);
-            border-top-color: var(--primary-blue);
-            border-radius: 50%;
-            animation: reco-spin 0.7s linear infinite;
-            flex: 0 0 auto;
-        }
-        @keyframes reco-spin { to { transform: rotate(360deg); } }
 
         /* 可編輯的生成結果 */
         textarea.output-container {
@@ -926,8 +930,8 @@
             <div class="section-inner hero-grid">
                 <div>
                     <div class="hero-kicker"><i class="bi bi-stars"></i> 企業 AI 工作提示詞庫</div>
-                    <h1 class="hero-title">276 個 AI 提示詞模板，一次整理成可直接使用的工作台</h1>
-                    <p class="hero-copy">276 個實戰提示詞模板，依產業與職能快速生成可直接使用的 AI 指令。從人資、行銷、長照到會計財務，先選情境，再填資料，最後複製到 ChatGPT、Claude 或 Gemini。</p>
+                    <h1 class="hero-title">300+ 個 AI 提示詞模板，依「產業 × 部門」雙軸快速找到可用指令</h1>
+                    <p class="hero-copy">300+ 個實戰提示詞模板，可依產業或部門雙軸瀏覽，也能直接描述需求讓 AI 推薦。從保險、長照、業務到會計財務，先選情境，再填資料，最後複製到 ChatGPT、Claude 或 Gemini。</p>
                     <div class="hero-actions">
                         <a href="#tool" class="btn-main"><i class="bi bi-lightning-charge-fill"></i>開始使用提示詞產生器</a>
                         <a href="#about" class="btn-quiet"><i class="bi bi-person-workspace"></i>了解企業 AI 培訓/陪跑</a>
@@ -999,7 +1003,12 @@
                                 <i class="bi bi-search"></i>
                                 <input id="templateSearch" class="form-control" type="search" placeholder="輸入關鍵字，例如：發票、面試、長照、會計" autocomplete="off">
                             </div>
-                            <div class="panel-label">分類</div>
+                            <div class="panel-label">瀏覽方式</div>
+                            <div id="axis-toggle" class="axis-toggle" role="tablist" aria-label="瀏覽方式">
+                                <button class="axis-btn active" type="button" data-axis="department" aria-pressed="true"><i class="bi bi-people"></i> 依部門</button>
+                                <button class="axis-btn" type="button" data-axis="industry" aria-pressed="false"><i class="bi bi-buildings"></i> 依產業</button>
+                            </div>
+                            <div class="panel-label" id="axisChipLabel">部門分類</div>
                             <div id="category-filters" class="category-strip" aria-label="模板分類"></div>
                             <label class="panel-label" for="templateSelector">下拉選單備用</label>
                             <select id="templateSelector" class="form-select template-select-fallback" aria-label="模板下拉選單"></select>
@@ -7258,10 +7267,12 @@ SOP名稱：<<<{sop_title}>>>
 
         let templates = {};
         let allTemplates = [];
-        let categories = new Set();
-        let categoryCounts = {};
-        let sortedCategories = [];
-        let currentCategory = 'all';
+        let industries = [];
+        let departments = [];
+        let industryCounts = {};
+        let departmentCounts = {};
+        let currentAxis = 'department';   // 'department' | 'industry'
+        let currentTag = 'all';
         let currentSearch = '';
         let selectedTemplateId = null;
         let toastTimer = null;
@@ -7307,6 +7318,8 @@ SOP名稱：<<<{sop_title}>>>
                 id: item.id || ('template_import_' + index),
                 name: item.name || '未命名模板',
                 category: item.category || '未分類',
+                industry: Array.isArray(item.industry) ? item.industry : (item.industry ? [item.industry] : []),
+                department: Array.isArray(item.department) ? item.department : (item.department ? [item.department] : []),
                 structure: Array.isArray(item.structure) ? item.structure : [],
                 template: typeof item.template === 'string' ? item.template : ''
             }));
@@ -7322,32 +7335,37 @@ SOP名稱：<<<{sop_title}>>>
             return parseInlineTemplates();
         };
 
+        const industryOrder = ['保險', '醫美', '長照', '政府', '實體店家'];
+        const departmentOrder = ['業務', '人資', '行銷', '企劃', '行政', '會計財務', '市場分析', '培訓', '活動', '客服', '營運'];
+        const orderSorter = (orderArr) => (a, b) => {
+            const oa = orderArr.indexOf(a), ob = orderArr.indexOf(b);
+            if (oa !== -1 || ob !== -1) return (oa === -1 ? 999 : oa) - (ob === -1 ? 999 : ob);
+            return a.localeCompare(b, 'zh-Hant');
+        };
+
         const rebuildDerived = () => {
             templates = {};
-            categories = new Set();
-            categoryCounts = {};
+            const indSet = new Set(), deptSet = new Set();
+            industryCounts = {};
+            departmentCounts = {};
             allTemplates.forEach((t) => {
                 t.structure = Array.isArray(t.structure) ? t.structure : [];
-                t.searchText = normalize(`${t.name} ${t.category}`);
+                t.industry = Array.isArray(t.industry) ? t.industry : [];
+                t.department = Array.isArray(t.department) ? t.department : [];
+                t.searchText = normalize(`${t.name} ${t.category} ${t.industry.join(' ')} ${t.department.join(' ')}`);
                 const fieldText = t.structure.map((f) => `${f.label || ''} ${f.placeholder || ''}`).join(' ');
                 t.reco = {
                     name: normalize(t.name),
-                    category: normalize(t.category),
+                    category: normalize(`${t.category} ${t.industry.join(' ')} ${t.department.join(' ')}`),
                     fields: normalize(fieldText),
                     body: normalize(t.template)
                 };
                 templates[t.id] = t;
-                categories.add(t.category);
-                categoryCounts[t.category] = (categoryCounts[t.category] || 0) + 1;
+                t.industry.forEach((x) => { indSet.add(x); industryCounts[x] = (industryCounts[x] || 0) + 1; });
+                t.department.forEach((x) => { deptSet.add(x); departmentCounts[x] = (departmentCounts[x] || 0) + 1; });
             });
-            sortedCategories = Array.from(categories).sort((a, b) => {
-                const orderA = preferredOrder.indexOf(a);
-                const orderB = preferredOrder.indexOf(b);
-                if (orderA !== -1 || orderB !== -1) {
-                    return (orderA === -1 ? 999 : orderA) - (orderB === -1 ? 999 : orderB);
-                }
-                return a.localeCompare(b, 'zh-Hant');
-            });
+            industries = Array.from(indSet).sort(orderSorter(industryOrder));
+            departments = Array.from(deptSet).sort(orderSorter(departmentOrder));
         };
 
         const recommend = (query) => {
@@ -7384,10 +7402,14 @@ SOP名稱：<<<{sop_title}>>>
 
         const getFilteredTemplates = () => {
             const query = normalize(currentSearch);
-            return allTemplates.filter((template) => {
-                const categoryMatch = currentCategory === 'all' || template.category === currentCategory;
-                const searchMatch = !query || template.searchText.includes(query);
-                return categoryMatch && searchMatch;
+            // 有搜尋字 → 全站搜尋（不受軸/標籤限制）
+            if (query) {
+                return allTemplates.filter((t) => t.searchText.includes(query));
+            }
+            // 無搜尋 → 依目前的軸（部門／產業）與標籤篩選
+            return allTemplates.filter((t) => {
+                const tags = currentAxis === 'industry' ? t.industry : t.department;
+                return currentTag === 'all' ? tags.length > 0 : tags.includes(currentTag);
             });
         };
 
@@ -7407,23 +7429,36 @@ SOP名稱：<<<{sop_title}>>>
             const total = allTemplates.length;
             $('#totalTemplateCount').text(total);
             $('#heroTemplateCount').text(total);
-            $('#heroCategoryCount').text(categories.size);
+            $('#heroCategoryCount').text(industries.length + departments.length);
             $('#activeResultCount').text(`目前顯示 ${visibleCount}`);
         };
 
+        const setAxisToggleUI = () => {
+            $('#axis-toggle .axis-btn').each(function() {
+                const active = $(this).data('axis') === currentAxis;
+                $(this).toggleClass('active', active).attr('aria-pressed', active);
+            });
+            $('#axisChipLabel').text(currentAxis === 'industry' ? '產業分類' : '部門分類');
+        };
+
         const renderCategoryFilters = () => {
+            setAxisToggleUI();
             const filterContainer = $('#category-filters').empty();
-            const allActive = currentCategory === 'all';
+            const isInd = currentAxis === 'industry';
+            const tags = isInd ? industries : departments;
+            const counts = isInd ? industryCounts : departmentCounts;
+            const axisTotal = allTemplates.filter((t) => (isInd ? t.industry : t.department).length > 0).length;
+            const allActive = currentTag === 'all';
             filterContainer.append(`
-                <button class="filter-btn${allActive ? ' active' : ''}" type="button" data-category="all" aria-pressed="${allActive}">
-                    全部顯示 <span class="template-count">(${allTemplates.length})</span>
+                <button class="filter-btn${allActive ? ' active' : ''}" type="button" data-tag="all" aria-pressed="${allActive}">
+                    全部 <span class="template-count">(${axisTotal})</span>
                 </button>
             `);
-            sortedCategories.forEach((category) => {
-                const active = currentCategory === category;
+            tags.forEach((tag) => {
+                const active = currentTag === tag;
                 filterContainer.append(`
-                    <button class="filter-btn${active ? ' active' : ''}" type="button" data-category="${escapeHtml(category)}" aria-pressed="${active}">
-                        ${escapeHtml(category)} <span class="template-count">(${categoryCounts[category]})</span>
+                    <button class="filter-btn${active ? ' active' : ''}" type="button" data-tag="${escapeHtml(tag)}" aria-pressed="${active}">
+                        ${escapeHtml(tag)} <span class="template-count">(${counts[tag] || 0})</span>
                     </button>
                 `);
             });
@@ -7652,62 +7687,29 @@ ${promptText.trim()}
             document.body.removeChild(textarea);
         };
 
-        const renderRecoItems = (items, withReason) => {
-            const box = $('#recommendResults');
-            let html = '<div class="reco-title"><i class="bi bi-hand-index-thumb"></i> 依你的描述，建議從這幾個開始練習：</div>';
-            items.forEach(({ template, reason }) => {
-                const reasonHtml = (withReason && reason) ? `<span class="reco-item-reason">${escapeHtml(reason)}</span>` : '';
-                html += `
-                    <button class="reco-item" type="button" data-template-id="${template.id}">
-                        <span class="reco-item-main">
-                            <span class="reco-item-name">${escapeHtml(template.name)}</span>
-                            <span class="reco-item-cat">${escapeHtml(template.category)}</span>
-                            ${reasonHtml}
-                        </span>
-                        <span class="reco-item-go">選這個 <i class="bi bi-arrow-right-short"></i></span>
-                    </button>`;
-            });
-            box.html(html).addClass('show');
-        };
-
-        const renderKeywordReco = (query) => {
-            const box = $('#recommendResults');
-            const results = recommend(query);
-            if (!results.length) {
-                box.html('<div class="reco-empty"><i class="bi bi-emoji-neutral"></i> 找不到很貼近的模板。換個說法描述你的工作，或直接用上方搜尋／分類瀏覽看看。</div>').addClass('show');
-                return;
-            }
-            renderRecoItems(results.map((r) => ({ template: r.template })), false);
-        };
-
-        const renderRecommend = async (query) => {
+        const renderRecommend = (query) => {
             const box = $('#recommendResults');
             if (!query || !query.trim()) {
                 box.empty().removeClass('show');
                 return;
             }
-            box.html('<div class="reco-loading"><span class="reco-spinner"></span> AI 推薦中…</div>').addClass('show');
-            try {
-                const candidates = allTemplates.map((t) => ({ id: t.id, name: t.name, category: t.category }));
-                const controller = new AbortController();
-                const timer = setTimeout(() => controller.abort(), 12000);
-                const res = await fetch('/api/recommend', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ need: query, candidates }),
-                    signal: controller.signal
-                });
-                clearTimeout(timer);
-                if (!res.ok) throw new Error('api ' + res.status);
-                const data = await res.json();
-                const items = (data.results || [])
-                    .map((r) => ({ template: templates[r.id], reason: r.reason }))
-                    .filter((x) => x.template);
-                if (!items.length) { renderKeywordReco(query); return; }
-                renderRecoItems(items, true);
-            } catch (e) {
-                renderKeywordReco(query);
+            const results = recommend(query);
+            if (!results.length) {
+                box.html('<div class="reco-empty"><i class="bi bi-emoji-neutral"></i> 找不到很貼近的模板。換個說法描述你的工作，或直接用上方搜尋／分類瀏覽看看。</div>').addClass('show');
+                return;
             }
+            let html = '<div class="reco-title"><i class="bi bi-hand-index-thumb"></i> 依你的描述，建議從這幾個開始練習：</div>';
+            results.forEach(({ template }) => {
+                html += `
+                    <button class="reco-item" type="button" data-template-id="${template.id}">
+                        <span class="reco-item-main">
+                            <span class="reco-item-name">${escapeHtml(template.name)}</span>
+                            <span class="reco-item-cat">${escapeHtml(template.category)}</span>
+                        </span>
+                        <span class="reco-item-go">選這個 <i class="bi bi-arrow-right-short"></i></span>
+                    </button>`;
+            });
+            box.html(html).addClass('show');
         };
 
         const refreshAll = () => {
@@ -7721,9 +7723,18 @@ ${promptText.trim()}
                 renderResults();
             });
 
+            $('#axis-toggle').on('click', '.axis-btn', function() {
+                const nextAxis = $(this).data('axis');
+                if (nextAxis === currentAxis) return;
+                currentAxis = nextAxis;
+                currentTag = 'all';
+                renderCategoryFilters();
+                renderResults();
+            });
+
             $('#category-filters').on('click', '.filter-btn', function() {
-                currentCategory = $(this).data('category');
-                $('.filter-btn').removeClass('active').attr('aria-pressed', 'false');
+                currentTag = $(this).data('tag');
+                $('#category-filters .filter-btn').removeClass('active').attr('aria-pressed', 'false');
                 $(this).addClass('active').attr('aria-pressed', 'true');
                 renderResults();
             });
@@ -7774,8 +7785,11 @@ ${promptText.trim()}
             });
             $('#recommendResults').on('click', '.reco-item', function() {
                 const id = $(this).data('template-id');
+                const picked = templates[id];
                 currentSearch = '';
-                currentCategory = 'all';
+                currentTag = 'all';
+                if (picked && picked.department && picked.department.length) currentAxis = 'department';
+                else if (picked && picked.industry && picked.industry.length) currentAxis = 'industry';
                 $('#templateSearch').val('');
                 refreshAll();
                 syncActiveTemplate(id);
