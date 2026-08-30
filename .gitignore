@@ -147,3 +147,6 @@ temp/
 *.sqlite
 *.sqlite3
 .vercel
+
+# 驗證用暫存檔
+.tmp_*
